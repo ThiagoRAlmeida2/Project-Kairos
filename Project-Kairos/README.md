@@ -10,26 +10,26 @@ Para rodar o projeto, basta seguir os passos abaixo:
 
 1. Certifique-se de estar na pasta raiz do projeto:
 
-```bash
-cd /caminho/para/Project-Kairos
-```
+    ```bash
+    cd /caminho/para/Project-Kairos
+    ```
 
 2. Instale todas as dependências:
 
-```bash
-npm install
-```
+    ```bash
+    npm install
+    ```
 
 3. Inicie o servidor de desenvolvimento:
 
-```bash
-npm run dev
-```
+    ```bash
+    npm run dev
+    ```
 
 4. Abra o navegador no endereço indicado, geralmente:
 
-```
-http://localhost:5173/
+```bash
+    http://localhost:5173/
 ```
 
 > ⚠️ **Atenção:** Não modifique a pasta `service`. Ela contém a configuração do Axios para comunicação com o backend, incluindo interceptors e base URL. Alterar esta pasta pode quebrar as requisições da aplicação.
@@ -40,15 +40,15 @@ http://localhost:5173/
 
 Dentro da pasta `src`, temos a seguinte organização:
 
-```
-src/
- ├─ assets/       → Imagens, ícones e arquivos estáticos do frontend
- ├─ components/   → Componentes reutilizáveis da interface (botões, cards, formulários, etc.)
- ├─ css/          → Arquivos CSS globais e Tailwind (index.css)
- ├─ pages/        → Páginas principais do sistema (cada rota terá sua própria página aqui)
- ├─ router/       → Configuração do React Router, define rotas e navegação SPA
- |─ service/      → Configuração do Axios e serviços de requisições HTTP
- └─ main.jsx      → Ponto de entrada da aplicação React
+```bash
+    src/
+    ├─ assets/       → Imagens, ícones e arquivos estáticos do frontend
+    ├─ components/   → Componentes reutilizáveis da interface (botões, cards, formulários, etc.)
+    ├─ css/          → Arquivos CSS globais e Tailwind (index.css)
+    ├─ pages/        → Páginas principais do sistema (cada rota terá sua própria página aqui)
+    ├─ router/       → Configuração do React Router, define rotas e navegação SPA
+    ├─ service/      → Configuração do Axios e serviços de requisições HTTP
+    └─ main.jsx      → Ponto de entrada da aplicação React
 ```
 
 ---
