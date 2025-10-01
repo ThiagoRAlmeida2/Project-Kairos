@@ -1,12 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
+import CadastroCard from "../components/CadastroCard"; // ajuste o caminho se necessário
 
-// Por enquanto só rota inicial
+// Rota inicial exibindo o card de cadastro
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <div className="text-center mt-10 text-2xl font-bold">Hello World 🚀</div>,
+    element: <CadastroCard />,
   },
 ]);
-
 
 export default router;
