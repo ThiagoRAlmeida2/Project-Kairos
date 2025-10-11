@@ -36,27 +36,44 @@
 .tab-buttons {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  align-items: center;
   margin-bottom: 2rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 9999px;
+  overflow: hidden;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  
+  
+  
 }
 
 .tab-buttons button {
-  padding: 0.6rem 1.5rem;
-  border-radius: 9999px;
+  flex: 1;
+  padding: 0.6rem 2rem;
   border: none;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transiton: all 0.2 ease;
+  background: #e5e7eb;
+
+  color: #374151;
+  
+  
+  
 }
+
+.tab-buttons button: first-child {
+   border-right: 1px solid #d1d5bd;
+  
+}
+
+
 
 .tab-buttons .active-tab {
   background: #9333ea; /* roxo forte */
   color: #fff;
-}
-
-.tab-buttons button:not(.active-tab) {
-  background: #e5e7eb;
-  color: #374151;
 }
 
 .tab-buttons button:hover:not(.active-tab) {
