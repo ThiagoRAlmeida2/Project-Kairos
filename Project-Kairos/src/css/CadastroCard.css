@@ -1,4 +1,4 @@
-/* Container principal */
+/* ====== Container principal ====== */
 .card-container {
   display: flex;
   justify-content: center;
@@ -8,7 +8,7 @@
   padding: 1rem;
 }
 
-/* Card */
+/* ====== Card ====== */
 .card {
   background: #ffffff;
   padding: 2rem 2.5rem;
@@ -23,7 +23,7 @@
   transform: scale(1.01);
 }
 
-/* Título */
+/* ====== Título ====== */
 .card h1 {
   font-size: 1.8rem;
   font-weight: 600;
@@ -32,21 +32,16 @@
   margin-bottom: 1.5rem;
 }
 
-/* Botões de aba */
+/* ====== Botões de aba ====== */
 .tab-buttons {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 2rem;
+  margin: 0 auto 2rem auto;
   border: 2px solid #e5e7eb;
   border-radius: 9999px;
   overflow: hidden;
   width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
-  
-  
-  
 }
 
 .tab-buttons button {
@@ -55,32 +50,28 @@
   border: none;
   font-weight: 600;
   cursor: pointer;
-  transiton: all 0.2 ease;
+  transition: all 0.2s ease; /* corrigido: "transiton" -> "transition" */
   background: #e5e7eb;
-
   color: #374151;
-  
-  
-  
 }
 
-.tab-buttons button: first-child {
-   border-right: 1px solid #d1d5bd;
-  
+/* corrigido: remover espaço entre ":" e "first-child" */
+.tab-buttons button:first-child {
+  border-right: 1px solid #d1d5bd;
 }
 
-
-
+/* Aba ativa */
 .tab-buttons .active-tab {
   background: #9333ea; /* roxo forte */
   color: #fff;
 }
 
+/* Hover nas abas inativas */
 .tab-buttons button:hover:not(.active-tab) {
   background: #d1d5db;
 }
 
-/* Campos do formulário */
+/* ====== Campos do formulário ====== */
 .form-fields {
   display: flex;
   flex-direction: column;
@@ -109,7 +100,7 @@
   border-color: #9333ea; /* roxo */
 }
 
-/* Botão de submit */
+/* ====== Botão de submit ====== */
 .submit-btn {
   display: block;
   width: 100%;
@@ -135,7 +126,7 @@
   transform: scale(0.98);
 }
 
-/* Alerta */
+/* ====== Alerta ====== */
 .alert {
   margin-top: 1rem;
   padding: 0.8rem 1rem;
