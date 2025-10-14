@@ -1,15 +1,20 @@
-/* ====== Container principal ====== */
-.card-container {
+/* Overlay que cobre a tela inteira */
+.modal-overlay {
+  position: fixed;      /* tira do fluxo da página */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* fundo semitransparente */
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background: #f3f4f6; /* cinza claro */
-  padding: 1rem;
+  z-index: 1000;       /* fica acima de tudo */
+  padding: 1rem;       /* para mobile */
 }
 
-/* ====== Card ====== */
-.card {
+/* Card/modal */
+.modal-content {
   background: #ffffff;
   padding: 2rem 2.5rem;
   border-radius: 1rem;
@@ -19,63 +24,55 @@
   transition: transform 0.2s ease;
 }
 
-.card:hover {
+.modal-content:hover {
   transform: scale(1.01);
 }
 
-/* ====== Título ====== */
-.card h1 {
+/* Mantendo título e botões do card */
+.modal-content h1 {
   font-size: 1.8rem;
   font-weight: 600;
   text-align: center;
-  color: #6b21a8; /* roxo */
+  color: #6b21a8;
   margin-bottom: 1.5rem;
 }
 
-/* ====== Botões de aba ====== */
 .tab-buttons {
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin: 0 auto 2rem auto;
-  border: 2px solid #e5e7eb;
-  border-radius: 9999px;
-  overflow: hidden;
-  width: fit-content;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .tab-buttons button {
-  flex: 1;
-  padding: 0.6rem 2rem;
+  padding: 0.6rem 1.5rem;
+  border-radius: 9999px;
   border: none;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease; /* corrigido: "transiton" -> "transition" */
+  transition: all 0.2s ease;
+}
+
+.tab-buttons .active-tab {
+  background: #9333ea;
+  color: #fff;
+}
+
+.tab-buttons button:not(.active-tab) {
   background: #e5e7eb;
   color: #374151;
 }
 
-/* corrigido: remover espaço entre ":" e "first-child" */
-.tab-buttons button:first-child {
-  border-right: 1px solid #d1d5bd;
-}
-
-/* Aba ativa */
-.tab-buttons .active-tab {
-  background: #9333ea; /* roxo forte */
-  color: #fff;
-}
-
-/* Hover nas abas inativas */
 .tab-buttons button:hover:not(.active-tab) {
   background: #d1d5db;
 }
 
-/* ====== Campos do formulário ====== */
+/* Campos do formulário */
 .form-fields {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  color: #ffffff;
 }
 
 .form-fields label {
@@ -97,10 +94,10 @@
 }
 
 .form-fields input:focus {
-  border-color: #9333ea; /* roxo */
+  border-color: #9333ea;
 }
 
-/* ====== Botão de submit ====== */
+/* Botão de submit */
 .submit-btn {
   display: block;
   width: 100%;
@@ -126,7 +123,7 @@
   transform: scale(0.98);
 }
 
-/* ====== Alerta ====== */
+/* Alerta */
 .alert {
   margin-top: 1rem;
   padding: 0.8rem 1rem;
@@ -146,4 +143,40 @@
   background: #fef2f2;
   color: #991b1b;
   border: 1px solid #f87171;
+}
+/* Campos do formulário */
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-fields label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #6b21a8; /* roxo */
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.form-fields input {
+  color: #111827; /* texto escuro */
+  background-color: #ffffff; /* fundo branco */
+  border: 2px solid #d1d5db; /* borda padrão */
+  border-radius: 0.5rem; /* cantos arredondados */
+  padding: 0.6rem 0.8rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+}
+
+.form-fields input::placeholder {
+  color: #9ca3af; /* placeholder cinza */
+}
+
+.form-fields input:focus {
+  border-color: #9333ea; /* roxo */
+  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.2); /* efeito de foco suave */
+  background-color: #ffffff;
 }

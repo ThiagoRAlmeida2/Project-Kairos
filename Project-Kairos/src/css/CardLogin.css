@@ -25,7 +25,7 @@ body {
 }
 
 .login-card {
-  background: white;
+  background: var(--card-bg);
   padding: 48px 56px;
   border-radius: 20px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
@@ -64,14 +64,21 @@ body {
 .form input {
   padding: 12px 14px;
   border-radius: 10px;
-  border: 1px solid #e6e6ef;
+  border: 2px solid #d1d5db; /* borda visível */
   outline: none;
   font-size: 14px;
+  color: #111827; /* texto escuro */
+  background-color: #ffffff; /* fundo branco */
+}
+
+.form input::placeholder {
+  color: #9ca3af; /* placeholder cinza */
 }
 
 .form input:focus {
-  box-shadow: 0 0 0 4px rgba(160,68,255,0.1);
-  border-color: var(--primary-2);
+  border-color: var(--primary-2); /* roxo */
+  box-shadow: 0 0 0 4px rgba(160, 68, 255, 0.1); /* sombra suave */
+  background-color: #ffffff;
 }
 
 .btn {
