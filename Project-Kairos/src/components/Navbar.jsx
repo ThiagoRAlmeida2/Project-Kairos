@@ -1,11 +1,23 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import CadastroCard from "../components/CadastroCard.jsx";
 import LoginCard from "../components/LoginCard.jsx";
+import logo from "../assets/logo.svg"
 
-export default function Navbar({ cadastroPath, loginPath }) {
+export default function Navbar() {
   const [showCadastro, setShowCadastro] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) setUser(JSON.parse(storedUser));
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    setUser(null);
+  };
 
   return (
     <>
@@ -16,43 +28,57 @@ export default function Navbar({ cadastroPath, loginPath }) {
           </a>
 
           <nav className="menu" aria-label="Menu Principal">
-            <Link to="/">Início</Link>
-            <Link to="/eventos">Eventos</Link>
-            <Link to="/projetos">Projetos</Link>
+            <a href="/">Início</a>
+            <a href="/eventos">Eventos</a>
+            <a href="/projetos">Projetos</a>
           </nav>
 
           <div className="nav__actions">
-            <button
-              className="btn btn--secondary"
-              onClick={() => setShowLogin(true)}
-            >
-              Entrar
-            </button>
-
-            <button
-              className="btn btn--primary"
-              onClick={() => setShowCadastro(true)}
-            >
-              Criar conta
-            </button>
+            {!user ? (
+              <>
+                <button
+                  className="btn btn--secondary"
+                  onClick={() => setShowLogin(true)}
+                >
+                  Entrar
+                </button>
+                <button
+                  className="btn btn--primary"
+                  onClick={() => setShowCadastro(true)}
+                >
+                  Criar conta
+                </button>
+              </>
+            ) : (
+              <div className="user-avatar" onClick={handleLogout} title="Sair">
+                <img
+                  src="/default-avatar.png"
+                  alt={user.email}
+                  style={{ width: 40, height: 40, borderRadius: "50%" }}
+                />
+              </div>
+            )}
           </div>
         </div>
       </header>
 
-      {/* Modal de Cadastro */}
       {showCadastro && (
         <div className="modal-overlay" onClick={() => setShowCadastro(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            {cadastroPath ? cadastroPath : <CadastroCard />}
+            <CadastroCard />
           </div>
         </div>
       )}
 
-      {/* Modal de Login */}
       {showLogin && (
         <div className="modal-overlay" onClick={() => setShowLogin(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            {loginPath ? loginPath : <LoginCard />}
+            <LoginCard
+              onLoginSuccess={(u) => {
+                setUser(u);
+                setShowLogin(false);
+              }}
+            />
           </div>
         </div>
       )}
