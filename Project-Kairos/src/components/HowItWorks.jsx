@@ -17,11 +17,11 @@ export default function HowItWorks() {
     <section id="como-funciona" className="how" aria-labelledby="como-title">
       <div className="container">
         <h2 id="como-title">Como Funciona</h2>
-        <p className="section-subtitle">Um processo simples e seguro para conectar clientes e alunos</p>
+        <p className="section-subtitle">Um processo simples e seguro para conectar empresas e alunos</p>
 
         <div className="how__cards">
           <article className="how__card">
-            <h3>Para Clientes</h3>
+            <h3>Para empresas</h3>
             <Step index="1" title="Descreva seu projeto" desc="Conte o que precisa, prazos e orçamento." />
             <Step index="2" title="Receba propostas" desc="Profissionais indicados enviam suas ideias." />
             <Step index="3" title="Acompanhe e aprove" desc="Trilhe junto, com entregas claras e checkpoints." />
