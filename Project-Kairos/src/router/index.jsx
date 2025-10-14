@@ -1,10 +1,15 @@
+import React from "react";
 import { createBrowserRouter } from "react-router-dom";
+import App from "../pages/App.jsx";
+import Home from "../pages/Home.jsx";
 
-const router = createBrowserRouter([
+
+export default createBrowserRouter([
   {
-    path: "/",
-    
+    element: <App />,           // layout (Navbar/Footer)
+    children: [
+      { index: true, element: <Home /> }, // "/" -> Home
+      // { path: "servicos", element: <ServicesPage /> }, // se precisar
+    ],
   },
 ]);
-
-export default router;
