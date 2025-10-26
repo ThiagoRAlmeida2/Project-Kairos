@@ -1,5 +1,6 @@
 // src/pages/ProjetosList.jsx
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../css/projetos.css";
 
 export default function ProjetosList() {
@@ -7,131 +8,108 @@ export default function ProjetosList() {
   const [showModal, setShowModal] = useState(false);
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [user, setUser] = useState(null);
 
-  // Carrega o usuário logado (da API via localStorage)
+  const baseURL = "http://localhost:8081/api/projetos/public";
+
+  // Carregar projetos
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) setUser(JSON.parse(storedUser));
+    const fetchProjetos = async () => {
+      try {
+        const res = await axios.get(baseURL);
+        if (Array.isArray(res.data)) setProjetos(res.data);
+      } catch (err) {
+        console.error("Erro ao buscar projetos:", err.message);
+      }
+    };
+    fetchProjetos();
   }, []);
 
-  // Criar novo projeto (somente front-end)
-  const handleCreateProject = (e) => {
+  // Criar projeto
+  const handleCreateProject = async (e) => {
     e.preventDefault();
+    if (!nome || !descricao) return alert("Preencha nome e descrição");
 
-    if (!nome.trim() || !descricao.trim()) {
-      alert("Preencha nome e descrição do projeto!");
-      return;
+    try {
+      const res = await axios.post(baseURL, { nome, descricao });
+      setProjetos([...projetos, res.data]);
+      setShowModal(false);
+      setNome("");
+      setDescricao("");
+    } catch (err) {
+      console.error("Erro ao criar projeto:", err.message);
     }
-
-    const novoProjeto = {
-      id: Date.now(),
-      nome,
-      descricao,
-      dataCriacao: new Date().toISOString(),
-      empresa: { usuario: { email: user?.email || "empresa@example.com" } },
-      encerrado: false,
-    };
-
-    setProjetos((prev) => [...prev, novoProjeto]);
-    setShowModal(false);
-    setNome("");
-    setDescricao("");
-    alert("✅ Projeto criado com sucesso!");
   };
 
-  // Encerrar projeto (muda cor e desabilita botão)
-  const handleEncerrarProjeto = (id) => {
-    setProjetos((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, encerrado: true } : p))
-    );
+  // Encerrar projeto
+  const handleEncerrarProjeto = async (id) => {
+    try {
+      await axios.post(`${baseURL}/${id}/encerrar`);
+      setProjetos(
+        projetos.map((p) =>
+          p.id === id ? { ...p, encerrado: true } : p
+        )
+      );
+    } catch (err) {
+      console.error("Erro ao encerrar projeto:", err.message);
+    }
   };
-
-  // Mostra só os projetos da empresa logada
-  const projetosFiltrados =
-    user?.role === "ROLE_EMPRESA"
-      ? projetos.filter((p) => p.empresa?.usuario?.email === user.email)
-      : projetos;
 
   return (
     <div className="projetos-container">
       <h1 className="titulo-projetos">Projetos</h1>
+      <button onClick={() => setShowModal(true)}>+ Criar Projeto</button>
 
-      {/* Botão de criação (somente para empresa) */}
-      {user?.role === "ROLE_EMPRESA" && (
-        <button
-          className="criar-projeto-btn"
-          onClick={() => setShowModal(true)}
-        >
-          + Criar Projeto
-        </button>
-      )}
-
-      {/* Lista de projetos */}
       <div className="lista-projetos">
-        {projetosFiltrados.length > 0 ? (
-          projetosFiltrados.map((p) => (
+        {projetos.length > 0 ? (
+          projetos.map((p) => (
             <div
               key={p.id}
-              className={`project-card ${p.encerrado ? "encerrado" : ""}`}
+              className="project-card"
+              style={{ opacity: p.encerrado ? 0.5 : 1 }}
             >
               <h3>{p.nome}</h3>
               <p>{p.descricao}</p>
-              <span className="project-data">
-                Criado em:{" "}
-                {new Date(p.dataCriacao).toLocaleDateString("pt-BR")}
+              <span>
+                Criado em: {new Date(p.dataCriacao).toLocaleDateString("pt-BR")}
               </span>
-
-              {user?.role === "ROLE_EMPRESA" && (
+              {!p.encerrado && (
                 <button
-                  className={`encerrar-btn ${p.encerrado ? "disabled" : ""}`}
                   onClick={() => handleEncerrarProjeto(p.id)}
-                  disabled={p.encerrado}
+                  style={{ marginTop: "8px" }}
                 >
-                  {p.encerrado ? "Encerrado" : "Encerrar Projeto"}
+                  Encerrar Projeto
                 </button>
               )}
             </div>
           ))
         ) : (
-          <p className="sem-projetos">Nenhum projeto disponível</p>
+          <p>Nenhum projeto disponível</p>
         )}
       </div>
 
-      {/* Modal de criação de projeto */}
+      {/* Modal */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2>Criar novo projeto</h2>
+            <h2>Criar Projeto</h2>
             <form onSubmit={handleCreateProject}>
-              <label>Nome do Projeto</label>
               <input
-                type="text"
-                placeholder="Ex: Sistema de Gestão Interna"
+                placeholder="Nome do Projeto"
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
                 required
               />
-
-              <label>Descrição</label>
               <textarea
-                placeholder="Descreva o objetivo e os detalhes do projeto"
+                placeholder="Descrição"
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
                 required
-              ></textarea>
-
-              <div className="modal-buttons">
-                <button
-                  type="button"
-                  className="cancelar-btn"
-                  onClick={() => setShowModal(false)}
-                >
+              />
+              <div>
+                <button type="button" onClick={() => setShowModal(false)}>
                   Cancelar
                 </button>
-                <button type="submit" className="salvar-btn">
-                  Salvar
-                </button>
+                <button type="submit">Salvar</button>
               </div>
             </form>
           </div>

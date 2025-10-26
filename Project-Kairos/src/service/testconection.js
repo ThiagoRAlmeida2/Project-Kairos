@@ -33,11 +33,9 @@ const tokens = {};
 // Função para registrar e logar usuário
 async function testUser(data, label) {
   try {
-    // Registro
     await axios.post(`${baseURL}/auth/register`, data);
     console.log(`✅ ${label} registrado: ${data.email}`);
 
-    // Login
     const loginResp = await axios.post(`${baseURL}/auth/login`, {
       email: data.email,
       senha: data.senha,
@@ -49,35 +47,43 @@ async function testUser(data, label) {
   }
 }
 
-// Função para criar projeto (somente empresa)
-async function criarProjeto(token, projeto) {
+// Armazena projetos criados
+let projetosCriados = [];
+
+// Função para criar projeto (público)
+async function criarProjeto(projeto) {
   try {
-    const res = await axios.post(
-      `${baseURL}/projetos`,
-      projeto,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    console.log("✅ Projeto criado:", res.data);
+    const res = await axios.post(baseURL, projeto);
+    console.log(`✅ Projeto criado: ${res.data.nome}`);
+    projetosCriados.push(res.data);
   } catch (err) {
     console.log("❌ Erro ao criar projeto:", err.response?.data || err.message);
   }
 }
 
-// Função para listar projetos
-async function listarProjetos(token) {
+// Função para encerrar projeto (público)
+async function encerrarProjeto(id) {
   try {
-    const res = await axios.get(`${baseURL}/projetos`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    console.log("🔹 res.data bruto:", res.data);
+    await axios.post(`${baseURL}/${id}/encerrar`);
+    console.log(`🛑 Projeto com ID ${id} encerrado`);
+  } catch (err) {
+    console.log("❌ Erro ao encerrar projeto:", err.response?.data || err.message);
+  }
+}
 
+// Função para listar projetos (público)
+async function listarProjetos() {
+  try {
+    const res = await axios.get(baseURL);
     if (Array.isArray(res.data)) {
-      console.log("📋 Lista de projetos:");
+      console.log("\n📋 Lista de Projetos:");
       res.data.forEach(p => {
-        console.log(`- ${p.nome} | ${p.descricao} | Empresa: ${p.empresa?.nome}`);
+        console.log(
+          `- ${p.nome} | ${p.descricao} | Encerrado: ${p.encerrado ? "Sim" : "Não"}`
+        );
       });
     } else {
-      console.log("❌ O retorno não é um array, verifique o backend!");
+      console.log("❌ Retorno não é array:", res.data);
     }
   } catch (err) {
     console.log("❌ Erro ao listar projetos:", err.response?.data || err.message);
@@ -92,12 +98,17 @@ async function listarProjetos(token) {
   console.log("\n=== Testando Empresa ===");
   await testUser(empresaData, "ROLE_EMPRESA");
 
-  console.log("\n=== Criando Projeto ===");
-  await criarProjeto(tokens["ROLE_EMPRESA"], {
-    nome: "Novo Projeto Teste",
-    descricao: "Descrição de teste do projeto"
-  });
+  const tokenEmpresa = tokens["ROLE_EMPRESA"]; // <-- agora o token já existe
 
-  console.log("\n=== Listando Projetos ===");
-  await listarProjetos(tokens["ROLE_EMPRESA"]);
+   console.log("=== Criando projetos ===");
+  await criarProjeto({ nome: "Projeto A", descricao: "Teste A" });
+  await criarProjeto({ nome: "Projeto B", descricao: "Teste B" });
+
+  console.log("\n=== Encerrando o primeiro projeto ===");
+  if (projetosCriados.length > 0) {
+    await encerrarProjeto(projetosCriados[0].id);
+  }
+
+  console.log("\n=== Listando todos os projetos ===");
+  await listarProjetos();
 })();
