@@ -25,36 +25,79 @@ const empresaData = {
 };
 
 // URL base do backend
-const baseURL = "http://localhost:8081/api/auth";
+const baseURL = "http://localhost:8081/api";
 
-// Função para registrar e logar
+// Armazena tokens JWT
+const tokens = {};
+
+// Função para registrar e logar usuário
 async function testUser(data, label) {
   try {
     // Registro
-    await axios.post(`${baseURL}/register`, data);
-    console.log(`✅ ${label} registrado com sucesso: ${data.email}`);
+    await axios.post(`${baseURL}/auth/register`, data);
+    console.log(`✅ ${label} registrado: ${data.email}`);
 
     // Login
-    const loginResp = await axios.post(`${baseURL}/login`, {
+    const loginResp = await axios.post(`${baseURL}/auth/login`, {
       email: data.email,
       senha: data.senha,
     });
-    console.log(`✅ ${label} logado com sucesso! Token JWT:`);
-    console.log(loginResp.data.token);
+    tokens[label] = loginResp.data.token;
+    console.log(`✅ ${label} logado! Token JWT:`, tokens[label]);
   } catch (err) {
-    if (err.response) {
-      console.log(`❌ Erro em ${label}:`, err.response.data);
-    } else {
-      console.log(`❌ Erro em ${label}:`, err.message);
-    }
+    console.log(`❌ Erro em ${label}:`, err.response?.data || err.message);
   }
 }
 
-// Executa os testes
+// Função para criar projeto (somente empresa)
+async function criarProjeto(token, projeto) {
+  try {
+    const res = await axios.post(
+      `${baseURL}/projetos`,
+      projeto,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    console.log("✅ Projeto criado:", res.data);
+  } catch (err) {
+    console.log("❌ Erro ao criar projeto:", err.response?.data || err.message);
+  }
+}
+
+// Função para listar projetos
+async function listarProjetos(token) {
+  try {
+    const res = await axios.get(`${baseURL}/projetos`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    console.log("🔹 res.data bruto:", res.data);
+
+    if (Array.isArray(res.data)) {
+      console.log("📋 Lista de projetos:");
+      res.data.forEach(p => {
+        console.log(`- ${p.nome} | ${p.descricao} | Empresa: ${p.empresa?.nome}`);
+      });
+    } else {
+      console.log("❌ O retorno não é um array, verifique o backend!");
+    }
+  } catch (err) {
+    console.log("❌ Erro ao listar projetos:", err.response?.data || err.message);
+  }
+}
+
+// Fluxo principal
 (async () => {
   console.log("=== Testando Aluno ===");
   await testUser(alunoData, "ROLE_ALUNO");
 
   console.log("\n=== Testando Empresa ===");
   await testUser(empresaData, "ROLE_EMPRESA");
+
+  console.log("\n=== Criando Projeto ===");
+  await criarProjeto(tokens["ROLE_EMPRESA"], {
+    nome: "Novo Projeto Teste",
+    descricao: "Descrição de teste do projeto"
+  });
+
+  console.log("\n=== Listando Projetos ===");
+  await listarProjetos(tokens["ROLE_EMPRESA"]);
 })();

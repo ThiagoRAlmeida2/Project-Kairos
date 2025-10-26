@@ -204,6 +204,16 @@ export default function CadastroCard() {
                 />
               </label>
               <label>
+                Email:*
+                <input
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  type="email"
+                  placeholder="Digite o email"
+                />
+              </label>
+              <label>
                 Senha:*
                 <input
                   name="senha"
