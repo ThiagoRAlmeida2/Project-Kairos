@@ -8,10 +8,10 @@ export default function ProjetosList() {
   const [showModal, setShowModal] = useState(false);
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
+  const [filtro, setFiltro] = useState("");
 
   const baseURL = "http://localhost:8081/api/projetos/public";
 
-  // Carregar projetos
   useEffect(() => {
     const fetchProjetos = async () => {
       try {
@@ -24,7 +24,6 @@ export default function ProjetosList() {
     fetchProjetos();
   }, []);
 
-  // Criar projeto
   const handleCreateProject = async (e) => {
     e.preventDefault();
     if (!nome || !descricao) return alert("Preencha nome e descrição");
@@ -40,54 +39,61 @@ export default function ProjetosList() {
     }
   };
 
-  // Encerrar projeto
   const handleEncerrarProjeto = async (id) => {
     try {
       await axios.post(`${baseURL}/${id}/encerrar`);
       setProjetos(
-        projetos.map((p) =>
-          p.id === id ? { ...p, encerrado: true } : p
-        )
+        projetos.map((p) => (p.id === id ? { ...p, encerrado: true } : p))
       );
     } catch (err) {
       console.error("Erro ao encerrar projeto:", err.message);
     }
   };
 
+  const projetosFiltrados = projetos.filter((p) =>
+    p.nome?.toLowerCase().includes(filtro.toLowerCase())
+  );
+
   return (
     <div className="projetos-container">
-      <h1 className="titulo-projetos">Projetos</h1>
-      <button onClick={() => setShowModal(true)}>+ Criar Projeto</button>
+      <div className="top-bar">
+        <h1 className="titulo-projetos">Projetos</h1>
+        <button className="criar-projeto-btn" onClick={() => setShowModal(true)}>
+          + Criar Projeto
+        </button>
+      </div>
+
+      <input
+        className="search-input"
+        placeholder="Buscar projeto..."
+        value={filtro}
+        onChange={(e) => setFiltro(e.target.value)}
+      />
 
       <div className="lista-projetos">
-        {projetos.length > 0 ? (
-          projetos.map((p) => (
+        {projetosFiltrados.length > 0 ? (
+          projetosFiltrados.map((p) => (
             <div
               key={p.id}
-              className="project-card"
-              style={{ opacity: p.encerrado ? 0.5 : 1 }}
+              className={`project-card ${p.encerrado ? "encerrado" : ""}`}
             >
               <h3>{p.nome}</h3>
               <p>{p.descricao}</p>
-              <span>
-                Criado em: {new Date(p.dataCriacao).toLocaleDateString("pt-BR")}
+              <span className="project-data">
+                Criado em: {p.dataCriacao ? new Date(p.dataCriacao).toLocaleDateString("pt-BR") : "-"}
               </span>
               {!p.encerrado && (
-                <button
-                  onClick={() => handleEncerrarProjeto(p.id)}
-                  style={{ marginTop: "8px" }}
-                >
+                <button className="encerrar-btn" onClick={() => handleEncerrarProjeto(p.id)}>
                   Encerrar Projeto
                 </button>
               )}
             </div>
           ))
         ) : (
-          <p>Nenhum projeto disponível</p>
+          <p className="sem-projetos">Nenhum projeto disponível</p>
         )}
       </div>
 
-      {/* Modal */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -105,11 +111,11 @@ export default function ProjetosList() {
                 onChange={(e) => setDescricao(e.target.value)}
                 required
               />
-              <div>
-                <button type="button" onClick={() => setShowModal(false)}>
+              <div className="modal-buttons">
+                <button type="button" className="cancelar-btn" onClick={() => setShowModal(false)}>
                   Cancelar
                 </button>
-                <button type="submit">Salvar</button>
+                <button type="submit" className="salvar-btn">Salvar</button>
               </div>
             </form>
           </div>
