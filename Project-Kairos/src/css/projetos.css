@@ -1,7 +1,7 @@
 .projetos-container {
   width: 100%;
-  min-height: 100vh;
-  padding: 120px 40px 40px 40px; /* mais próximo do navbar */
+  min-height: 50vh;
+  padding: 80px 40px 40px 40px; /* mais próximo do navbar */
   background: #f9f9f9;
   color: #333;
 }
