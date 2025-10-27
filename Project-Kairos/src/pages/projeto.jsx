@@ -1,4 +1,3 @@
-// src/pages/ProjetosList.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/projetos.css";
@@ -57,18 +56,20 @@ export default function ProjetosList() {
   return (
     <div className="projetos-container">
       <div className="top-bar">
-        <h1 className="titulo-projetos">Projetos</h1>
-        <button className="criar-projeto-btn" onClick={() => setShowModal(true)}>
-          + Criar Projeto
-        </button>
-      </div>
+        <h1 className="titulo-projetos">📁 Projetos</h1>
 
-      <input
-        className="search-input"
-        placeholder="Buscar projeto..."
-        value={filtro}
-        onChange={(e) => setFiltro(e.target.value)}
-      />
+        <div className="actions">
+          <input
+            className="search-input"
+            placeholder="🔍 Buscar projeto..."
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)}
+          />
+          <button className="criar-projeto-btn" onClick={() => setShowModal(true)}>
+            + Criar Projeto
+          </button>
+        </div>
+      </div>
 
       <div className="lista-projetos">
         {projetosFiltrados.length > 0 ? (
@@ -77,16 +78,27 @@ export default function ProjetosList() {
               key={p.id}
               className={`project-card ${p.encerrado ? "encerrado" : ""}`}
             >
-              <h3>{p.nome}</h3>
+              <div className="project-header">
+                <h3>{p.nome}</h3>
+                {!p.encerrado && (
+                  <button
+                    className="encerrar-btn"
+                    onClick={() => handleEncerrarProjeto(p.id)}
+                  >
+                    Encerrar
+                  </button>
+                )}
+              </div>
               <p>{p.descricao}</p>
-              <span className="project-data">
-                Criado em: {p.dataCriacao ? new Date(p.dataCriacao).toLocaleDateString("pt-BR") : "-"}
-              </span>
-              {!p.encerrado && (
-                <button className="encerrar-btn" onClick={() => handleEncerrarProjeto(p.id)}>
-                  Encerrar Projeto
-                </button>
-              )}
+              <div className="project-footer">
+                <span>
+                  Criado em:{" "}
+                  {p.dataCriacao
+                    ? new Date(p.dataCriacao).toLocaleDateString("pt-BR")
+                    : "-"}
+                </span>
+                {p.encerrado && <span className="status-tag">Encerrado</span>}
+              </div>
             </div>
           ))
         ) : (
@@ -97,7 +109,7 @@ export default function ProjetosList() {
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h2>Criar Projeto</h2>
+            <h2>Novo Projeto</h2>
             <form onSubmit={handleCreateProject}>
               <input
                 placeholder="Nome do Projeto"
@@ -106,16 +118,22 @@ export default function ProjetosList() {
                 required
               />
               <textarea
-                placeholder="Descrição"
+                placeholder="Descrição do Projeto"
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
                 required
               />
               <div className="modal-buttons">
-                <button type="button" className="cancelar-btn" onClick={() => setShowModal(false)}>
+                <button
+                  type="button"
+                  className="cancelar-btn"
+                  onClick={() => setShowModal(false)}
+                >
                   Cancelar
                 </button>
-                <button type="submit" className="salvar-btn">Salvar</button>
+                <button type="submit" className="salvar-btn">
+                  Criar Projeto
+                </button>
               </div>
             </form>
           </div>
