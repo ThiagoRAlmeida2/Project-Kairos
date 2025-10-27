@@ -1,10 +1,9 @@
 .projetos-container {
   width: 100%;
-  min-height: 100vh;
-  padding: 110px 60px 60px 60px;
-  background: linear-gradient(180deg, #f3e7ff 0%, #f9f9f9 100%);
-  color: #2d2d2d;
-  font-family: "Inter", sans-serif;
+  min-height: 50vh;
+  padding: 80px 40px 40px 40px; /* mais próximo do navbar */
+  background: #f9f9f9;
+  color: #333;
 }
 
 /* TOPO */
