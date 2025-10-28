@@ -159,7 +159,7 @@ export default function ProjetosList() {
     }
   };
 
-  // 🔹 Cancelar inscrição em projeto 🚩 NOVO
+  // 🔹 Cancelar inscrição em projeto 
   const handleCancelRegistration = async (projetoId) => {
     if (!window.confirm("Tem certeza que deseja cancelar sua inscrição neste projeto?")) return;
 
@@ -205,9 +205,26 @@ export default function ProjetosList() {
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
           />
-          <button className="btn btn--primary criar-projeto-btn" onClick={() => setShowModal(true)}>
-            <span>+</span> Criar Projeto
-          </button>
+
+          {/* Botão de alternância para o ALUNO */}
+          {role === "ROLE_ALUNO" && (
+              <button
+                  className={`meus-projetos-btn ${modoAluno === 'INSCRITOS' ? 'active' : ''}`}
+                  onClick={() => setModoAluno((prev) => 
+                      prev === "TODOS" ? "INSCRITOS" : "TODOS"
+                  )}
+              >
+                  {modoAluno === "TODOS" ? "Minhas Inscrições" : "Ver Todos"}
+              </button>
+          )}
+
+          {/* CORREÇÃO AQUI: O botão Criar Projeto SÓ DEVE APARECER para a EMPRESA */}
+          {role === "ROLE_EMPRESA" && (
+            <button className="criar-projeto-btn" onClick={() => setShowModal(true)}>
+              + Criar Projeto
+            </button>
+          )}
+
         </div>
       </div>
 
@@ -293,7 +310,7 @@ export default function ProjetosList() {
                 >
                   Cancelar
                 </button>
-                <button type="submit" className="btn btn--primary salvar-btn">
+                <button type="submit" className="salvar-btn">
                   Criar Projeto
                 </button>
               </div>
