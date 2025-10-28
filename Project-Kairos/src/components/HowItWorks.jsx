@@ -13,6 +13,15 @@ function Step({ index, title, desc }) {
 }
 
 export default function HowItWorks() {
+  // Função para rolar suavemente até o topo da página
+  const handleInterestClick = (e) => {
+    e.preventDefault();
+    // Rola para o topo com comportamento suave
+    if (typeof window !== 'undefined' && window.scrollTo) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="como-funciona" className="how" aria-labelledby="como-title">
       <div className="container">
@@ -36,7 +45,7 @@ export default function HowItWorks() {
         </div>
 
         <div className="how__action">
-          <a className="btn btn--primary" href="#">Tenho interesse</a>
+          <a className="btn btn--primary" href="#" onClick={handleInterestClick}>Tenho interesse</a>
         </div>
       </div>
     </section>

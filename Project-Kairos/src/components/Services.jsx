@@ -12,6 +12,13 @@ const categories = [
 ]
 
 export default function Services() {
+  const handleCategoryClick = () => {
+    const section = document.getElementById('servicos');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="servicos" className="services" aria-labelledby="servicos-title">
       <div className="container">
@@ -22,14 +29,14 @@ export default function Services() {
 
         <div className="services__grid">
           {categories.map((c) => (
-            <button key={c} className="pill" type="button" aria-label={c}>
+            <button key={c} className="pill" type="button" aria-label={c} onClick={handleCategoryClick}>
               {c}
             </button>
           ))}
         </div>
 
         <div className="services__cta">
-          <a href="#" className="btn btn--light">Enviar Projeto</a>
+          <a href="#" className="btn btn--light"><span>Enviar Projeto</span></a>
         </div>
       </div>
     </section>

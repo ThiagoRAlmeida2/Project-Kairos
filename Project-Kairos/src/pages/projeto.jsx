@@ -205,24 +205,9 @@ export default function ProjetosList() {
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
           />
-
-          {/* Botão de alternância para o ALUNO */}
-          {role === "ROLE_ALUNO" && (
-              <button
-                  className={`meus-projetos-btn ${modoAluno === 'INSCRITOS' ? 'active' : ''}`}
-                  onClick={() => setModoAluno((prev) => 
-                      prev === "TODOS" ? "INSCRITOS" : "TODOS"
-                  )}
-              >
-                  {modoAluno === "TODOS" ? "Minhas Inscrições" : "Ver Todos"}
-              </button>
-          )}
-
-          {role === "ROLE_EMPRESA" && (
-            <button className="criar-projeto-btn" onClick={() => setShowModal(true)}>
-              + Criar Projeto
-            </button>
-          )}
+          <button className="btn btn--primary criar-projeto-btn" onClick={() => setShowModal(true)}>
+            <span>+</span> Criar Projeto
+          </button>
         </div>
       </div>
 
@@ -308,7 +293,7 @@ export default function ProjetosList() {
                 >
                   Cancelar
                 </button>
-                <button type="submit" className="salvar-btn">
+                <button type="submit" className="btn btn--primary salvar-btn">
                   Criar Projeto
                 </button>
               </div>
