@@ -65,8 +65,8 @@ export default function ProjetosList() {
             value={filtro}
             onChange={(e) => setFiltro(e.target.value)}
           />
-          <button className="criar-projeto-btn" onClick={() => setShowModal(true)}>
-            + Criar Projeto
+          <button className="btn btn--primary criar-projeto-btn" onClick={() => setShowModal(true)}>
+            <span>+</span> Criar Projeto
           </button>
         </div>
       </div>
@@ -131,7 +131,7 @@ export default function ProjetosList() {
                 >
                   Cancelar
                 </button>
-                <button type="submit" className="salvar-btn">
+                <button type="submit" className="btn btn--primary salvar-btn">
                   Criar Projeto
                 </button>
               </div>
