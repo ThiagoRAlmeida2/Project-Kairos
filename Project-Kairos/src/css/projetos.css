@@ -12,6 +12,7 @@
   --text-medium: #7f8c8d;
   --shadow-purple: rgba(160, 68, 255, 0.15);
   --shadow-subtle: rgba(44, 62, 80, 0.08);
+  --gradient-main: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
 }
 
 .projetos-container {
@@ -34,7 +35,7 @@
 
 .titulo-projetos {
   font-size: 2.5rem;
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  background: var(--gradient-main);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 800;
@@ -61,18 +62,62 @@
   box-shadow: 0 0 8px var(--shadow-purple);
 }
 
-/* Botões Principais (Empresa/Criar) */
+/* 🚩 CORREÇÃO E REFINAMENTO: Botões Principais (Criar Projeto e Salvar Modal) */
+.criar-projeto-btn, .salvar-btn {
+  background: var(--gradient-main);
+  color: #fff;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 10px var(--shadow-purple);
+}
+
+.criar-projeto-btn:hover, .salvar-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px var(--shadow-purple);
+}
+
 .criar-projeto-btn {
-  font-size: 1rem !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 8px !important;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .criar-projeto-btn span {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 800;
   line-height: 1;
   margin-top: -2px;
+}
+
+/* 🚩 NOVO: Botão Minhas Inscrições (Aluno) */
+.meus-projetos-btn {
+  background: var(--card-bg);
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.meus-projetos-btn:hover {
+  background: var(--primary-color);
+  color: var(--card-bg);
+}
+
+.meus-projetos-btn.active {
+  background: var(--primary-color);
+  color: var(--card-bg);
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 8px rgba(106, 48, 147, 0.3);
 }
 
 /* --- LISTA DE PROJETOS --- */
@@ -167,7 +212,7 @@
   background-color: #c0392b;
 }
 
-/* NOVO: Botão Inscrever-se (Aluno) */
+/* Botão Inscrever-se (Aluno) */
 .inscrever-btn {
   background: var(--secondary-color);
   color: white;
@@ -183,7 +228,7 @@
   background: #8e44ad;
 }
 
-/* NOVO: Estilo para botão Inscrito/Desabilitado (Cinza) */
+/* Estilo para botão Inscrito/Desabilitado (Cinza) */
 .inscrever-btn:disabled,
 .inscrever-btn.inscrito {
   background-color: #bdc3c7 !important;
@@ -193,7 +238,7 @@
   pointer-events: none;
 }
 
-/* 🚩 NOVO: Botão de Cancelar Inscrição */
+/* Botão de Cancelar Inscrição */
 .cancelar-inscricao-btn {
     background-color: #f39c12; /* Laranja/Amarelo */
     border: none;
@@ -293,7 +338,7 @@
   color: #fff;
   border: none;
   border-radius: 10px;
-  padding: 10px 18px;
+  padding: 12px 22px; /* Aumentado para melhor toque */
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
@@ -304,22 +349,9 @@
 }
 
 .salvar-btn {
-  background: var(--brand);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 24px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background-image: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
-  background-size: 200% auto;
-}
-
-.salvar-btn:hover {
-  transform: translateY(-2px);
-  background-position: right center;
-  box-shadow: 0 12px 28px rgba(106,48,147,0.3);
+  /* Usa o estilo principal redefinido acima para manter o gradiente */
+  /* Remove as variáveis não definidas (brand, brand-2) */
+  padding: 12px 22px; /* Aumentado para melhor toque */
 }
 
 /* --- RESPONSIVIDADE --- */
@@ -356,6 +388,19 @@
     }
     .project-card h3 {
         font-size: 1.3rem;
+    }
+    /* Ajuste de botões para telas pequenas */
+    .project-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .project-footer span {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    .inscrever-btn, .cancelar-inscricao-btn {
+        width: 100%;
+        margin-top: 10px;
     }
 }
 
