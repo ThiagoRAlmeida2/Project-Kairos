@@ -226,6 +226,7 @@ export default function CadastroCard() {
             </>
           )}
         </div>
+        
 
         {/* Botão */}
         <button onClick={handleSubmit} className="submit-btn">
