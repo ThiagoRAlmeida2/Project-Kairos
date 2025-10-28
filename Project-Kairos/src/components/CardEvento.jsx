@@ -1,5 +1,5 @@
 import React from "react";
-import "../CSS/Eventos.css";
+import "../css/Eventos.css";
 
 export default function CardEvento({ imagem, titulo, descricao }) {
   return (

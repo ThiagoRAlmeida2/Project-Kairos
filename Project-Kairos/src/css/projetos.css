@@ -1,49 +1,67 @@
+/* ======================================= */
+/* ESTILOS MODERNOS PARA PROJETOS.CSS      */
+/* ======================================= */
+
+:root {
+  /* Paleta de Cores */
+  --primary-color: #6a3093; /* Roxo Escuro Principal */
+  --secondary-color: #a044ff; /* Roxo Claro / Destaque */
+  --background-light: #f4f7f9;
+  --card-bg: #ffffff;
+  --text-dark: #2c3e50;
+  --text-medium: #7f8c8d;
+  --shadow-purple: rgba(160, 68, 255, 0.15);
+  --shadow-subtle: rgba(44, 62, 80, 0.08);
+}
+
 .projetos-container {
   width: 100%;
   min-height: 50vh;
-  padding: 80px 40px 40px 40px; /* mais próximo do navbar */
-  background: #f9f9f9;
-  color: #333;
+  padding: 80px 40px 40px 40px;
+  background: var(--background-light);
+  color: var(--text-dark);
 }
 
-/* TOPO */
+/* --- TOPO --- */
 .top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 20px;
 }
 
 .titulo-projetos {
-  font-size: 2.2rem;
-  background: linear-gradient(90deg, #6a3093, #a044ff);
+  font-size: 2.5rem;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
 }
 
 .search-input {
-  padding: 10px 15px;
-  border-radius: 12px;
-  border: 1px solid #d0d0d0;
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
   font-size: 1rem;
-  transition: 0.2s;
+  transition: all 0.3s ease;
+  width: 250px;
 }
 
 .search-input:focus {
-  border-color: #a044ff;
+  border-color: var(--secondary-color);
   outline: none;
-  box-shadow: 0 0 6px rgba(160, 68, 255, 0.4);
+  box-shadow: 0 0 8px var(--shadow-purple);
 }
 
+/* Botões Principais (Empresa/Criar) */
 .criar-projeto-btn {
   font-size: 1rem !important;
   display: inline-flex !important;
@@ -57,89 +75,159 @@
   margin-top: -2px;
 }
 
-/* LISTA DE PROJETOS */
+/* --- LISTA DE PROJETOS --- */
 .lista-projetos {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 35px;
   margin-top: 20px;
 }
 
 .project-card {
-  background: white;
-  padding: 25px 30px;
-  border-radius: 18px;
-  box-shadow: 0 6px 20px rgba(160, 68, 255, 0.1);
+  background: var(--card-bg);
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px var(--shadow-subtle);
+  border-left: 5px solid transparent;
   transition: all 0.3s ease;
 }
 
 .project-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(160, 68, 255, 0.25);
+  box-shadow: 0 10px 30px var(--shadow-subtle);
+  border-left-color: var(--secondary-color);
 }
 
 .project-card.encerrado {
-  opacity: 0.7;
-  filter: grayscale(80%);
+  opacity: 0.6;
+  filter: grayscale(100%);
+  box-shadow: none;
+  border-left: 5px solid #ccc;
+}
+
+.project-card.encerrado:hover {
+  transform: none;
 }
 
 .project-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  margin-bottom: 10px;
 }
 
 .project-card h3 {
-  font-size: 1.4rem;
-  color: #6a3093;
+  font-size: 1.6rem;
+  color: var(--text-dark);
+  font-weight: 700;
 }
 
 .project-card p {
-  margin: 15px 0;
-  color: #555;
-  line-height: 1.5;
+  margin: 10px 0 20px 0;
+  color: var(--text-medium);
+  line-height: 1.6;
+  min-height: 60px;
 }
 
 .project-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.9rem;
-  color: #777;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 15px;
+  border-top: 1px dashed #e0e0e0;
+  font-size: 0.85rem;
+  color: var(--text-medium);
 }
 
 .status-tag {
-  background: #6a3093;
+  background: #f1c40f;
   color: white;
   padding: 4px 10px;
-  border-radius: 8px;
+  border-radius: 5px;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
+/* Botão Encerrar (Empresa) */
 .encerrar-btn {
-  background-color: #ff4b5c;
+  background-color: #e74c3c;
   border: none;
   color: white;
   border-radius: 8px;
-  padding: 8px 14px;
-  font-weight: bold;
+  padding: 6px 12px;
+  font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
+  font-size: 0.9rem;
 }
 
 .encerrar-btn:hover {
-  background-color: #e63946;
+  background-color: #c0392b;
 }
 
-/* MODAL */
+/* NOVO: Botão Inscrever-se (Aluno) */
+.inscrever-btn {
+  background: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.inscrever-btn:hover:not(:disabled) {
+  background: #8e44ad;
+}
+
+/* NOVO: Estilo para botão Inscrito/Desabilitado (Cinza) */
+.inscrever-btn:disabled,
+.inscrever-btn.inscrito {
+  background-color: #bdc3c7 !important;
+  color: #7f8c8d !important;
+  cursor: not-allowed;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+/* 🚩 NOVO: Botão de Cancelar Inscrição */
+.cancelar-inscricao-btn {
+    background-color: #f39c12; /* Laranja/Amarelo */
+    border: none;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.9rem;
+}
+
+.cancelar-inscricao-btn:hover {
+    background-color: #e67e22; 
+}
+
+
+.sem-projetos {
+    text-align: center;
+    grid-column: 1 / -1;
+    font-size: 1.5rem;
+    color: var(--text-medium);
+    padding: 50px 0;
+}
+
+
+/* --- MODAL --- */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(45, 45, 45, 0.6);
+  background: rgba(44, 62, 80, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -147,65 +235,72 @@
 }
 
 .modal-content {
-  background: white;
-  padding: 30px 35px;
-  border-radius: 20px;
+  background: var(--card-bg);
+  padding: 35px 40px;
+  border-radius: 16px;
   width: 90%;
-  max-width: 480px;
-  box-shadow: 0 8px 25px rgba(160, 68, 255, 0.4);
-  animation: modalFade 0.3s ease;
+  max-width: 500px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: modalFade 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 @keyframes modalFade {
   from {
-    transform: scale(0.9);
+    transform: translateY(-20px) scale(0.95);
     opacity: 0;
   }
   to {
-    transform: scale(1);
+    transform: translateY(0) scale(1);
     opacity: 1;
   }
 }
 
 .modal-content h2 {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   text-align: center;
-  color: #6a3093;
-  font-size: 1.5rem;
+  color: var(--primary-color);
+  font-size: 1.8rem;
+  font-weight: 700;
 }
 
 .modal-content input,
 .modal-content textarea {
   width: 100%;
-  padding: 10px 12px;
-  margin-bottom: 15px;
+  padding: 12px 15px;
+  margin-bottom: 20px;
   border-radius: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #dcdcdc;
   font-size: 1rem;
-  transition: 0.2s;
+  transition: all 0.3s ease;
 }
 
 .modal-content input:focus,
 .modal-content textarea:focus {
-  border-color: #a044ff;
+  border-color: var(--secondary-color);
   outline: none;
-  box-shadow: 0 0 6px rgba(160, 68, 255, 0.3);
+  box-shadow: 0 0 8px var(--shadow-purple);
 }
 
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 15px;
+  margin-top: 15px;
 }
 
 .cancelar-btn {
-  background: #ccc;
+  background: #95a5a6;
   color: #fff;
   border: none;
   border-radius: 10px;
-  padding: 10px 16px;
+  padding: 10px 18px;
   font-weight: 600;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.cancelar-btn:hover {
+    background: #7f8c8d;
 }
 
 .salvar-btn {
@@ -225,4 +320,47 @@
   transform: translateY(-2px);
   background-position: right center;
   box-shadow: 0 12px 28px rgba(106,48,147,0.3);
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 1000px) {
+    .lista-projetos {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .projetos-container {
+        padding: 50px 20px 20px 20px;
+    }
+    .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .actions {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    .search-input {
+        width: 100%;
+        order: 3;
+    }
+    .titulo-projetos {
+        font-size: 2rem;
+    }
+    .criar-projeto-btn, .meus-projetos-btn {
+        flex-grow: 1;
+    }
+    .project-card h3 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .lista-projetos {
+        grid-template-columns: 1fr;
+    }
 }

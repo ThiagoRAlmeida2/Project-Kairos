@@ -1,6 +1,6 @@
 import React from "react";
 import CardEvento from "./CardEvento";
-import "../CSS/Eventos.css";
+import "../css/Eventos.css";
 
 export default function EventosList() {
   const eventos = [
