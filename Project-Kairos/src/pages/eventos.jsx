@@ -2,7 +2,7 @@ import React from "react";
 import FiltroEve from "../components/FiltroEve";
 import EventosList from "../components/Eventoslist";
 import DescEventos from "../components/descEventos";
-import "../CSS/Eventos.css";
+import "../css/Eventos.css";
 
 export default function Eventos() {
   return (
