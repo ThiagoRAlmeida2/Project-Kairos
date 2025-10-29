@@ -4,15 +4,40 @@
 
 :root {
   /* Paleta de Cores */
-  --primary-color: #6a3093; /* Roxo Escuro Principal */
-  --secondary-color: #a044ff; /* Roxo Claro / Destaque */
+  --primary-color: #6a3093; 
+  --secondary-color: #a044ff; 
   --background-light: #f4f7f9;
   --card-bg: #ffffff;
   --text-dark: #2c3e50;
   --text-medium: #7f8c8d;
-  --shadow-purple: rgba(160, 68, 255, 0.15);
-  --shadow-subtle: rgba(44, 62, 80, 0.08);
-  --gradient-main: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  --shadow-purple: rgba(160, 68, 255, 0.3);
+  --shadow-subtle: rgba(44, 62, 80, 0.1);
+  --gradient-main: linear-gradient(90deg, #7b4397, #a044ff); 
+  
+  /* Cores de Status */
+  --color-success: #2ecc71;
+  --color-warning: #f1c40f;
+  --color-danger: #e74c3c;
+  
+  /* Paleta de Tags Coloridas (Ghost Button) */
+  --tag-JavaScript: #f7df1e;
+  --tag-Python: #306998;
+  --tag-Java: #e04a4f;
+  --tag-C-sharp: #178600; 
+  --tag-C-plus-plus: #00599c; 
+  --tag-React: #61dafb;
+  --tag-Angular: #dd1b16;
+  --tag-Vue-js: #42b883; 
+  --tag-Node-js: #3c873a; 
+  --tag-Spring-Boot: #6db33f; 
+  --tag-SQL: #cc7001;
+  --tag-MongoDB: #47a248;
+  --tag-AWS: #ff9900;
+  --tag-Docker: #2496ed;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
 }
 
 .projetos-container {
@@ -28,17 +53,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px; /* Reduzido para dar espaço à barra de filtros */
   flex-wrap: wrap;
   gap: 20px;
 }
 
 .titulo-projetos {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   background: var(--gradient-main);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .actions {
@@ -47,68 +72,84 @@
   gap: 15px;
 }
 
-.search-input {
+/* 🚩 NOVO BLOCO: Estilos para a Barra de Filtros (Texto e Selects) */
+.filter-controls-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.search-input, .filter-select {
   padding: 12px 18px;
   border-radius: 10px;
   border: 1px solid #e0e0e0;
   font-size: 1rem;
   transition: all 0.3s ease;
-  width: 250px;
+  background: #fff;
 }
 
-.search-input:focus {
+.search-input {
+    width: 300px; /* Mais largo para a busca principal */
+}
+
+.filter-select {
+    width: 200px; /* Largura padrão para selects */
+    appearance: none; /* Remove estilo nativo do select */
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%237f8c8d" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position-x: 95%;
+    background-position-y: center;
+    padding-right: 30px;
+}
+
+.search-input::placeholder {
+    color: var(--text-medium);
+}
+
+.search-input:focus, .filter-select:focus {
   border-color: var(--secondary-color);
   outline: none;
-  box-shadow: 0 0 8px var(--shadow-purple);
+  box-shadow: 0 0 10px var(--shadow-purple);
 }
 
-/* 🚩 CORREÇÃO E REFINAMENTO: Botões Principais (Criar Projeto e Salvar Modal) */
+/* --- ESTILO DOS BOTÕES --- */
+
 .criar-projeto-btn, .salvar-btn {
   background: var(--gradient-main);
   color: #fff;
   border: none;
   padding: 12px 22px;
   border-radius: 10px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 10px var(--shadow-purple);
-}
-
-.criar-projeto-btn:hover, .salvar-btn:hover {
-  transform: translateY(-3px);
+  letter-spacing: 0.8px;
   box-shadow: 0 6px 15px var(--shadow-purple);
 }
 
-.criar-projeto-btn {
-  font-size: 1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.criar-projeto-btn:hover, .salvar-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--shadow-purple);
+  opacity: 0.95;
 }
 
-.criar-projeto-btn span {
-  font-size: 1.2rem;
-  font-weight: 800;
-  line-height: 1;
-  margin-top: -2px;
-}
-
-/* 🚩 NOVO: Botão Minhas Inscrições (Aluno) */
 .meus-projetos-btn {
   background: var(--card-bg);
   color: var(--primary-color);
   border: 2px solid var(--primary-color);
   padding: 10px 18px;
   border-radius: 10px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.meus-projetos-btn:hover {
+.meus-projetos-btn:hover:not(.active) {
   background: var(--primary-color);
   color: var(--card-bg);
 }
@@ -117,118 +158,272 @@
   background: var(--primary-color);
   color: var(--card-bg);
   border-color: var(--primary-color);
-  box-shadow: 0 4px 8px rgba(106, 48, 147, 0.3);
+  box-shadow: 0 4px 8px rgba(106, 48, 147, 0.4);
 }
 
-/* --- LISTA DE PROJETOS --- */
-.lista-projetos {
+/* --- LISTA DE PROJETOS GRID --- */
+.lista-projetos-grid { 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 35px;
-  margin-top: 20px;
+  gap: 30px;
+  padding: 20px 0;
 }
 
+@media (min-width: 768px) {
+    .lista-projetos-grid {
+        grid-template-columns: repeat(2, 1fr); 
+    }
+}
+
+@media (min-width: 1200px) {
+    .lista-projetos-grid {
+        grid-template-columns: repeat(4, 1fr); 
+    }
+}
+
+
+/* --- CARD DE PROJETO (REFINADO) --- */
 .project-card {
   background: var(--card-bg);
-  padding: 25px;
-  border-radius: 16px;
-  box-shadow: 0 4px 15px var(--shadow-subtle);
-  border-left: 5px solid transparent;
+  padding: 28px;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px var(--shadow-subtle);
+  border: 1px solid #eee;
+  border-left: 6px solid var(--secondary-color);
   transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .project-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px var(--shadow-subtle);
-  border-left-color: var(--secondary-color);
+  transform: translateY(-6px);
+  box-shadow: 0 15px 40px var(--shadow-purple);
+  border-left-color: var(--primary-color);
 }
 
 .project-card.encerrado {
-  opacity: 0.6;
-  filter: grayscale(100%);
+  opacity: 0.7;
+  filter: grayscale(80%);
   box-shadow: none;
-  border-left: 5px solid #ccc;
+  border-left: 6px solid var(--text-medium);
 }
 
 .project-card.encerrado:hover {
   transform: none;
+  box-shadow: 0 4px 15px var(--shadow-subtle);
+  border-left-color: var(--text-medium);
 }
 
 .project-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .project-card h3 {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   color: var(--text-dark);
-  font-weight: 700;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
-.project-card p {
-  margin: 10px 0 20px 0;
-  color: var(--text-medium);
-  line-height: 1.6;
-  min-height: 60px;
+.status-tags {
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
 
+/* Status Regime (PJ/CLT) */
+.status-regime {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.regime-pj {
+    background-color: #fff3cd; 
+    color: #856404;
+}
+
+.regime-clt {
+    background-color: #d4edda; 
+    color: #155724;
+}
+
+/* Informações de Duração */
+.card-info-group {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: var(--text-medium);
+    margin-bottom: 15px;
+    padding: 10px 0;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.card-info {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* -------------------------------------- */
+/* Tags de Linguagens - Estilo GHOST BUTTON */
+/* -------------------------------------- */
+
+.tags-list {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag-chip {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75em;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    cursor: default; 
+    
+    /* Estilo Ghost Button Base */
+    background-color: transparent;
+    border: 2px solid; 
+}
+
+/* Mapeamento de Cores para as Classes Geradas pelo JS */
+.tag-JavaScript {
+    color: var(--tag-JavaScript);
+    border-color: var(--tag-JavaScript);
+}
+.tag-Python {
+    color: var(--tag-Python);
+    border-color: var(--tag-Python);
+}
+.tag-Java {
+    color: var(--tag-Java);
+    border-color: var(--tag-Java);
+}
+.tag-C-sharp {
+    color: var(--tag-C-sharp);
+    border-color: var(--tag-C-sharp);
+}
+.tag-C-plus-plus {
+    color: var(--tag-C-plus-plus);
+    border-color: var(--tag-C-plus-plus);
+}
+.tag-React {
+    color: var(--tag-React);
+    border-color: var(--tag-React);
+}
+.tag-Angular {
+    color: var(--tag-Angular);
+    border-color: var(--tag-Angular);
+}
+.tag-Vue-js {
+    color: var(--tag-Vue-js);
+    border-color: var(--tag-Vue-js);
+}
+.tag-Node-js {
+    color: var(--tag-Node-js);
+    border-color: var(--tag-Node-js);
+}
+.tag-Spring-Boot {
+    color: var(--tag-Spring-Boot);
+    border-color: var(--tag-Spring-Boot);
+}
+.tag-SQL {
+    color: var(--tag-SQL);
+    border-color: var(--tag-SQL);
+}
+.tag-MongoDB {
+    color: var(--tag-MongoDB);
+    border-color: var(--tag-MongoDB);
+}
+.tag-AWS {
+    color: var(--tag-AWS);
+    border-color: var(--tag-AWS);
+}
+.tag-Docker {
+    color: var(--tag-Docker);
+    border-color: var(--tag-Docker);
+}
+
+.tag-chip:hover {
+    background-color: rgba(0, 0, 0, 0.05); /* Sutil hover */
+}
+
+/* Descrição */
+.descricao-completa {
+    flex-grow: 1; 
+    margin: 10px 0 20px 0;
+    color: var(--text-medium);
+    line-height: 1.5;
+    max-height: 80px; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+/* --- FOOTER E BOTÕES DE AÇÃO --- */
 .project-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
+  margin-top: auto; 
   padding-top: 15px;
   border-top: 1px dashed #e0e0e0;
+  display: flex;
+  flex-direction: column; 
+  gap: 10px;
   font-size: 0.85rem;
   color: var(--text-medium);
 }
 
-.status-tag {
-  background: #f1c40f;
-  color: white;
-  padding: 4px 10px;
-  border-radius: 5px;
-  font-size: 0.8rem;
-  font-weight: 700;
+.project-footer span {
+    display: block;
 }
 
-/* Botão Encerrar (Empresa) */
 .encerrar-btn {
-  background-color: #e74c3c;
+  background-color: var(--color-danger);
   border: none;
   color: white;
   border-radius: 8px;
-  padding: 6px 12px;
+  padding: 8px 15px;
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
   font-size: 0.9rem;
+  margin-top: 10px;
 }
 
 .encerrar-btn:hover {
   background-color: #c0392b;
 }
 
-/* Botão Inscrever-se (Aluno) */
 .inscrever-btn {
   background: var(--secondary-color);
   color: white;
   border: none;
   border-radius: 8px;
-  padding: 8px 16px;
-  font-weight: 600;
+  padding: 10px 16px; 
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(160, 68, 255, 0.4);
 }
 
 .inscrever-btn:hover:not(:disabled) {
-  background: #8e44ad;
+  background: var(--primary-color);
+  box-shadow: 0 4px 10px rgba(106, 48, 147, 0.5);
 }
 
-/* Estilo para botão Inscrito/Desabilitado (Cinza) */
 .inscrever-btn:disabled,
 .inscrever-btn.inscrito {
   background-color: #bdc3c7 !important;
@@ -238,21 +433,21 @@
   pointer-events: none;
 }
 
-/* Botão de Cancelar Inscrição */
 .cancelar-inscricao-btn {
-    background-color: #f39c12; /* Laranja/Amarelo */
+    background-color: var(--color-warning);
     border: none;
-    color: white;
+    color: var(--text-dark);
     border-radius: 8px;
-    padding: 8px 16px;
-    font-weight: 600;
+    padding: 10px 16px;
+    font-weight: 700;
     cursor: pointer;
     transition: 0.2s;
     font-size: 0.9rem;
+    box-shadow: 0 3px 8px rgba(243, 156, 18, 0.4);
 }
 
 .cancelar-inscricao-btn:hover {
-    background-color: #e67e22; 
+    background-color: #f39c12; 
 }
 
 
@@ -262,10 +457,12 @@
     font-size: 1.5rem;
     color: var(--text-medium);
     padding: 50px 0;
+    font-style: italic;
 }
 
 
-/* --- MODAL --- */
+/* --- MODAL (CRIAÇÃO) --- */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -289,15 +486,8 @@
   animation: modalFade 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-@keyframes modalFade {
-  from {
-    transform: translateY(-20px) scale(0.95);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
+.modal-content.large-modal {
+    max-width: 700px;
 }
 
 .modal-content h2 {
@@ -308,29 +498,82 @@
   font-weight: 700;
 }
 
-.modal-content input,
-.modal-content textarea {
-  width: 100%;
-  padding: 12px 15px;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  border: 1px solid #dcdcdc;
-  font-size: 1rem;
-  transition: all 0.3s ease;
+.create-project-form {
+    display: grid;
+    gap: 15px;
 }
 
-.modal-content input:focus,
-.modal-content textarea:focus {
-  border-color: var(--secondary-color);
-  outline: none;
-  box-shadow: 0 0 8px var(--shadow-purple);
+.create-project-form input[type="text"], 
+.create-project-form textarea,
+.create-project-form input[type="date"],
+.create-project-form .multi-select-tags {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 5px;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    background: var(--background-light);
+}
+
+.create-project-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.form-row label, .form-group-tags label, .form-regime label {
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+    display: block;
+    font-size: 0.95rem;
+}
+
+.form-row input[type="date"] {
+    margin-top: 5px;
+}
+
+.radio-group-modal {
+    display: flex;
+    gap: 30px;
+    margin-top: 5px;
+}
+
+.radio-group-modal label {
+    font-weight: 500;
+    color: var(--text-medium);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.multi-select-tags {
+    margin-top: 5px;
+    height: 120px !important; 
+}
+
+.form-group-tags small {
+    display: block;
+    margin-top: 5px;
+    color: var(--text-medium);
+    font-size: 0.8em;
+    font-style: italic;
 }
 
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
   gap: 15px;
-  margin-top: 15px;
+  margin-top: 25px;
 }
 
 .cancelar-btn {
@@ -338,7 +581,7 @@
   color: #fff;
   border: none;
   border-radius: 10px;
-  padding: 12px 22px; /* Aumentado para melhor toque */
+  padding: 12px 22px;
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
@@ -349,20 +592,37 @@
 }
 
 .salvar-btn {
-  /* Usa o estilo principal redefinido acima para manter o gradiente */
-  /* Remove as variáveis não definidas (brand, brand-2) */
-  padding: 12px 22px; /* Aumentado para melhor toque */
+  background: var(--gradient-main);
+  color: #fff;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  box-shadow: 0 6px 15px var(--shadow-purple);
+}
+
+.salvar-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--shadow-purple);
+  opacity: 0.95;
 }
 
 /* --- RESPONSIVIDADE --- */
 @media (max-width: 1000px) {
-    .lista-projetos {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
+    .lista-projetos-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
 @media (max-width: 768px) {
+    .lista-projetos-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
     .projetos-container {
         padding: 50px 20px 20px 20px;
     }
@@ -381,31 +641,29 @@
         order: 3;
     }
     .titulo-projetos {
-        font-size: 2rem;
+        font-size: 2.2rem;
     }
     .criar-projeto-btn, .meus-projetos-btn {
         flex-grow: 1;
+        width: 48%;
     }
-    .project-card h3 {
-        font-size: 1.3rem;
-    }
-    /* Ajuste de botões para telas pequenas */
-    .project-footer {
+    .form-row {
         flex-direction: column;
-        align-items: flex-start;
+        gap: 10px;
     }
-    .project-footer span {
-        width: 100%;
-        margin-bottom: 5px;
-    }
-    .inscrever-btn, .cancelar-inscricao-btn {
-        width: 100%;
-        margin-top: 10px;
+    .modal-content.large-modal {
+        max-width: 95%;
     }
 }
 
 @media (max-width: 500px) {
-    .lista-projetos {
+    .lista-projetos-grid {
         grid-template-columns: 1fr;
+    }
+    .criar-projeto-btn, .meus-projetos-btn {
+        width: 100%;
+    }
+    .project-card {
+        padding: 20px;
     }
 }
