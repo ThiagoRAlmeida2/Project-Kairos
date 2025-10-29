@@ -1,47 +1,54 @@
 /* Overlay que cobre a tela inteira */
 .modal-overlay {
-  position: fixed;      /* tira do fluxo da página */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5); /* fundo semitransparente */
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;       /* fica acima de tudo */
-  padding: 1rem;       /* para mobile */
+  z-index: 1000;
+  padding: 20px;
 }
 
 /* Card/modal */
 .modal-content {
   background: #ffffff;
-  padding: 2rem 2.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  max-width: 700px;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  max-width: 450px;
   width: 100%;
-  transition: transform 0.2s ease;
+  transition: transform 0.3s ease;
 }
 
 .modal-content:hover {
-  transform: scale(1.01);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 1.2rem;
+    margin: 10px;
+  }
 }
 
 /* Mantendo título e botões do card */
 .modal-content h1 {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-weight: 600;
   text-align: center;
   color: #6b21a8;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .tab-buttons {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .tab-buttons button {
@@ -67,43 +74,13 @@
   background: #d1d5db;
 }
 
-/* Campos do formulário */
-.form-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  color: #ffffff;
-}
-
-.form-fields label {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #6b21a8;
-  margin-bottom: 0.25rem;
-  display: block;
-}
-
-.form-fields input {
-  border: none;
-  border-bottom: 2px solid #d1d5db;
-  padding: 0.4rem;
-  font-size: 1rem;
-  outline: none;
-  transition: border-color 0.2s ease;
-  width: 100%;
-}
-
-.form-fields input:focus {
-  border-color: #9333ea;
-}
-
 /* Botão de submit */
 .submit-btn {
   display: block;
   width: 100%;
   max-width: 320px;
-  margin: 2rem auto 0;
-  padding: 0.8rem 1.5rem;
+  margin: 1.5rem auto 0;
+  padding: 0.7rem 1.5rem;
   border: none;
   border-radius: 9999px;
   background: #9333ea;
@@ -148,35 +125,54 @@
 .form-fields {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1rem;
 }
 
 .form-fields label {
   font-size: 0.9rem;
   font-weight: 500;
-  color: #6b21a8; /* roxo */
+  color: #6b21a8;
   margin-bottom: 0.25rem;
   display: block;
 }
 
 .form-fields input {
-  color: #111827; /* texto escuro */
-  background-color: #ffffff; /* fundo branco */
-  border: 2px solid #d1d5db; /* borda padrão */
-  border-radius: 0.5rem; /* cantos arredondados */
+  color: #111827;
+  background-color: #ffffff;
+  border: 2px solid #d1d5db;
+  border-radius: 0.5rem;
   padding: 0.6rem 0.8rem;
   font-size: 1rem;
   outline: none;
-  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   width: 100%;
 }
 
 .form-fields input::placeholder {
-  color: #9ca3af; /* placeholder cinza */
+  color: #9ca3af;
 }
 
 .form-fields input:focus {
-  border-color: #9333ea; /* roxo */
-  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.2); /* efeito de foco suave */
-  background-color: #ffffff;
+  border-color: #9333ea;
+  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.2);
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 1rem;
+  }
+  
+  .form-fields {
+    gap: 0.8rem;
+  }
+  
+  .form-fields input {
+    padding: 0.6rem;
+    font-size: 16px;
+  }
+  
+  .modal-content h1 {
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+  }
 }
