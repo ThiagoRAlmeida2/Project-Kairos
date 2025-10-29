@@ -2,16 +2,33 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/projetos.css";
 
+// Lista de tags para o Multi-Select (usaremos para o filtro também)
+const LINGUAGENS_OPTIONS = [
+    "JavaScript", "Python", "Java", "C#", "C++", "React", "Angular", 
+    "Vue.js", "Node.js", "Spring Boot", "SQL", "MongoDB", "AWS", "Docker"
+];
+
+
 export default function ProjetosList() {
   const [projetos, setProjetos] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [filtro, setFiltro] = useState("");
+  const [tags, setTags] = useState([]); 
+  const [regime, setRegime] = useState("PJ"); 
+  const [dataInicio, setDataInicio] = useState(""); 
+  const [dataFim, setDataFim] = useState(""); 
 
-  // 🚩 NOVO ESTADO: Controla se o aluno está vendo todos ou só os inscritos
+  // Filtros de busca de texto
+  const [filtroTexto, setFiltroTexto] = useState(""); 
+  
+  // 🚩 NOVOS ESTADOS DE FILTRO
+  const [filtroRegime, setFiltroRegime] = useState("TODOS"); // Pode ser 'PJ', 'CLT', 'TODOS'
+  const [filtroTag, setFiltroTag] = useState("TODAS"); // Pode ser uma tag específica ou 'TODAS'
+  
+
   const [modoAluno, setModoAluno] = useState("TODOS"); 
-  // 🚩 NOVO ESTADO: Armazena o ID dos projetos nos quais o aluno está inscrito
   const [projetosInscritosIds, setProjetosInscritosIds] = useState([]);
 
   const baseURL = "http://localhost:8081/api/projetos";
@@ -19,45 +36,77 @@ export default function ProjetosList() {
   const token = localStorage.getItem("token");
   const role = user?.role || "";
 
+  // Função utilitária para converter a string de tags em um array limpo
+  const parseTagsString = (tagsString) => {
+      if (!tagsString || typeof tagsString !== 'string') return [];
+      return tagsString.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+  };
+  
+  // 🔹 Função utilitária para criar um objeto Date robusto
+  const parseDate = (dateData) => {
+    if (!dateData) return null;
+    
+    if (Array.isArray(dateData) && dateData.length >= 3) {
+      const date = new Date(dateData[0], dateData[1] - 1, dateData[2]);
+      if (isNaN(date)) return null;
+      return date;
+    }
+    
+    const date = new Date(dateData);
+    if (isNaN(date)) return null;
+    return date;
+  }
+
+  // 🔹 Lógica de Duração
+  const getDurationInMonths = (start, end) => {
+    if (!start || !end) return "N/I";
+    
+    const startDate = parseDate(start);
+    const endDate = parseDate(end);
+
+    if (!startDate || !endDate) return "N/I";
+    
+    const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays < 30) return `${diffDays} dias`;
+    
+    const diffMonths = Math.round(diffDays / 30.44); 
+    return `${diffMonths} meses`;
+  }
+
+
   // Função para buscar projetos e inscrições do aluno
   const fetchProjetos = async () => {
     try {
       let url = `${baseURL}/public`;
       let config = {};
 
-      // 1. Lógica da URL de Busca (EMPRESA ou ALUNO/PUBLICO/INSCRICOES)
       if (role === "ROLE_EMPRESA" && token) {
         url = `${baseURL}/meus`;
         config = { headers: { Authorization: `Bearer ${token}` } };
       } else if (role === "ROLE_ALUNO" && token) {
-        // Aluno precisa do token se estiver na rota de inscrições
         if (modoAluno === "INSCRITOS") {
           url = `${baseURL}/inscricoes`;
           config = { headers: { Authorization: `Bearer ${token}` } };
         } else {
-          // Rota pública para ALUNO/TODOS
           url = `${baseURL}/public`;
           config = {};
         }
       }
 
-      // 2. Busca principal de projetos
       const res = await axios.get(url, config);
       
-      // 3. Lógica de busca de inscrições (SÓ se for ALUNO logado)
       if (role === "ROLE_ALUNO" && token) {
-        // Sempre busca a lista completa de IDs inscritos para controle do botão
         const inscricoesRes = await axios.get(`${baseURL}/inscricoes`, 
             { headers: { Authorization: `Bearer ${token}` } });
             
-        // Extrai apenas os IDs dos projetos inscritos
         const ids = inscricoesRes.data.map(p => p.id);
         setProjetosInscritosIds(ids);
       } else {
-          setProjetosInscritosIds([]); // Limpa se não for aluno
+          setProjetosInscritosIds([]); 
       }
 
-      // 4. Mapeamento e Definição do Estado
       if (Array.isArray(res.data)) {
         const projetosFormatados = res.data.map((p) => ({
           id: p.id,
@@ -66,6 +115,12 @@ export default function ProjetosList() {
           dataCriacao: p.dataCriacao,
           empresaNome: p.empresaNome || p.empresa?.nome || "Não informado",
           encerrado: p.encerrado || p.isEncerrado || false,
+          
+          tags: parseTagsString(p.tags),
+          
+          regime: p.regime || "N/I",
+          dataInicio: p.dataInicio, 
+          dataFim: p.dataFim,      
         }));
 
         console.log("Projetos carregados:", projetosFormatados);
@@ -84,19 +139,37 @@ export default function ProjetosList() {
     fetchProjetos();
   }, [role, token, modoAluno]);
 
+  // 🔹 Limpar o formulário (útil ao fechar/criar)
+  const resetForm = () => {
+    setNome("");
+    setDescricao("");
+    setTags([]);
+    setRegime("PJ");
+    setDataInicio("");
+    setDataFim("");
+  };
+
   // 🔹 Criar projeto
   const handleCreateProject = async (e) => {
     e.preventDefault();
-    if (!nome || !descricao) return alert("Preencha nome e descrição.");
+    if (!nome || !descricao || !dataInicio || !dataFim || tags.length === 0) {
+        return alert("Preencha todos os campos obrigatórios (Nome, Descrição, Datas e Tags).");
+    }
 
     try {
       const res = await axios.post(
         `${baseURL}/criar`,
-        { nome, descricao },
+        { 
+          nome, 
+          descricao,
+          tags: tags.join(","), 
+          regime,
+          dataInicio,
+          dataFim,
+        },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Padronizar o projeto criado
       const novoProjeto = {
         id: res.data.id,
         nome: res.data.nome,
@@ -104,18 +177,36 @@ export default function ProjetosList() {
         dataCriacao: res.data.dataCriacao,
         empresaNome: res.data.empresaNome || res.data.empresa?.nome || "Não informado",
         encerrado: res.data.encerrado || false,
+        
+        tags: parseTagsString(res.data.tags),
+        
+        regime: res.data.regime,
+        dataInicio: res.data.dataInicio,
+        dataFim: res.data.dataFim,
       };
 
       setProjetos([...projetos, novoProjeto]);
       setShowModal(false);
-      setNome("");
-      setDescricao("");
+      resetForm();
     } catch (err) {
       console.error("Erro ao criar projeto:", err.response?.data || err.message);
       alert("Erro ao criar projeto. Verifique se está logado como empresa.");
     }
   };
-
+  
+  // 🔹 Manipulador para o Multi-Select de Tags (Criação)
+  const handleTagChange = (e) => {
+    const options = e.target.options;
+    const value = [];
+    for (let i = 0, l = options.length; i < l; i++) {
+      if (options[i].selected) {
+        value.push(options[i].value);
+      }
+    }
+    setTags(value);
+  };
+  
+  
   // 🔹 Encerrar projeto
   const handleEncerrarProjeto = async (id) => {
     if (!window.confirm("Tem certeza que deseja encerrar este projeto?")) return;
@@ -149,7 +240,6 @@ export default function ProjetosList() {
 
       alert(`Inscrição no projeto ${projetoId} realizada com sucesso!`);
       
-      // Atualiza a lista de IDs inscritos para desabilitar o botão instantaneamente
       setProjetosInscritosIds([...projetosInscritosIds, projetoId]);
 
     } catch (err) {
@@ -159,7 +249,7 @@ export default function ProjetosList() {
     }
   };
 
-  // 🔹 Cancelar inscrição em projeto 🚩 NOVO
+  // 🔹 Cancelar inscrição em projeto 
   const handleCancelRegistration = async (projetoId) => {
     if (!window.confirm("Tem certeza que deseja cancelar sua inscrição neste projeto?")) return;
 
@@ -171,10 +261,7 @@ export default function ProjetosList() {
 
       alert(`Inscrição no projeto ${projetoId} cancelada com sucesso!`);
       
-      // 1. Remove o projeto da lista atual (se estiver no modo "Minhas Inscrições")
       setProjetos(projetos.filter(p => p.id !== projetoId));
-
-      // 2. Remove o ID da lista de inscritos (para que apareça "Inscrever-se" no modo "TODOS")
       setProjetosInscritosIds(prevIds => prevIds.filter(id => id !== projetoId));
 
     } catch (err) {
@@ -184,10 +271,32 @@ export default function ProjetosList() {
     }
   };
 
+  // 🔹 LÓGICA DE FILTRAGEM COMBINADA
+  const projetosFiltrados = projetos.filter((p) => {
+    // 1. Filtro de Texto (Nome ou Tag)
+    const textoMin = filtroTexto.toLowerCase();
+    const matchesTexto = 
+      p.nome?.toLowerCase().includes(textoMin) ||
+      p.tags?.some(tag => tag.toLowerCase().includes(textoMin));
+      
+    // 2. Filtro por Regime (PJ/CLT/TODOS)
+    const matchesRegime = 
+      filtroRegime === "TODOS" || 
+      p.regime?.toUpperCase() === filtroRegime;
+      
+    // 3. Filtro por Tag Específica
+    const matchesTag = 
+      filtroTag === "TODAS" ||
+      p.tags?.includes(filtroTag);
+      
+    // O projeto deve satisfazer TODAS as condições de filtro
+    return matchesTexto && matchesRegime && matchesTag;
+  });
 
-  const projetosFiltrados = projetos.filter((p) =>
-    p.nome?.toLowerCase().includes(filtro.toLowerCase())
-  );
+
+  // =========================================================================
+  // RENDER
+  // =========================================================================
 
   return (
     <div className="projetos-container">
@@ -199,19 +308,65 @@ export default function ProjetosList() {
           }
         </h1>
         <div className="actions">
-          <input
-            className="search-input"
-            placeholder="🔍 Buscar projeto..."
-            value={filtro}
-            onChange={(e) => setFiltro(e.target.value)}
-          />
-          <button className="btn btn--primary criar-projeto-btn" onClick={() => setShowModal(true)}>
-            <span>+</span> Criar Projeto
-          </button>
+          {/* Botão de alternância para o ALUNO */}
+          {role === "ROLE_ALUNO" && (
+              <button
+                  className={`meus-projetos-btn ${modoAluno === 'INSCRITOS' ? 'active' : ''}`}
+                  onClick={() => setModoAluno((prev) => 
+                      prev === "TODOS" ? "INSCRITOS" : "TODOS"
+                  )}
+              >
+                  {modoAluno === "TODOS" ? "Minhas Inscrições" : "Ver Todos"}
+              </button>
+          )}
+
+          {/* Botão Criar Projeto SÓ DEVE APARECER para a EMPRESA */}
+          {role === "ROLE_EMPRESA" && (
+            <button 
+              className="criar-projeto-btn" 
+              onClick={() => {setShowModal(true); resetForm();}}
+            >
+              + Criar Projeto
+            </button>
+          )}
+
         </div>
       </div>
 
-      <div className="lista-projetos">
+      {/* 🚩 NOVA SEÇÃO DE FILTROS ABAIXO DO TOP BAR */}
+      <div className="filter-controls-bar">
+        <input
+            className="search-input"
+            placeholder="🔍 Buscar projeto ou tag..." 
+            value={filtroTexto}
+            onChange={(e) => setFiltroTexto(e.target.value)}
+        />
+        
+        {/* Filtro de Regime */}
+        <select
+            className="filter-select"
+            value={filtroRegime}
+            onChange={(e) => setFiltroRegime(e.target.value)}
+        >
+            <option value="TODOS">Regime: Todos</option>
+            <option value="PJ">PJ</option>
+            <option value="CLT">CLT</option>
+        </select>
+        
+        {/* Filtro de Tag Específica */}
+        <select
+            className="filter-select"
+            value={filtroTag}
+            onChange={(e) => setFiltroTag(e.target.value)}
+        >
+            <option value="TODAS">Tecnologia: Todas</option>
+            {LINGUAGENS_OPTIONS.map(lang => (
+                <option key={lang} value={lang}>{lang}</option>
+            ))}
+        </select>
+      </div>
+
+      <div className="lista-projetos-grid"> 
         {projetosFiltrados.length > 0 ? (
           projetosFiltrados.map((p) => (
             <div
@@ -220,21 +375,44 @@ export default function ProjetosList() {
             >
               <div className="project-header">
                 <h3>{p.nome}</h3>
-                {!p.encerrado && role === "ROLE_EMPRESA" && (
-                  <button
-                    className="encerrar-btn"
-                    onClick={() => handleEncerrarProjeto(p.id)}
-                  >
-                    Encerrar
-                  </button>
-                )}
+                <div className="status-tags">
+                  <span className={`status-regime regime-${p.regime?.toLowerCase()}`}>{p.regime}</span>
+                  {p.encerrado && <span className="status-tag encerrado">Encerrado</span>}
+                </div>
               </div>
-              <p>{p.descricao}</p>
+              
+              <div className="card-info-group">
+                  <span className="card-info">
+                      📅 Início: {p.dataInicio ? parseDate(p.dataInicio).toLocaleDateString("pt-BR") : "N/I"}
+                  </span>
+                  <span className="card-info">
+                      ⌛ Duração: {getDurationInMonths(p.dataInicio, p.dataFim)}
+                  </span>
+              </div>
+              
+              {/* GERAÇÃO DE TAGS */}
+              <div className="tags-list">
+                  {p.tags.map(tag => {
+                      const className = `tag-${tag.replace(/\s|#/g, '-').replace(/\+\+/g, 'plus-plus').replace(/\./g, '')}`; 
+                      return (
+                          <span 
+                              key={tag} 
+                              className={`tag-chip ${className}`} 
+                          >
+                              {tag}
+                          </span>
+                      );
+                  })}
+              </div>
+
+              <p className="descricao-completa">{p.descricao}</p> 
+
               <div className="project-footer">
                 <span>Empresa: {p.empresaNome}</span>
                 <span>
                   Criado em:{" "}
-                  {p.dataCriacao ? new Date(p.dataCriacao).toLocaleDateString("pt-BR") : "-"}
+                  {/* Usa parseDate para garantir que a data de criação seja formatada */}
+                  {p.dataCriacao ? parseDate(p.dataCriacao).toLocaleDateString("pt-BR") : "-"}
                 </span>
                 
                 {/* Lógica do Botão para ALUNO (Inscrever / Inscrito / Cancelar) */}
@@ -259,7 +437,14 @@ export default function ProjetosList() {
                     </>
                 )}
 
-                {p.encerrado && <span className="status-tag">Encerrado</span>}
+                {!p.encerrado && role === "ROLE_EMPRESA" && (
+                  <button
+                    className="encerrar-btn"
+                    onClick={() => handleEncerrarProjeto(p.id)}
+                  >
+                    Encerrar Projeto
+                  </button>
+                )}
               </div>
             </div>
           ))
@@ -268,11 +453,13 @@ export default function ProjetosList() {
         )}
       </div>
 
+      {/* MODAL DE CRIAÇÃO */}
       {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={() => {setShowModal(false); resetForm();}}>
+          <div className="modal-content large-modal" onClick={(e) => e.stopPropagation()}>
             <h2>Novo Projeto</h2>
-            <form onSubmit={handleCreateProject}>
+            <form onSubmit={handleCreateProject} className="create-project-form">
+              
               <input
                 placeholder="Nome do Projeto"
                 value={nome}
@@ -280,20 +467,84 @@ export default function ProjetosList() {
                 required
               />
               <textarea
-                placeholder="Descrição do Projeto"
+                placeholder="Descrição Completa do Projeto"
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
+                rows="6"
                 required
               />
+
+              <div className="form-row">
+                  <label>
+                      Data de Início:
+                      <input 
+                          type="date" 
+                          value={dataInicio}
+                          onChange={(e) => setDataInicio(e.target.value)}
+                          required
+                      />
+                  </label>
+                  <label>
+                      Data de Fim (Previsão):
+                      <input 
+                          type="date" 
+                          value={dataFim}
+                          onChange={(e) => setDataFim(e.target.value)}
+                          required
+                      />
+                  </label>
+              </div>
+
+              <div className="form-regime">
+                <label>Regime de Contratação:</label>
+                <div className="radio-group-modal">
+                    <label>
+                        <input 
+                            type="radio" 
+                            value="PJ" 
+                            checked={regime === "PJ"}
+                            onChange={(e) => setRegime(e.target.value)}
+                        />
+                        Pessoa Jurídica (PJ)
+                    </label>
+                    <label>
+                        <input 
+                            type="radio" 
+                            value="CLT" 
+                            checked={regime === "CLT"}
+                            onChange={(e) => setRegime(e.target.value)}
+                        />
+                        CLT
+                    </label>
+                </div>
+              </div>
+
+              <div className="form-group-tags">
+                  <label>Tags / Linguagens de Programação:</label>
+                  <select 
+                      multiple 
+                      value={tags} 
+                      onChange={handleTagChange} 
+                      className="multi-select-tags"
+                      size="5" 
+                      required
+                  >
+                      {LINGUAGENS_OPTIONS.map(lang => (
+                          <option key={lang} value={lang}>{lang}</option>
+                      ))}
+                  </select>
+                  <small>Segure **Ctrl** ou **Cmd** para selecionar múltiplas tags.</small>
+              </div>
+              
               <div className="modal-buttons">
                 <button
                   type="button"
                   className="cancelar-btn"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => {setShowModal(false); resetForm();}}
                 >
                   Cancelar
                 </button>
-                <button type="submit" className="btn btn--primary salvar-btn">
+                <button type="submit" className="salvar-btn">
                   Criar Projeto
                 </button>
               </div>

@@ -1,3 +1,4 @@
+// src/pages/Navbar.jsx
 import React, { useState, useEffect, useRef } from "react";
 import CadastroCard from "../components/CadastroCard.jsx";
 import LoginCard from "../components/LoginCard.jsx";
@@ -19,6 +20,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleClickOutside = (e) => {
+      // Verifica se o clique ocorreu fora da área do menu dropdown
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setMenuOpen(false);
         setMobileOpen(false);
@@ -33,6 +35,17 @@ export default function Navbar() {
     localStorage.removeItem("token");
     setUser(null);
     setMenuOpen(false);
+
+    // 🚩 CORREÇÃO: Força o recarregamento e redireciona para a página inicial
+    window.location.href = "/";
+  };
+  
+  // Função que será passada para o LoginCard para atualizar o estado do user
+  const handleLoginSuccess = (userData) => {
+    setUser(userData);
+    setShowLogin(false);
+    // Opcional: Recarregar a página para atualizar o conteúdo que depende do login
+    window.location.reload(); 
   };
 
   return (
@@ -99,7 +112,7 @@ export default function Navbar() {
                       width: 40,
                       height: 40,
                       borderRadius: "50%",
-                      border: "2px solid #007bff",
+                      border: "2px solid #7b5cf5", // Cor ajustada para consistência
                     }}
                   />
                   {menuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -108,7 +121,12 @@ export default function Navbar() {
                 {menuOpen && (
                   <ul className="dropdown">
                     <li><a href="/perfil">Perfil</a></li>
-                    <li onClick={handleLogout}>Sair</li>
+                    <li 
+                      onClick={handleLogout}
+                      style={{ cursor: 'pointer' }} // Torna explícito que é clicável
+                    >
+                      Sair
+                    </li>
                   </ul>
                 )}
               </div>
@@ -130,10 +148,7 @@ export default function Navbar() {
         <div className="modal-overlay" onClick={() => setShowLogin(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <LoginCard
-              onLoginSuccess={(u) => {
-                setUser(u);
-                setShowLogin(false);
-              }}
+              onLoginSuccess={handleLoginSuccess}
             />
           </div>
         </div>
