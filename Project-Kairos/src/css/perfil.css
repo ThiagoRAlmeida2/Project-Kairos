@@ -23,8 +23,10 @@ body {
 .perfil-container {
   display: flex;
   justify-content: center;
-  margin: 60px auto; /* Mais margem superior e centralizado */
-  padding: 0 20px;
+  width: 100%;
+  min-height: 100vh;
+  padding: 60px 24px;
+  background: var(--background-light);
 }
 
 .perfil-card {
@@ -207,16 +209,17 @@ body {
 /* --- RESPONSIVIDADE --- */
 @media (max-width: 768px) {
   .perfil-card {
-    padding: 30px;
+    padding: 20px;
   }
   
   .perfil-top {
     flex-direction: column;
-    gap: 30px;
+    gap: 20px;
+    align-items: center;
   }
 
   .foto-container {
-    align-self: center; /* Centraliza a foto no topo */
+    align-self: center;
   }
 
   .perfil-info {
@@ -229,7 +232,7 @@ body {
   }
   
   .btn-principal, .btn-cancelar {
-      width: 100%;
-      justify-content: center;
+    width: 100%;
+    justify-content: center;
   }
 }

@@ -9,6 +9,7 @@ export default function Navbar() {
   const [showLogin, setShowLogin] = useState(false);
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -20,6 +21,7 @@ export default function Navbar() {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setMenuOpen(false);
+        setMobileOpen(false);
       }
     };
     document.addEventListener("click", handleClickOutside);
@@ -43,10 +45,23 @@ export default function Navbar() {
             <img src={logo} alt="Kairos" className="brand__logo" />
           </a>
 
-          <nav className="menu" aria-label="Menu Principal">
-            <a href="/">Início</a>
-            <a href="/eventos">Eventos</a>
-            <a href="/projetos">Projetos</a>
+          {/* mobile menu toggle */}
+          <button
+            className="nav__toggle"
+            aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
+            aria-expanded={mobileOpen}
+            onClick={(e) => {
+              e.stopPropagation();
+              setMobileOpen((v) => !v);
+            }}
+          >
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+
+          <nav className={`menu ${mobileOpen ? 'menu--open' : ''}`} aria-label="Menu Principal">
+            <a href="/" onClick={() => setMobileOpen(false)}>Início</a>
+            <a href="/eventos" onClick={() => setMobileOpen(false)}>Eventos</a>
+            <a href="/projetos" onClick={() => setMobileOpen(false)}>Projetos</a>
           </nav>
 
           <div className="nav__actions">
