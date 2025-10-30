@@ -15,7 +15,7 @@ export default function ProjetosList() {
     
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
-    const [tags, setTags] = useState([]); 
+    const [tags, setTags] = useState([]); // Array para armazenar as tags selecionadas
     const [regime, setRegime] = useState("PJ"); 
     const [dataInicio, setDataInicio] = useState(""); 
     const [dataFim, setDataFim] = useState(""); 
@@ -171,7 +171,7 @@ export default function ProjetosList() {
                 { 
                     nome, 
                     descricao,
-                    tags: tags.join(","), 
+                    tags: tags.join(","), // Envia o array de tags como string separada por vírgula
                     regime,
                     dataInicio,
                     dataFim,
@@ -203,16 +203,20 @@ export default function ProjetosList() {
         }
     };
     
-    // 🔹 Manipulador para o Multi-Select de Tags (Criação)
+    // 🔹 Manipulador para Checkbox de Tags (Criação)
     const handleTagChange = (e) => {
-        const options = e.target.options;
-        const value = [];
-        for (let i = 0, l = options.length; i < l; i++) {
-            if (options[i].selected) {
-                value.push(options[i].value);
+        const value = e.target.value;
+        const isChecked = e.target.checked;
+        
+        setTags(prevTags => {
+            if (isChecked) {
+                // Adiciona a tag se estiver marcada
+                return [...prevTags, value];
+            } else {
+                // Remove a tag se estiver desmarcada
+                return prevTags.filter(tag => tag !== value);
             }
-        }
-        setTags(value);
+        });
     };
     
     
@@ -283,8 +287,41 @@ export default function ProjetosList() {
         }
     };
 
+    // Função para gerar a classe CSS (corrigida)
+    const generateTagClassName = (tag) => {
+        // Caso especial para C++ para evitar falhas na regex do ambiente
+        if (tag === "C++") {
+            return "tag-c-plus-plus"; 
+        }
+        
+        // Lógica para todas as outras tags (garantindo o alinhamento com o CSS)
+        return `tag-${tag
+            .replace(/\s/g, '-')
+            .replace(/\+\+/g, 'plus-plus') // Corrigido o problema do escape na Regex
+            .replace(/\#/g, 'sharp') // Trata o C#
+            .replace(/\./g, '-') // Trata Vue.js, Node.js e Spring Boot
+            .toLowerCase()
+        }`;
+    }
+
+    // 🔹 LÓGICA DE ORDENAÇÃO (Mais Recente Primeiro)
+    const projetosOrdenados = [...projetos].sort((a, b) => {
+        // Converte as datas de criação para objetos Date para comparação
+        const dateA = parseDate(a.dataCriacao);
+        const dateB = parseDate(b.dataCriacao);
+
+        // Trata datas inválidas ou nulas (coloca-as no final)
+        if (!dateA) return 1;
+        if (!dateB) return -1;
+        
+        // Ordena em ordem decrescente (mais recente primeiro: B - A)
+        return dateB.getTime() - dateA.getTime();
+    });
+
+
     // 🔹 LÓGICA DE FILTRAGEM COMBINADA
-    const projetosFiltrados = projetos.filter((p) => {
+    // Filtra a lista já ordenada
+    const projetosFiltrados = projetosOrdenados.filter((p) => {
         // 1. Filtro de Texto (Nome ou Tag)
         const textoMin = filtroTexto.toLowerCase();
         const matchesTexto = 
@@ -396,7 +433,8 @@ export default function ProjetosList() {
                             className={`project-card ${p.encerrado ? "encerrado" : ""}`}
                         >
                             <div className="project-header">
-                                <h3>{p.nome}</h3>
+                                {/* 🚩 CORREÇÃO APLICADA: Adicionando a classe CSS para o gradiente */}
+                                <h3 className="project-title-link">{p.nome}</h3>
                                 <div className="status-tags">
                                     <span className={`status-regime regime-${p.regime?.toLowerCase()}`}>{p.regime}</span>
                                     {p.encerrado && <span className="status-tag encerrado">Encerrado</span>}
@@ -412,10 +450,10 @@ export default function ProjetosList() {
                                 </span>
                             </div>
                             
-                            {/* GERAÇÃO DE TAGS */}
+                            {/* GERAÇÃO DE TAGS (USANDO FUNÇÃO CORRIGIDA) */}
                             <div className="tags-list">
                                 {p.tags.map(tag => {
-                                    const className = `tag-${tag.replace(/\s|#/g, '-').replace(/\+\+/g, 'plus-plus').replace(/\./g, '')}`; 
+                                    const className = generateTagClassName(tag); 
                                     return (
                                         <span 
                                             key={tag} 
@@ -555,19 +593,25 @@ export default function ProjetosList() {
 
                             <div className="form-group-tags">
                                 <label>Tags / Linguagens de Programação:</label>
-                                <select 
-                                    multiple 
-                                    value={tags} 
-                                    onChange={handleTagChange} 
-                                    className="multi-select-tags"
-                                    size="5" 
-                                    required
-                                >
+                                {/* 🚩 SUBSTITUÍDO: Multi-Select por Checkboxes */}
+                                <div className="tag-checkbox-group">
                                     {LINGUAGENS_OPTIONS.map(lang => (
-                                        <option key={lang} value={lang}>{lang}</option>
+                                        <label key={lang} className="tag-checkbox-label">
+                                            <input
+                                                type="checkbox"
+                                                value={lang}
+                                                checked={tags.includes(lang)}
+                                                onChange={handleTagChange}
+                                                required={tags.length === 0}
+                                            />
+                                            {/* 🚩 USANDO FUNÇÃO CORRIGIDA AQUI */}
+                                            <span className={`tag-chip ${generateTagClassName(lang)} checkbox-style`}>
+                                                {lang}
+                                            </span>
+                                        </label>
                                     ))}
-                                </select>
-                                <small>Segure **Ctrl** ou **Cmd** para selecionar múltiplas tags.</small>
+                                </div>
+                                <small>Selecione uma ou mais tecnologias.</small>
                             </div>
                             
                             <div className="modal-buttons">

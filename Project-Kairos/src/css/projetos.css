@@ -19,21 +19,21 @@
   --color-warning: #f1c40f;
   --color-danger: #e74c3c;
   
-  /* Paleta de Tags Coloridas (Ghost Button) */
-  --tag-JavaScript: #f7df1e;
-  --tag-Python: #306998;
-  --tag-Java: #e04a4f;
-  --tag-C-sharp: #178600; 
-  --tag-C-plus-plus: #00599c; 
-  --tag-React: #61dafb;
-  --tag-Angular: #dd1b16;
-  --tag-Vue-js: #42b883; 
-  --tag-Node-js: #3c873a; 
-  --tag-Spring-Boot: #6db33f; 
-  --tag-SQL: #cc7001;
-  --tag-MongoDB: #47a248;
-  --tag-AWS: #ff9900;
-  --tag-Docker: #2496ed;
+  /* Paleta de Tags Coloridas (Ghost Button) - TUDO MINÚSCULO E CONSISTENTE */
+  --tag-javascript: #f7df1e;
+  --tag-python: #306998;
+  --tag-java: #e04a4f;
+  --tag-csharp: #178600; 
+  --tag-c-plus-plus: #00599c; 
+  --tag-react: #61dafb;
+  --tag-angular: #dd1b16;
+  --tag-vue-js: #42b883; 
+  --tag-node-js: #3c873a; 
+  --tag-spring-boot: #6db33f; 
+  --tag-sql: #cc7001;
+  --tag-mongodb: #47a248;
+  --tag-aws: #ff9900;
+  --tag-docker: #2496ed;
 }
 
 body {
@@ -230,6 +230,28 @@ body {
   line-height: 1.2;
 }
 
+/* --- ESTILO ADICIONAL: Título do Projeto no Card (Gradiente) --- */
+
+.project-title-link {
+    font-size: 1.5rem; /* Levemente maior que o 1.4rem original */
+    font-weight: 900;
+    line-height: 1.2;
+    transition: all 0.3s ease;
+    
+    /* Aplicando o gradiente principal */
+    background: var(--gradient-main);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block; /* Necessário para o gradiente funcionar */
+    cursor: pointer; /* Imita um link/chamada */
+}
+
+/* Efeito sutil ao passar o mouse para dar vida ao nome */
+.project-card:hover .project-title-link {
+    filter: brightness(1.2);
+    transform: scale(1.02);
+}
+
 .status-tags {
     display: flex;
     gap: 8px;
@@ -300,62 +322,62 @@ body {
     border: 2px solid; 
 }
 
-/* Mapeamento de Cores para as Classes Geradas pelo JS */
-.tag-JavaScript {
-    color: var(--tag-JavaScript);
-    border-color: var(--tag-JavaScript);
+/* Mapeamento de Cores para as Classes Geradas pelo JS (Estado Não Selecionado) */
+.tag-javascript {
+    color: var(--tag-javascript);
+    border-color: var(--tag-javascript);
 }
-.tag-Python {
-    color: var(--tag-Python);
-    border-color: var(--tag-Python);
+.tag-python {
+    color: var(--tag-python);
+    border-color: var(--tag-python);
 }
-.tag-Java {
-    color: var(--tag-Java);
-    border-color: var(--tag-Java);
+.tag-java {
+    color: var(--tag-java);
+    border-color: var(--tag-java);
 }
-.tag-C-sharp {
-    color: var(--tag-C-sharp);
-    border-color: var(--tag-C-sharp);
+.tag-csharp {
+    color: var(--tag-csharp);
+    border-color: var(--tag-csharp);
 }
-.tag-C-plus-plus {
-    color: var(--tag-C-plus-plus);
-    border-color: var(--tag-C-plus-plus);
+.tag-c-plus-plus {
+    color: var(--tag-c-plus-plus);
+    border-color: var(--tag-c-plus-plus);
 }
-.tag-React {
-    color: var(--tag-React);
-    border-color: var(--tag-React);
+.tag-react {
+    color: var(--tag-react);
+    border-color: var(--tag-react);
 }
-.tag-Angular {
-    color: var(--tag-Angular);
-    border-color: var(--tag-Angular);
+.tag-angular {
+    color: var(--tag-angular);
+    border-color: var(--tag-angular);
 }
-.tag-Vue-js {
-    color: var(--tag-Vue-js);
-    border-color: var(--tag-Vue-js);
+.tag-vue-js {
+    color: var(--tag-vue-js);
+    border-color: var(--tag-vue-js);
 }
-.tag-Node-js {
-    color: var(--tag-Node-js);
-    border-color: var(--tag-Node-js);
+.tag-node-js {
+    color: var(--tag-node-js);
+    border-color: var(--tag-node-js);
 }
-.tag-Spring-Boot {
-    color: var(--tag-Spring-Boot);
-    border-color: var(--tag-Spring-Boot);
+.tag-spring-boot {
+    color: var(--tag-spring-boot);
+    border-color: var(--tag-spring-boot);
 }
-.tag-SQL {
-    color: var(--tag-SQL);
-    border-color: var(--tag-SQL);
+.tag-sql {
+    color: var(--tag-sql);
+    border-color: var(--tag-sql);
 }
-.tag-MongoDB {
-    color: var(--tag-MongoDB);
-    border-color: var(--tag-MongoDB);
+.tag-mongodb {
+    color: var(--tag-mongodb);
+    border-color: var(--tag-mongodb);
 }
-.tag-AWS {
-    color: var(--tag-AWS);
-    border-color: var(--tag-AWS);
+.tag-aws {
+    color: var(--tag-aws);
+    border-color: var(--tag-aws);
 }
-.tag-Docker {
-    color: var(--tag-Docker);
-    border-color: var(--tag-Docker);
+.tag-docker {
+    color: var(--tag-docker);
+    border-color: var(--tag-docker);
 }
 
 .tag-chip:hover {
@@ -500,9 +522,9 @@ body {
     gap: 15px;
 }
 
-.create-project-form input[type="text"], 
+/* 🚩 CORREÇÃO APLICADA: Unificando o estilo para campos de texto, textarea e datas */
+.create-project-form input:not([type="radio"]):not([type="checkbox"]), 
 .create-project-form textarea,
-.create-project-form input[type="date"],
 .create-project-form .multi-select-tags {
     width: 100%;
     padding: 12px 15px;
@@ -511,7 +533,7 @@ body {
     border-radius: 10px;
     font-size: 1rem;
     transition: all 0.3s ease;
-    box-sizing: border-box;
+    box-sizing: border-box; /* Garante que o padding não aumente a largura total */
     background: var(--background-light);
 }
 
@@ -727,4 +749,164 @@ body {
 .status-tag.status-rejeitado {
     background-color: var(--color-danger);
     color: white;
+}
+
+.form-group-tags {
+    margin-bottom: 20px;
+}
+
+.tag-checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Espaço entre as tags */
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #b313db;
+    border-radius: 10px;
+    background: var(--background-light);
+}
+
+.tag-checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+}
+
+.tag-checkbox-label input[type="checkbox"] {
+    /* Esconde o checkbox nativo */
+    display: none;
+}
+
+/* Reutilizando o estilo da tag-chip como o visual do checkbox */
+.tag-checkbox-label .tag-chip {
+    padding: 7px 15px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    border-width: 2px; /* Mante a borda original do tag-chip */
+    background-color: transparent;
+    opacity: 0.8;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+/* Efeito Hover e Foco */
+.tag-checkbox-label:hover .tag-chip {
+    opacity: 1;
+    transform: translateY(-1px);
+}
+
+/* 🚩 CORREÇÕES FINAIS APLICADAS: Solução de MÁXIMA ESPECIFICIDADE PARA FUNDO E TEXTO */
+
+/* Estilo Base para Checked (Define Textura e Sombra) */
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-chip {
+    opacity: 1;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 1. REGRA GERAL FORTE DE TEXTO: Força o texto para ESCURO (para tags claras) */
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-chip {
+    color: var(--text-dark) !important;
+}
+
+/* 2. DEFINIÇÃO EXPLÍCITA DE COR DE FUNDO E TEXTO PARA CADA TAG QUANDO CHECADA */
+
+/* TAGS CLARAS (JavaScript, React, AWS, Docker) - Texto Escuro */
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-javascript {
+    background-color: var(--tag-javascript) !important;
+    border-color: var(--tag-javascript) !important;
+    color: var(--text-dark) !important;
+}
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-react {
+    background-color: var(--tag-react) !important;
+    border-color: var(--tag-react) !important;
+    color: var(--text-dark) !important;
+}
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-aws {
+    background-color: var(--tag-aws) !important;
+    border-color: var(--tag-aws) !important;
+    color: var(--text-dark) !important;
+}
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-docker {
+    background-color: var(--tag-docker) !important;
+    border-color: var(--tag-docker) !important;
+    color: var(--text-dark) !important;
+}
+
+/* TAGS ESCURAS/MÉDIAS (Onde o texto deve ser BRANCO) */
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-python {
+    background-color: var(--tag-python) !important;
+    border-color: var(--tag-python) !important;
+    color: var(--card-bg) !important;
+}
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-java {
+    background-color: var(--tag-java) !important;
+    border-color: var(--tag-java) !important;
+    color: var(--card-bg) !important;
+}
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-csharp {
+    background-color: var(--tag-csharp) !important;
+    border-color: var(--tag-csharp) !important;
+    color: var(--card-bg) !important;
+}
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-c-plus-plus {
+    background-color: var(--tag-c-plus-plus) !important;
+    border-color: var(--tag-c-plus-plus) !important;
+    color: var(--card-bg) !important;
+}
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-angular {
+    background-color: var(--tag-angular) !important;
+    border-color: var(--tag-angular) !important;
+    color: var(--card-bg) !important;
+}
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-vue-js {
+    background-color: var(--tag-vue-js) !important;
+    border-color: var(--tag-vue-js) !important;
+    color: var(--card-bg) !important;
+}
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-node-js {
+    background-color: var(--tag-node-js) !important;
+    border-color: var(--tag-node-js) !important;
+    color: var(--card-bg) !important;
+}
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-spring-boot {
+    background-color: var(--tag-spring-boot) !important;
+    border-color: var(--tag-spring-boot) !important;
+    color: var(--card-bg) !important;
+}
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-sql {
+    background-color: var(--tag-sql) !important;
+    border-color: var(--tag-sql) !important;
+    color: var(--card-bg) !important;
+}
+.tag-checkbox-label input[type="checkbox"]:checked + .tag-mongodb {
+    background-color: var(--tag-mongodb) !important;
+    border-color: var(--tag-mongodb) !important;
+    color: var(--card-bg) !important;
+}
+
+/* Estilo para a small text de ajuda */
+.form-group-tags small {
+    margin-top: 10px; /* Ajusta a margem para separar do grupo de tags */
+}
+
+.project-title-link {
+    font-size: 1.5rem; /* Levemente maior que o 1.4rem original */
+    font-weight: 900;
+    line-height: 1.2;
+    transition: all 0.3s ease;
+    
+    /* Aplicando o gradiente principal */
+    background: var(--gradient-main);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block; /* Necessário para o gradiente funcionar */
+    cursor: pointer; /* Imita um link/chamada */
+}
+
+/* Efeito sutil ao passar o mouse para dar vida ao nome */
+.project-card:hover .project-title-link {
+    filter: brightness(1.2);
+    transform: scale(1.02);
 }
