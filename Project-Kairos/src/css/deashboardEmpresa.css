@@ -1,0 +1,413 @@
+/* src/css/empresa-dashboard.css (CÓDIGO COMPLETO E MODERNO - FINAL 2.0) */
+
+:root {
+    --primary-color: #6a3093; /* Roxo Escuro Principal */
+    --secondary-color: #a044ff; /* Roxo Claro Vibrante */
+    --tertiary-color: #4a1f63; /* Roxo para hover */
+    --background-light: #f9f9f9; /* Fundo mais claro */
+    --card-bg: #ffffff;
+    --text-dark: #2c3e50;
+    --text-medium: #7f8c8d;
+    --success-color: #2ecc71;
+    --danger-color: #e74c3c;
+    --warning-color: #f1c40f;
+    --border-color: #e8e8e8; /* Borda sutil */
+    --shadow-soft: 0 6px 15px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04); 
+    --shadow-main: 0 12px 30px rgba(0, 0, 0, 0.1); 
+    --gradient-purple: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+}
+
+/* ================================================= */
+/* 1. ESTRUTURA E TÍTULO               */
+/* ================================================= */
+
+.dashboard-container {
+    padding: 80px 50px; 
+    background: var(--background-light);
+    min-height: 100vh;
+    color: var(--text-dark);
+    font-family: 'Inter', sans-serif;
+}
+
+.dashboard-header-controls {
+    display: flex;
+    flex-direction: column; 
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.dashboard-title {
+    font-size: 2.5rem; 
+    color: var(--text-dark);
+    font-weight: 900;
+    margin-top: 10px;
+    margin-bottom: 0;
+    padding-bottom: 15px;
+    border-bottom: 4px solid var(--secondary-color); 
+    align-self: flex-start; 
+}
+
+/* Botão Voltar (Estilo clean e com sombra sutil) */
+.btn-voltar-projetos {
+    background: var(--card-bg);
+    color: var(--text-dark);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px; 
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 8px;
+    box-shadow: var(--shadow-soft);
+}
+
+.btn-voltar-projetos:hover {
+    background: var(--border-color);
+    color: var(--primary-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+
+/* ================================================= */
+/* 2. TABELA E ESTILOS GERAIS          */
+/* ================================================= */
+
+.dashboard-table-wrapper {
+    /* CRÍTICO: Esconde o excesso para respeitar o border-radius */
+    overflow: hidden; 
+    overflow-x: auto;
+    background: var(--card-bg); 
+    border-radius: 15px; 
+    box-shadow: var(--shadow-main);
+    border: 1px solid var(--border-color);
+}
+
+.candidatos-table {
+    width: 100%;
+    /* Garante que as bordas se unam */
+    border-collapse: collapse; 
+    /* CRÍTICO: Zera o espaçamento entre células */
+    border-spacing: 0; 
+    /* CRÍTICO: Zera qualquer margem/padding que possa empurrar a tabela */
+    margin: 0;
+    padding: 0;
+    min-width: 900px; 
+}
+
+/* 🚩 NOVO: Aplica o fundo e arredondamento principal ao THEAD */
+.candidatos-table thead { 
+    background: var(--gradient-purple); 
+    color: white;
+}
+
+.candidatos-table th, .candidatos-table td {
+    padding: 18px 25px; 
+    text-align: left;
+    border: none; 
+}
+
+.candidatos-table th {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.95em;
+    letter-spacing: 0.5px;
+}
+
+/* Arredondamento dos cantos superiores dos THs dentro do THEAD */
+.candidatos-table thead tr:first-child th:first-child { 
+    border-top-left-radius: 15px; 
+}
+.candidatos-table thead tr:first-child th:last-child { 
+    border-top-right-radius: 15px; 
+}
+
+/* Adiciona a borda inferior apenas nas células de dados (TD) */
+.candidatos-table td {
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.candidatos-table tr:hover td {
+    background-color: #f7f7fc; 
+}
+.candidatos-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Estilo do link do aluno */
+.aluno-link {
+    color: var(--primary-color);
+    font-weight: 700;
+    cursor: pointer;
+    transition: color 0.2s, text-decoration 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.aluno-link:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+/* Botões de Ação na Tabela */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.action-buttons button {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); 
+}
+
+.action-buttons button:active {
+    transform: translateY(1px); 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.btn-aprovar {
+    background-color: var(--success-color);
+    color: white;
+}
+.btn-aprovar:hover {
+    background-color: #27ae60;
+}
+
+.btn-declinar {
+    background-color: var(--danger-color);
+    color: white;
+}
+.btn-declinar:hover {
+    background-color: #c0392b;
+}
+
+.action-completed {
+    font-style: italic;
+    color: var(--text-medium);
+    font-size: 0.9em;
+}
+
+/* ------------------------------------------- */
+/* --- ESTILOS DE STATUS NA TABELA E GERAL --- */
+/* ------------------------------------------- */
+
+.status-text {
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.status-text.status-pendente {
+    color: var(--warning-color);
+}
+
+.status-text.status-aprovado {
+    color: var(--success-color);
+}
+
+.status-text.status-rejeitado {
+    color: var(--danger-color);
+}
+
+
+/* ================================================= */
+/* 3. ESTILO DO MODAL DE PERFIL        */
+/* ================================================= */
+
+.modal-content.profile-modal {
+    max-width: 850px; 
+    padding: 50px;
+    border-radius: 20px; 
+    box-shadow: var(--shadow-main);
+    background: var(--card-bg);
+}
+
+.modal-title {
+    color: var(--primary-color);
+    font-size: 2.2rem;
+    font-weight: 900;
+    border-bottom: 4px solid var(--secondary-color); 
+    padding-bottom: 15px;
+    margin-bottom: 35px;
+}
+
+.perfil-detalhe-body {
+    display: grid;
+    grid-template-columns: 2fr 3fr; 
+    gap: 40px;
+}
+
+.detalhe-campo {
+    padding: 0;
+}
+
+.detalhe-campo h4 {
+    font-size: 1.2em;
+    color: var(--tertiary-color); 
+    margin-bottom: 15px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Caixa de descrição */
+.detalhe-campo p {
+    margin: 0;
+    color: var(--text-dark);
+    line-height: 1.6;
+    background: #f0f0f5; 
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05); 
+}
+
+/* Tags List */
+.tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 5px;
+}
+.tag-chip {
+    padding: 7px 14px;
+    border-radius: 25px; 
+    font-size: 0.85em;
+    font-weight: 700;
+    border: none;
+    background: rgba(160, 68, 255, 0.15); 
+    color: var(--primary-color);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Lista de Projetos Participados */
+.projetos-participados-lista {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.projetos-participados-lista li {
+    background: #ffffff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    font-size: 0.95em;
+    border-left: 6px solid var(--secondary-color); 
+    color: var(--text-dark);
+    box-shadow: var(--shadow-soft);
+    transition: all 0.2s;
+}
+.projetos-participados-lista li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.projetos-participados-lista li strong {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.btn-fechar-modal {
+    margin-top: 40px;
+    padding: 12px 25px;
+    background: var(--text-medium);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    float: right;
+    transition: background 0.2s;
+    box-shadow: var(--shadow-soft);
+}
+
+.btn-fechar-modal:hover {
+    background: var(--text-dark);
+}
+
+/* --- ESTILOS AUXILIARES --- */
+
+.loading-spinner {
+    animation: spin 1.5s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.no-data {
+    text-align: center;
+    padding-top: 100px;
+}
+
+
+/* ================================================= */
+/* 4. RESPONSIVIDADE                 */
+/* ================================================= */
+
+@media (min-width: 600px) {
+    .dashboard-header-controls {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 992px) {
+    .dashboard-container {
+        padding: 50px 30px;
+    }
+    .perfil-detalhe-body {
+        grid-template-columns: 1fr; 
+        gap: 25px;
+    }
+    .modal-content.profile-modal {
+        padding: 30px;
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 600px) {
+    .dashboard-container {
+        padding: 20px 15px;
+    }
+    .dashboard-title {
+        font-size: 2rem;
+    }
+    .dashboard-header-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .candidatos-table {
+        min-width: 600px; 
+        font-size: 0.85em;
+    }
+    .candidatos-table th, .candidatos-table td {
+        padding: 12px 15px;
+    }
+    .action-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .action-buttons button {
+        width: 100%;
+        justify-content: center;
+    }
+}
