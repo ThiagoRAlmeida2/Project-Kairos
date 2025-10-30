@@ -4,8 +4,8 @@
 
 :root {
   /* Cores Modernas */
-  --primary-color: #7b5cf5; /* Roxo principal (Seu roxo original) */
-  --secondary-color: #927be6; /* Roxo secundário (Para gradiente) */
+  --primary-color: #7b5cf5; 
+  --secondary-color: #927be6; 
   --background-light: #f4f7f9;
   --card-bg: #ffffff;
   --text-dark: #2c3e50;
@@ -14,6 +14,17 @@
   --success-color: #22c55e;
   --danger-color: #e74c3c;
   --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.08);
+
+  /* Cores de Tags (Referência) */
+  --tag-default-border: #927be6;
+  --tag-default-color: #7b5cf5;
+  /* Cores específicas de tags (Ajuste ou defina estas no arquivo projetos.css ou global) */
+  --tag-JavaScript: #f7df1e;
+  --tag-Python: #306998;
+  --tag-Java: #e04a4f;
+  --tag-C-sharp: #178600; 
+  --tag-C-plus-plus: #00599c; 
+  --tag-React: #61dafb;
 }
 
 body {
@@ -33,14 +44,14 @@ body {
   background: var(--card-bg);
   border-radius: 20px;
   padding: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Sombra mais profunda e suave */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
   width: 100%;
   max-width: 950px;
 }
 
 /* --- TÍTULO --- */
 .perfil-titulo {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 700;
     margin-bottom: 30px;
     padding-bottom: 10px;
@@ -48,7 +59,7 @@ body {
     color: var(--text-dark);
 }
 
-/* --- LAYOUT PRINCIPAL --- */
+/* --- LAYOUT PRINCIPAL (Foto e Info) --- */
 .perfil-top {
   display: flex;
   gap: 50px;
@@ -57,17 +68,17 @@ body {
 /* --- FOTO --- */
 .foto-container {
   position: relative;
-  flex-shrink: 0; /* Impede que o container de foto encolha */
+  flex-shrink: 0;
   margin-top: 20px;
 }
 
 .foto-perfil {
-  width: 180px; /* Foto um pouco maior */
+  width: 180px; 
   height: 180px;
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid var(--secondary-color);
-  box-shadow: 0 0 0 8px rgba(123, 92, 245, 0.1); /* Anel externo suave */
+  box-shadow: 0 0 0 8px rgba(123, 92, 245, 0.1); 
 }
 
 .editar-foto {
@@ -76,7 +87,7 @@ body {
   right: 5px;
   background: var(--gradient-main);
   color: #fff;
-  padding: 10px; /* Botão de edição maior e mais visível */
+  padding: 10px; 
   border-radius: 50%;
   cursor: pointer;
   transition: transform 0.2s;
@@ -96,7 +107,7 @@ body {
 }
 
 .campo label {
-  font-weight: 600; /* Mais destaque no label */
+  font-weight: 600;
   margin-bottom: 5px;
   display: block;
   color: var(--text-dark);
@@ -107,10 +118,12 @@ body {
   position: relative;
 }
 
-.input-editavel input {
+/* Estilo Base para Input e Textarea */
+.input-editavel input,
+.input-editavel textarea {
   width: 100%;
   padding: 12px 15px;
-  padding-right: 45px; /* Espaço para o ícone */
+  padding-right: 45px; 
   border-radius: 10px;
   border: 1px solid #dcdcdc;
   background: var(--background-light);
@@ -119,15 +132,51 @@ body {
   transition: all 0.3s ease;
 }
 
+/* Estilo para Textarea */
+.input-editavel.is-textarea textarea {
+    min-height: 120px;
+    resize: vertical;
+    padding-right: 15px; 
+}
+
+/* Grid de Checkboxes no modo edição */
+.tags-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #dcdcdc; 
+}
+
+.tag-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+}
+
+.tags-checkbox-grid .help-text {
+    grid-column: 1 / -1;
+    margin-top: 5px;
+}
+
 /* Estilo para campo que PODE ser editado */
-.input-editavel.is-editable input {
+.input-editavel.is-editable input,
+.input-editavel.is-editable textarea,
+.input-editavel.is-editable .tags-checkbox-grid {
     border-color: var(--primary-color);
     background: #fff;
     box-shadow: 0 0 5px rgba(123, 92, 245, 0.4);
 }
 
-.input-editavel input:read-only {
-  background: #e9ecef; /* Cinza claro e sutil */
+.input-editavel input:read-only,
+.input-editavel textarea:read-only {
+  background: #e9ecef; 
   border-color: #e9ecef;
   cursor: default;
   color: var(--text-medium);
@@ -138,8 +187,8 @@ body {
   right: 15px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-medium); /* Cinza padrão */
-  cursor: default; /* Não clicável no JSX */
+  color: var(--text-medium);
+  cursor: default;
   transition: color 0.3s;
   opacity: 0.7;
 }
@@ -150,12 +199,43 @@ body {
     opacity: 1;
 }
 
-/* --- BOTÕES --- */
+/* --- TAGS (MODO LEITURA) --- */
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 0;
+}
+
+.tag-chip {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 2px solid var(--tag-default-border);
+    color: var(--tag-default-color);
+    background: #f7f5ff;
+}
+
+.tag-chip:hover {
+    opacity: 0.9;
+}
+
+.no-tags {
+    font-style: italic;
+    color: var(--text-medium);
+    font-size: 0.9em;
+}
+
+/* --- BOTÕES DE AÇÃO --- */
 .botoes {
   margin-top: 30px;
   display: flex;
   gap: 15px;
-  justify-content: flex-start; /* Alinha à esquerda, mais moderno */
+  justify-content: flex-start;
 }
 
 .btn-principal {
@@ -178,9 +258,7 @@ body {
 }
 
 .btn-salvar {
-    /* O Salvar usa o .btn-principal para o gradiente, mas o .btn-salvar 
-       pode ser usado para sobrescrever se você quiser o verde */
-    background: var(--success-color); /* Retorna ao verde para contraste */
+    background: var(--success-color); 
     box-shadow: 0 4px 10px rgba(34, 197, 94, 0.4);
 }
 
@@ -189,7 +267,7 @@ body {
 }
 
 .btn-cancelar {
-  background: #adb5bd; /* Cinza de cancelamento */
+  background: #adb5bd;
   color: var(--text-dark);
   padding: 12px 25px;
   border: none;
@@ -206,7 +284,129 @@ body {
   color: #fff;
 }
 
+/* ----------------------------------------------------- */
+/* --- SEÇÃO: PROJETOS PARTICIPADOS (REUTILIZANDO ESTILOS) --- */
+/* ----------------------------------------------------- */
+
+.projetos-participados-section {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+}
+
+.projetos-participados-section h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.projetos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* Reutiliza o estilo base do project-card (ajustado para ser menor e mais discreto) */
+.project-card.projeto-participado {
+    /* Necessário para aplicar o estilo base do card de projeto */
+    background: var(--card-bg);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    border-left: 4px solid var(--secondary-color);
+    
+    /* Sobrescreve estilos para esta seção */
+    padding: 20px;
+    height: auto;
+    transition: all 0.2s ease;
+    display: block; 
+}
+
+.project-card.projeto-participado:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    border-left-color: var(--primary-color);
+}
+
+.projeto-participado .project-header {
+    margin-bottom: 0;
+}
+.projeto-participado .card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-dark);
+}
+
+.projeto-participado .card-description {
+    color: var(--text-medium);
+    line-height: 1.4;
+    margin: 10px 0;
+    font-size: 0.95rem;
+}
+
+/* Esconder a tag de status que aparece no project-card original */
+.projeto-participado .status-tags {
+    display: none;
+}
+
+/* Estilos de detalhes */
+.projeto-participado .card-details {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.projeto-participado .card-info {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-medium);
+    margin-top: 5px;
+}
+
+.projeto-participado .card-info span {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+/* Estilos de Regime (Copiados do projetos.css) */
+.status-regime {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.regime-pj {
+    background-color: #fff3cd; 
+    color: #856404;
+}
+
+.regime-clt {
+    background-color: #d4edda; 
+    color: #155724;
+}
+
+.no-projects {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--text-medium);
+    padding: 20px;
+    font-style: italic;
+}
+
 /* --- RESPONSIVIDADE --- */
+@media (max-width: 992px) {
+    .projetos-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
   .perfil-card {
     padding: 20px;
@@ -217,22 +417,8 @@ body {
     gap: 20px;
     align-items: center;
   }
-
-  .foto-container {
-    align-self: center;
-  }
-
-  .perfil-info {
-    width: 100%;
-  }
   
-  .botoes {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .btn-principal, .btn-cancelar {
-    width: 100%;
-    justify-content: center;
+  .projetos-grid {
+    grid-template-columns: 1fr;
   }
 }

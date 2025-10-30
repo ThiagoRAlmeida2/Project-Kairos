@@ -2,31 +2,70 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/perfil.css";
-import { FaPencilAlt, FaTimes } from "react-icons/fa"; // Adicionado FaTimes para fechar edição
+import { FaPencilAlt, FaTimes, FaProjectDiagram } from "react-icons/fa"; 
 
+// Lista de tags para o Multi-Select (usadas nos checkboxes)
+const LINGUAGENS_OPTIONS = [
+    "JavaScript", "Python", "Java", "C#", "C++", "React", "Angular", 
+    "Vue.js", "Node.js", "Spring Boot", "SQL", "MongoDB", "AWS", "Docker"
+];
+
+// Funções utilitárias (repetidas do ProjetosList para auto-suficiência)
+const parseTagsString = (tagsString) => {
+    if (!tagsString || typeof tagsString !== 'string') return [];
+    return tagsString.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+};
+
+// 🔹 Função utilitária para criar um objeto Date robusto (Lida com o formato [ano, mês, dia] do LocalDate)
+const parseDate = (dateData) => {
+    if (!dateData) return null;
+    
+    if (Array.isArray(dateData) && dateData.length >= 3) {
+      const date = new Date(dateData[0], dateData[1] - 1, dateData[2]);
+      if (isNaN(date)) return null;
+      return date;
+    }
+    
+    const date = new Date(dateData);
+    if (isNaN(date)) return null;
+    return date;
+}
+
+// Componente principal Perfil
 export default function Perfil() {
   const [usuario, setUsuario] = useState(null);
   const [editando, setEditando] = useState(false);
   const [imagemPreview, setImagemPreview] = useState(null);
+  const [tagsInput, setTagsInput] = useState([]); 
+  const [originalUsuario, setOriginalUsuario] = useState(null); 
+
+  const fetchPerfil = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get("http://localhost:8081/api/usuario/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = res.data;
+      setUsuario(data);
+      setOriginalUsuario(data); 
+      
+      if (data.role === "ROLE_ALUNO" && data.aluno?.tags) {
+          setTagsInput(parseTagsString(data.aluno.tags));
+      } else {
+          setTagsInput([]);
+      }
+    } catch (err) {
+      console.error("Erro ao carregar perfil:", err);
+    }
+  };
 
   useEffect(() => {
-    const fetchPerfil = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:8081/api/usuario/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUsuario(res.data);
-      } catch (err) {
-        console.error("Erro ao carregar perfil:", err);
-      }
-    };
     fetchPerfil();
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // O backend retorna a entidade principal com as aninhadas (aluno/empresa)
+    // Sincroniza as alterações de texto no estado principal
     setUsuario((prev) => ({
       ...prev,
       aluno: prev.aluno ? { ...prev.aluno, [name]: value } : prev.aluno,
@@ -34,38 +73,57 @@ export default function Perfil() {
     }));
   };
   
+  // Handler para o Checkbox de Tags
+  const handleTagChange = (newTagsArray) => {
+    setTagsInput(newTagsArray); 
+    
+    // Sincroniza o objeto 'usuario.aluno' no estado principal com a nova string de tags
+    setUsuario((prev) => ({
+        ...prev,
+        aluno: prev.aluno ? { ...prev.aluno, tags: newTagsArray.join(',') } : prev.aluno,
+    }));
+  };
+  
   const handleCancel = () => {
-    // Para cancelar, apenas desabilita a edição e recarrega os dados originais se necessário
+    // Reverte o estado para o original
+    setUsuario(originalUsuario);
+    if (originalUsuario.role === "ROLE_ALUNO" && originalUsuario.aluno?.tags) {
+        setTagsInput(parseTagsString(originalUsuario.aluno.tags));
+    }
     setEditando(false);
-    // O ideal seria armazenar o estado original separado para reverter,
-    // mas por simplicidade, vamos apenas resetar o preview da imagem
-    setImagemPreview(null); 
-    fetchPerfil(); // Pode ser pesado, mas garante que os dados voltem ao original
+    setImagemPreview(null);
+    fetchPerfil(); 
   };
 
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      const updatedData = usuario.role === "ROLE_ALUNO" ? usuario.aluno : usuario.empresa;
-
+      
+      let payload;
+      if (usuario.role === "ROLE_ALUNO") {
+          // O payload é o objeto aluno, que já está atualizado
+          payload = usuario.aluno; 
+      } else {
+          payload = usuario.empresa;
+      }
+      
       const res = await axios.put(
         "http://localhost:8081/api/usuario/me",
-        updatedData,
+        payload,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setUsuario(res.data); // atualiza estado com DTO retornado
+      setUsuario(res.data);
+      setOriginalUsuario(res.data);
       setEditando(false);
-      setImagemPreview(null); // Reseta preview após salvar
+      setImagemPreview(null);
       alert("Perfil atualizado com sucesso!");
     } catch (err) {
       console.error("Erro ao atualizar perfil:", err);
-      alert("Erro ao salvar alterações");
+      alert(err.response?.data?.message || err.response?.data || "Erro ao salvar alterações");
     }
   };
   
-  // NOTE: A lógica de upload de imagem real (enviar para o BE) precisaria de um endpoint POST/PUT separado com FormData.
-  // Aqui apenas lidamos com o preview no lado do cliente.
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -76,11 +134,11 @@ export default function Perfil() {
   if (!usuario) return <p className="loading">Carregando perfil...</p>;
 
   const isAluno = usuario.role === "ROLE_ALUNO";
+  const alunoTags = parseTagsString(usuario.aluno?.tags); 
 
   return (
     <div className="perfil-container">
       <div className="perfil-card">
-        {/* Adicionado Título Moderno */}
         <h2 className="perfil-titulo">
           {isAluno ? "Meu Perfil de Aluno" : "Perfil da Empresa"}
         </h2>
@@ -115,7 +173,7 @@ export default function Perfil() {
               name="email"
               value={usuario.email}
               readOnly={true}
-              editando={false} // Email nunca é editável aqui
+              editando={false}
             />
 
             {isAluno ? (
@@ -126,7 +184,6 @@ export default function Perfil() {
                   value={usuario.aluno?.nome || ""}
                   onChange={handleChange}
                   editando={editando}
-                  // Adicionei key para forçar re-render, evitando bugs de estado
                   key={`aluno-nome-${editando}`} 
                 />
                 <CampoEditavel
@@ -145,8 +202,29 @@ export default function Perfil() {
                   editando={editando}
                   key={`aluno-matricula-${editando}`}
                 />
+                
+                {/* NOVO CAMPO: DESCRIÇÃO */}
+                <CampoEditavel
+                  label="Descrição Pessoal"
+                  name="descricao"
+                  value={usuario.aluno?.descricao || ""}
+                  onChange={handleChange}
+                  editando={editando}
+                  key={`aluno-descricao-${editando}`}
+                  isTextarea={true}
+                />
+                
+                {/* NOVO CAMPO: TAGS DE LINGUAGEM (CHECKBOXES) */}
+                <TagsEditaveis
+                    label="Habilidades/Tecnologias"
+                    tags={alunoTags}
+                    editando={editando}
+                    currentSelectedTags={tagsInput}
+                    handleTagChange={handleTagChange}
+                />
               </>
             ) : (
+              // CAMPOS DE EMPRESA
               <>
                 <CampoEditavel
                   label="Nome da Empresa"
@@ -187,28 +265,152 @@ export default function Perfil() {
             </div>
           </div>
         </div>
+        
+        {/* NOVA SEÇÃO: PROJETOS PARTICIPADOS (SÓ ALUNO) */}
+        {isAluno && (
+          <ProjetosParticipados 
+              projetos={usuario.aluno?.projetosParticipados || []} 
+          />
+        )}
       </div>
     </div>
   );
 }
 
-function CampoEditavel({ label, name, value, onChange, editando, readOnly }) {
-  // Use 'isEditable' para controlar o estado da borda
+// -----------------------------------------------------------------
+// COMPONENTES DE AJUDA
+// -----------------------------------------------------------------
+
+// Componente para campos simples e textarea
+function CampoEditavel({ label, name, value, onChange, editando, readOnly, isTextarea }) {
   const isEditable = !readOnly && editando;
   
+  const InputComponent = isTextarea ? 'textarea' : 'input';
+
   return (
     <div className="campo">
       <label>{label}</label>
-      <div className={`input-editavel ${isEditable ? 'is-editable' : ''}`}>
-        <input
+      <div className={`input-editavel ${isEditable ? 'is-editable' : ''} ${isTextarea ? 'is-textarea' : ''}`}>
+        <InputComponent
           name={name}
           value={value}
           onChange={onChange}
           readOnly={readOnly || !editando}
+          rows={isTextarea ? 4 : undefined}
         />
-        {/* Ícone só aparece se o campo for tecnicamente editável (não readOnly) */}
         {!readOnly && <FaPencilAlt className={`icone-editar ${isEditable ? 'visible' : ''}`} />}
       </div>
     </div>
   );
+}
+
+// Componente para Tags (Leitura ou Edição via Checkbox) 
+function TagsEditaveis({ label, tags, editando, currentSelectedTags, handleTagChange }) {
+    
+    const getTagClassName = (tag) => `tag-chip tag-${tag.replace(/\s|#/g, '-').replace(/\+\+/g, 'plus-plus').replace(/\./g, '')}`;
+
+    const handleCheckboxChange = (e) => {
+        const value = e.target.value;
+        const isChecked = e.target.checked;
+        
+        let newTagsArray;
+        if (isChecked) {
+            newTagsArray = [...currentSelectedTags, value];
+        } else {
+            newTagsArray = currentSelectedTags.filter(tag => tag !== value);
+        }
+            
+        handleTagChange(newTagsArray);
+    };
+
+    return (
+        <div className="campo">
+            <label>{label}</label>
+            
+            {editando ? (
+                // MODO EDIÇÃO: GRID DE CHECKBOXES
+                <div className="input-editavel is-editable tags-checkbox-grid"> 
+                    {LINGUAGENS_OPTIONS.map(lang => (
+                        <label key={lang} className="tag-checkbox-label">
+                            <input 
+                                type="checkbox"
+                                value={lang}
+                                checked={currentSelectedTags.includes(lang)}
+                                onChange={handleCheckboxChange} 
+                            />
+                            {lang}
+                        </label>
+                    ))}
+                    <small className="help-text">Selecione suas principais tecnologias.</small>
+                </div>
+            ) : (
+                // MODO LEITURA
+                <div className="tags-container">
+                    {tags.length > 0 ? (
+                        tags.map(tag => (
+                            <span key={tag} className={getTagClassName(tag)}>
+                                {tag}
+                            </span>
+                        ))
+                    ) : (
+                        <span className="no-tags">Nenhuma tecnologia listada.</span>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}
+
+
+// Componente para listar projetos participados
+function ProjetosParticipados({ projetos }) {
+    
+    // Funções utilitárias necessárias aqui:
+    const getTagClassName = (tag) => `tag-chip tag-${tag.replace(/\s|#/g, '-').replace(/\+\+/g, 'plus-plus').replace(/\./g, '')}`;
+
+    return (
+        <div className="projetos-participados-section">
+            <h3><FaProjectDiagram /> Projetos Participados ({projetos.length})</h3>
+            
+            <div className="projetos-grid">
+                {projetos.length > 0 ? ( 
+                    projetos.map(p => (
+                        <div key={p.id} className="project-card projeto-participado">
+                            <div className="project-header">
+                                <h4 className="card-title">{p.nome}</h4>
+                            </div>
+
+                            <div className="project-body">
+                                
+                                {/* Descrição (Simplificada) */}
+                                <p className="card-description">{p.descricao?.substring(0, 100) || 'Sem descrição.'}...</p>
+
+                                {/* Tags */}
+                                <div className="tags-list">
+                                    {parseTagsString(p.tags).length > 0 ? (
+                                        parseTagsString(p.tags).map(tag => (
+                                            <span key={tag} className={getTagClassName(tag)}>
+                                                {tag}
+                                            </span>
+                                        ))
+                                    ) : (
+                                        <span className="no-tags">Sem tags</span>
+                                    )}
+                                </div>
+
+                                {/* Detalhes (Oculta Empresa) */}
+                                <div className="card-details">
+                                    <p className="card-info">📅 Início: <span>{p.dataInicio ? parseDate(p.dataInicio).toLocaleDateString('pt-BR') : 'N/I'}</span></p>
+                                    <p className="card-info">🏁 Fim (Previsto): <span>{p.dataFim ? parseDate(p.dataFim).toLocaleDateString('pt-BR') : 'N/I'}</span></p>
+                                    <p className="card-info">💼 Regime: <span className={`status-regime regime-${p.regime?.toLowerCase()}`}>{p.regime || 'N/I'}</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <p className="no-projects">Ainda não há projetos registrados.</p>
+                )}
+            </div>
+        </div>
+    );
 }
