@@ -177,7 +177,7 @@ a{ color:inherit; text-decoration:none; }
   position: relative;
 }
 .brand{ display:flex; align-items:center; gap:10px; font-weight:700; }
-.brand__logo{ height:28px; }
+.brand__logo{ height:52px; }
 .menu{ display:flex; gap:22px; font-weight:600; color:#4b5563;}
 .menu a:hover{ color: var(--primary); }
 .nav__toggle{
