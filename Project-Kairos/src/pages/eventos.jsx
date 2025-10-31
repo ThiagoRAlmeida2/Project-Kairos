@@ -7,17 +7,9 @@ import "../css/Eventos.css";
 export default function Eventos() {
   return (
     <div className="eventos-container">
-      <section className="eventos-descricao">
-        <DescEventos />
-      </section>
-      <section className="eventos-filtro">
-        <FiltroEve />
-      </section>
-
-      <section className="eventos-lista">
-        <EventosList />
-      </section>
-
+      <DescEventos />
+      <FiltroEve />
+      <EventosList />
     </div>
   );
 }

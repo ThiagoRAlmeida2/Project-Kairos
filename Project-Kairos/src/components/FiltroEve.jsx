@@ -1,7 +1,7 @@
 import React from "react";
 import "../css/Eventos.css";
 
-export default function FiltroEv() {
+export default function FiltroEve() {
   return (
     <section className="filtro-eve">
       <div className="filtro-bloco">

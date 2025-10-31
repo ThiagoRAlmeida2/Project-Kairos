@@ -431,10 +431,10 @@ a{ color:inherit; text-decoration:none; }
   line-height: 1.6;
 }
 .services__grid{ 
-  display: grid; 
-  grid-template-columns: repeat(4, minmax(0, 1fr)); 
-  gap: 16px; 
-  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
 }
 .pill{ 
   height: 48px; 
@@ -616,7 +616,8 @@ a{ color:inherit; text-decoration:none; }
 }
 @media (max-width: 600px){
   .menu{ display:none; }
-  .cta{ padding: 60px 0; }
+  .services__grid{ grid-template-columns: 1fr; }
+  .cta{ padding: 40px 0; }
   .cta__inner{ padding: 30px 20px; }
   .cta__title{ font-size: 1.8rem; }
   .cta__subtitle{ font-size: 1rem; }
