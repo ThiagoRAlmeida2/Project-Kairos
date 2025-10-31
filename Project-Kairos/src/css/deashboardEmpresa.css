@@ -1,4 +1,4 @@
-/* src/css/empresa-dashboard.css (CÓDIGO COMPLETO E MODERNO - FINAL 2.0) */
+/* src/css/empresa-dashboard.css (CÓDIGO COMPLETO E MODERNO - FINAL 3.0 - SCROLL CONTROLADO) */
 
 :root {
     --primary-color: #6a3093; /* Roxo Escuro Principal */
@@ -71,8 +71,6 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     transform: translateY(-2px);
 }
-
-
 /* ================================================= */
 /* 2. TABELA E ESTILOS GERAIS          */
 /* ================================================= */
@@ -84,18 +82,11 @@
     background: var(--card-bg); 
     border-radius: 15px; 
     box-shadow: var(--shadow-main);
-    border: 1px solid var(--border-color);
 }
 
 .candidatos-table {
     width: 100%;
-    /* Garante que as bordas se unam */
     border-collapse: collapse; 
-    /* CRÍTICO: Zera o espaçamento entre células */
-    border-spacing: 0; 
-    /* CRÍTICO: Zera qualquer margem/padding que possa empurrar a tabela */
-    margin: 0;
-    padding: 0;
     min-width: 900px; 
 }
 
@@ -109,16 +100,16 @@
     padding: 18px 25px; 
     text-align: left;
     border: none; 
+    vertical-align: middle; /* Alinha verticalmente o conteúdo das células */
 }
 
-.candidatos-table th {
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 0.95em;
-    letter-spacing: 0.5px;
+.candidatos-table td {
+    border-style: dashed;
+    color: var(--text-dark);
+    font-weight: 500;
+    border-bottom: 1px solid var(--border-color); 
 }
 
-/* Arredondamento dos cantos superiores dos THs dentro do THEAD */
 .candidatos-table thead tr:first-child th:first-child { 
     border-top-left-radius: 15px; 
 }
@@ -126,11 +117,13 @@
     border-top-right-radius: 15px; 
 }
 
-/* Adiciona a borda inferior apenas nas células de dados (TD) */
 .candidatos-table td {
-    border-bottom: 1px solid var(--border-color);
     color: var(--text-dark);
     font-weight: 500;
+    border-left: none;
+    border-right: none; 
+    border-top: none; 
+    border-bottom: 1px solid var(--border-color);
 }
 
 .candidatos-table tr:hover td {
@@ -146,7 +139,6 @@
     font-weight: 700;
     cursor: pointer;
     transition: color 0.2s, text-decoration 0.2s;
-    display: flex;
     align-items: center;
     gap: 8px;
 }
@@ -157,8 +149,8 @@
 
 /* Botões de Ação na Tabela */
 .action-buttons {
-    display: flex;
-    gap: 12px;
+
+    align-items: center; 
 }
 
 .action-buttons button {
@@ -200,7 +192,10 @@
     font-style: italic;
     color: var(--text-medium);
     font-size: 0.9em;
+    display: inline-flex; /* 🛠️ ADICIONADO: Trata o span como inline-flex para consistência com botões */
+    align-items: center; /* Alinha verticalmente o texto */
 }
+
 
 /* ------------------------------------------- */
 /* --- ESTILOS DE STATUS NA TABELA E GERAL --- */
@@ -224,15 +219,23 @@
 
 
 /* ================================================= */
-/* 3. ESTILO DO MODAL DE PERFIL        */
+/* 3. ESTILO DO MODAL DE PERFIL (SCROLL CONTROLADO)*/
 /* ================================================= */
 
 .modal-content.profile-modal {
     max-width: 850px; 
+    width: 95%; 
+    
+    /* 🛠️ AJUSTE PARA O MODAL PRINCIPAL: Define altura máxima e layout flexível */
+    max-height: 90vh; 
+    overflow: hidden; /* Garante que o container principal não tenha scroll */
+    
     padding: 50px;
     border-radius: 20px; 
     box-shadow: var(--shadow-main);
     background: var(--card-bg);
+    display: flex;
+    flex-direction: column; /* Necessário para o corpo ocupar o espaço restante */
 }
 
 .modal-title {
@@ -242,12 +245,36 @@
     border-bottom: 4px solid var(--secondary-color); 
     padding-bottom: 15px;
     margin-bottom: 35px;
+    flex-shrink: 0; /* Impede que o título encolha */
 }
 
+/* 🛠️ AJUSTE: O CORPO DO CONTEÚDO AGORA CONTROLA O SCROLL */
 .perfil-detalhe-body {
     display: grid;
     grid-template-columns: 2fr 3fr; 
     gap: 40px;
+    
+    /* Permite que o corpo ocupe o espaço restante (entre título e botão) */
+    flex-grow: 1; 
+    overflow-y: auto; /* SCROLL REINTRODUZIDO AQUI! */
+    padding-right: 20px; /* Espaço para a barra de rolagem */
+    margin-right: -20px; /* Contrapeso para o padding, para o modal manter a largura total */
+}
+
+/* Colunas de Detalhes Básicos (Esquerda) */
+.detalhe-coluna-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /* Mantido: Estilo de separador base */
+    border-right: 1px solid #eee; 
+    padding-right: 40px;
+}
+
+.detalhe-coluna-tags {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
 
 .detalhe-campo {
@@ -274,6 +301,12 @@
     border-radius: 12px;
     border: 1px solid var(--border-color);
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05); 
+    
+    /* 🛠️ CORREÇÃO: Remove a limitação de altura e overflow para que o texto apareça todo */
+    max-height: none; 
+    overflow: visible; 
+    text-overflow: clip; 
+    white-space: pre-wrap; /* Permite quebras de linha */
 }
 
 /* Tags List */
@@ -302,6 +335,10 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    
+    /* 🛠️ CORREÇÃO: Remove a limitação de altura para que a lista apareça toda, o scroll é controlado pelo body */
+    max-height: none; 
+    overflow: visible; 
 }
 
 .projetos-participados-lista li {
@@ -335,6 +372,7 @@
     float: right;
     transition: background 0.2s;
     box-shadow: var(--shadow-soft);
+    flex-shrink: 0; /* Impede que o botão encolha */
 }
 
 .btn-fechar-modal:hover {
@@ -374,40 +412,54 @@
     .dashboard-container {
         padding: 50px 30px;
     }
+    /* Passa para coluna única */
     .perfil-detalhe-body {
         grid-template-columns: 1fr; 
-        gap: 25px;
+        gap: 20px;
+        
+        /* 🛠️ AJUSTE PARA O SCROLL: Remove o padding right no mobile para evitar barra dupla */
+        padding-right: 0; 
+        margin-right: 0;
     }
+    /* Remove a borda direita e adiciona borda inferior no primeiro bloco */
+    .detalhe-coluna-info {
+        border-right: none;
+        padding-right: 0;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+
     .modal-content.profile-modal {
         padding: 30px;
         max-width: 90%;
+        max-height: 95vh; 
     }
-}
-
-@media (max-width: 600px) {
-    .dashboard-container {
-        padding: 20px 15px;
-    }
-    .dashboard-title {
-        font-size: 2rem;
-    }
-    .dashboard-header-controls {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .candidatos-table {
-        min-width: 600px; 
-        font-size: 0.85em;
-    }
-    .candidatos-table th, .candidatos-table td {
-        padding: 12px 15px;
-    }
-    .action-buttons {
-        flex-direction: column;
-        gap: 8px;
-    }
-    .action-buttons button {
-        width: 100%;
-        justify-content: center;
+    
+    @media (max-width: 600px) {
+        .dashboard-container {
+            padding: 20px 15px;
+        }
+        .dashboard-title {
+            font-size: 2rem;
+        }
+        .dashboard-header-controls {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .candidatos-table {
+            min-width: 600px; 
+            font-size: 0.85em;
+        }
+        .candidatos-table th, .candidatos-table td {
+            padding: 12px 15px;
+        }
+        .action-buttons {
+            flex-direction: column;
+            gap: 8px;
+        }
+        .action-buttons button {
+            width: 100%;
+            justify-content: center;
+        }
     }
 }

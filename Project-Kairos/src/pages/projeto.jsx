@@ -15,7 +15,7 @@ export default function ProjetosList() {
     
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
-    const [tags, setTags] = useState([]); // Array para armazenar as tags selecionadas
+    const [tags, setTags] = useState([]); 
     const [regime, setRegime] = useState("PJ"); 
     const [dataInicio, setDataInicio] = useState(""); 
     const [dataFim, setDataFim] = useState(""); 
@@ -75,6 +75,24 @@ export default function ProjetosList() {
         return `${diffMonths} meses`;
     }
 
+    // Função para gerar a classe CSS (corrigida)
+    const generateTagClassName = (tag) => {
+        // Caso especial para C++ para evitar falhas na regex do ambiente
+        if (tag === "C++") {
+            return "tag-c-plus-plus"; 
+        }
+        
+        // Lógica para todas as outras tags (garantindo o alinhamento com o CSS)
+        return `tag-${tag
+            .replace(/\s/g, '-')
+            .replace(/\+\+/g, 'plus-plus') // Corrigido o problema do escape na Regex
+            .replace(/\#/g, 'sharp') // Trata o C#
+            .replace(/\./g, '-') // Trata Vue.js, Node.js e Spring Boot
+            .toLowerCase()
+        }`;
+    }
+    
+
 
     // Função para buscar projetos e inscrições do aluno
     const fetchProjetos = async () => {
@@ -82,15 +100,17 @@ export default function ProjetosList() {
             let url = `${baseURL}/public`;
             let config = {};
             let isFetchingInscricoes = false;
+            let isFetchingMeusProjetos = false;
 
             if (role === "ROLE_EMPRESA" && token) {
                 url = `${baseURL}/meus`;
                 config = { headers: { Authorization: `Bearer ${token}` } };
+                isFetchingMeusProjetos = true;
             } else if (role === "ROLE_ALUNO" && token) {
                 if (modoAluno === "INSCRITOS") {
                     url = `${baseURL}/inscricoes`;
                     config = { headers: { Authorization: `Bearer ${token}` } };
-                    isFetchingInscricoes = true; // Define que estamos na rota de inscrições
+                    isFetchingInscricoes = true; 
                 } else {
                     url = `${baseURL}/public`;
                     config = {};
@@ -104,8 +124,6 @@ export default function ProjetosList() {
                 const inscricoesRes = await axios.get(`${baseURL}/inscricoes`, 
                     { headers: { Authorization: `Bearer ${token}` } });
                     
-                // Mapeia os IDs dos projetos inscritos
-                // Nota: o objeto p aqui é o retorno de /inscricoes, que é o Projeto com o status
                 const ids = inscricoesRes.data.map(p => p.id); 
                 setProjetosInscritosIds(ids);
             } else {
@@ -127,9 +145,10 @@ export default function ProjetosList() {
                     dataInicio: p.dataInicio, 
                     dataFim: p.dataFim,
                     
-                    // 🚩 CRÍTICO: Mapeia o status retornado pelo backend
-                    // Se estiver buscando inscrições, usa p.status (que deve vir do InscricaoProjetoResponse)
+                    // Mapeia o status e a contagem se disponíveis
                     statusInscricao: isFetchingInscricoes ? p.status : undefined,
+                    totalCandidatos: isFetchingMeusProjetos ? p.totalCandidatos : 0,
+                    aprovados: isFetchingMeusProjetos ? p.aprovados : 0,
                 }));
 
                 console.log("Projetos carregados:", projetosFormatados);
@@ -171,7 +190,7 @@ export default function ProjetosList() {
                 { 
                     nome, 
                     descricao,
-                    tags: tags.join(","), // Envia o array de tags como string separada por vírgula
+                    tags: tags.join(","), 
                     regime,
                     dataInicio,
                     dataFim,
@@ -192,6 +211,8 @@ export default function ProjetosList() {
                 regime: res.data.regime,
                 dataInicio: res.data.dataInicio,
                 dataFim: res.data.dataFim,
+                totalCandidatos: 0, 
+                aprovados: 0,
             };
 
             setProjetos([...projetos, novoProjeto]);
@@ -210,10 +231,8 @@ export default function ProjetosList() {
         
         setTags(prevTags => {
             if (isChecked) {
-                // Adiciona a tag se estiver marcada
                 return [...prevTags, value];
             } else {
-                // Remove a tag se estiver desmarcada
                 return prevTags.filter(tag => tag !== value);
             }
         });
@@ -253,7 +272,6 @@ export default function ProjetosList() {
 
             alert(`Inscrição no projeto ${projetoId} realizada com sucesso!`);
             
-            // Atualiza o array de IDs para refletir a inscrição no modo TODOS
             setProjetosInscritosIds([...projetosInscritosIds, projetoId]);
 
         } catch (err) {
@@ -275,9 +293,7 @@ export default function ProjetosList() {
 
             alert(`Inscrição no projeto ${projetoId} cancelada com sucesso!`);
             
-            // Remove o card se estiver no modo "Minhas Inscrições"
             setProjetos(projetos.filter(p => p.id !== projetoId));
-            // Remove o ID da lista de inscritos
             setProjetosInscritosIds(prevIds => prevIds.filter(id => id !== projetoId));
 
         } catch (err) {
@@ -287,58 +303,29 @@ export default function ProjetosList() {
         }
     };
 
-    // Função para gerar a classe CSS (corrigida)
-    const generateTagClassName = (tag) => {
-        // Caso especial para C++ para evitar falhas na regex do ambiente
-        if (tag === "C++") {
-            return "tag-c-plus-plus"; 
-        }
-        
-        // Lógica para todas as outras tags (garantindo o alinhamento com o CSS)
-        return `tag-${tag
-            .replace(/\s/g, '-')
-            .replace(/\+\+/g, 'plus-plus') // Corrigido o problema do escape na Regex
-            .replace(/\#/g, 'sharp') // Trata o C#
-            .replace(/\./g, '-') // Trata Vue.js, Node.js e Spring Boot
-            .toLowerCase()
-        }`;
-    }
-
-    // 🔹 LÓGICA DE ORDENAÇÃO (Mais Recente Primeiro)
+    // 🔹 LÓGICA DE ORDENAÇÃO E FILTRAGEM
     const projetosOrdenados = [...projetos].sort((a, b) => {
-        // Converte as datas de criação para objetos Date para comparação
         const dateA = parseDate(a.dataCriacao);
         const dateB = parseDate(b.dataCriacao);
-
-        // Trata datas inválidas ou nulas (coloca-as no final)
         if (!dateA) return 1;
         if (!dateB) return -1;
-        
-        // Ordena em ordem decrescente (mais recente primeiro: B - A)
         return dateB.getTime() - dateA.getTime();
     });
 
-
-    // 🔹 LÓGICA DE FILTRAGEM COMBINADA
-    // Filtra a lista já ordenada
     const projetosFiltrados = projetosOrdenados.filter((p) => {
-        // 1. Filtro de Texto (Nome ou Tag)
         const textoMin = filtroTexto.toLowerCase();
         const matchesTexto = 
             p.nome?.toLowerCase().includes(textoMin) ||
             p.tags?.some(tag => tag.toLowerCase().includes(textoMin));
             
-        // 2. Filtro por Regime (PJ/CLT/TODOS)
         const matchesRegime = 
             filtroRegime === "TODOS" || 
             p.regime?.toUpperCase() === filtroRegime;
             
-        // 3. Filtro por Tag Específica
         const matchesTag = 
             filtroTag === "TODAS" ||
             p.tags?.includes(filtroTag);
             
-        // O projeto deve satisfazer TODAS as condições de filtro
         return matchesTexto && matchesRegime && matchesTag;
     });
 
@@ -369,10 +356,10 @@ export default function ProjetosList() {
                         </button>
                     )}
 
-                    {/* 🚩 NOVO BOTÃO: DASHBOARD CANDIDATOS (Apenas Empresa) */}
+                    {/* 🚩 BOTÃO: DASHBOARD CANDIDATOS (Apenas Empresa) */}
                     {role === "ROLE_EMPRESA" && (
                         <a 
-                            href="/dashboard" // Assumindo que a rota do dashboard é /dashboard
+                            href="/dashboard" 
                             className="btn-candidatos-dashboard" 
                         >
                             Candidatos
@@ -392,7 +379,7 @@ export default function ProjetosList() {
                 </div>
             </div>
 
-            {/* 🚩 NOVA SEÇÃO DE FILTROS ABAIXO DO TOP BAR */}
+            {/* 🚩 SEÇÃO DE FILTROS */}
             <div className="filter-controls-bar">
                 <input
                     className="search-input"
@@ -433,13 +420,14 @@ export default function ProjetosList() {
                             className={`project-card ${p.encerrado ? "encerrado" : ""}`}
                         >
                             <div className="project-header">
-                                {/* 🚩 CORREÇÃO APLICADA: Adicionando a classe CSS para o gradiente */}
                                 <h3 className="project-title-link">{p.nome}</h3>
                                 <div className="status-tags">
                                     <span className={`status-regime regime-${p.regime?.toLowerCase()}`}>{p.regime}</span>
                                     {p.encerrado && <span className="status-tag encerrado">Encerrado</span>}
                                 </div>
                             </div>
+
+                            
                             
                             <div className="card-info-group">
                                 <span className="card-info">
@@ -450,7 +438,7 @@ export default function ProjetosList() {
                                 </span>
                             </div>
                             
-                            {/* GERAÇÃO DE TAGS (USANDO FUNÇÃO CORRIGIDA) */}
+                            {/* GERAÇÃO DE TAGS */}
                             <div className="tags-list">
                                 {p.tags.map(tag => {
                                     const className = generateTagClassName(tag); 
@@ -469,19 +457,26 @@ export default function ProjetosList() {
 
                             <div className="project-footer">
                                 <span>Empresa: {p.empresaNome}</span>
+                                
+                                {/*Exibe Aprovados na linha de baixo, se houver */}
                                 <span>
                                     Criado em:{" "}
-                                    {/* Usa parseDate para garantir que a data de criação seja formatada */}
-                                    {p.dataCriacao ? parseDate(p.dataCriacao).toLocaleDateString("pt-BR") : "-"}
+                                    {parseDate(p.dataCriacao) ? parseDate(p.dataCriacao).toLocaleDateString("pt-BR") : "-"}
                                 </span>
+                                
+                                {role === "ROLE_EMPRESA" && p.aprovados > 0 && (
+                                    <span className="aprovados-count-footer">
+                                        Aprovados: 
+                                        <strong style={{ color: 'var(--color-success)', marginLeft: '5px' }}>{p.aprovados}</strong>
+                                    </span>
+                                )}
                                 
                                 {/* Lógica do Botão para ALUNO (Inscrever / Inscrito / Cancelar) */}
                                 {!p.encerrado && role === "ROLE_ALUNO" && (
                                     <>
                                         {modoAluno === "INSCRITOS" ? (
-                                            // 🚩 BLOCO CORRIGIDO PARA EXIBIR O STATUS DA INSCRIÇÃO
+                                            // BLOCO CORRIGIDO PARA EXIBIR O STATUS DA INSCRIÇÃO
                                             <div className="status-and-action">
-                                                {/* Correção: Garante que 'PENDENTE' é o fallback e usa .toLowerCase() */}
                                                 <span className={`status-tag status-${(p.statusInscricao || 'PENDENTE').toLowerCase()}`}>
                                                     {p.statusInscricao || 'PENDENTE'}
                                                 </span>
@@ -497,7 +492,6 @@ export default function ProjetosList() {
                                                 )}
                                             </div>
                                         ) : (
-                                            // MODO TODOS: Botão Inscrever/Inscrito
                                             <button
                                                 className={`inscrever-btn ${projetosInscritosIds.includes(p.id) ? 'inscrito' : ''}`}
                                                 onClick={() => handleInscrever(p.id)}
@@ -595,6 +589,7 @@ export default function ProjetosList() {
                                 <label>Tags / Linguagens de Programação:</label>
                                 {/* 🚩 SUBSTITUÍDO: Multi-Select por Checkboxes */}
                                 <div className="tag-checkbox-group">
+                                    {/* Para o modal de criação, use input[type="checkbox"] no lugar do select */}
                                     {LINGUAGENS_OPTIONS.map(lang => (
                                         <label key={lang} className="tag-checkbox-label">
                                             <input
@@ -604,7 +599,6 @@ export default function ProjetosList() {
                                                 onChange={handleTagChange}
                                                 required={tags.length === 0}
                                             />
-                                            {/* 🚩 USANDO FUNÇÃO CORRIGIDA AQUI */}
                                             <span className={`tag-chip ${generateTagClassName(lang)} checkbox-style`}>
                                                 {lang}
                                             </span>
