@@ -1,64 +1,36 @@
-.desc-eventos {
-  color: #ffffff;
-  padding: 4rem 24px;
-  text-align: center;
-  font-family: "Inter", Arial, sans-serif;
-  width: 100%;
-  min-height: 100vh;
-  background: var(--background-light, #f4f7f9);
-}
-
-.desc-container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.desc-titulo {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #a064db;
-  margin-bottom: 1.5rem;
-}
-
-.desc-texto {
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: #6a747e;/* ======================================= */
-/* ESTILOS MODERNOS PARA EVENTOS.CSS (REFINADO) */
+/* ======================================= */
+/* ESTILOS PARA PÁGINA DE EVENTOS         */
 /* ======================================= */
 
 :root {
-  /* Paleta de Cores */
-  --primary-purple: #7b4397; /* Roxo escuro */
-  --secondary-purple: #a044ff; /* Roxo vibrante (destaque) */
-  --background-light: #f9f9f9; /* Fundo muito claro */
-  --card-dark: #3a006c; /* Fundo escuro para card (quase preto) */
-  --text-primary: #1e293b; /* Texto escuro */
-  --text-secondary: #64748b; /* Texto cinza */
+  --primary-purple: #7b4397;
+  --secondary-purple: #a044ff;
+  --background-light: #f9f9f9;
+  --card-dark: #3a006c;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
   --white: #ffffff;
   --border-color: #e2e8f0;
-
-  /* Efeitos */
   --shadow-main: 0 10px 30px rgba(0, 0, 0, 0.15);
   --shadow-purple-glow: 0 8px 25px rgba(160, 68, 255, 0.4);
-  --gradient-card: linear-gradient(135deg, var(--primary-purple) 0%, #5d127c 100%);
 }
 
-body {
-    font-family: 'Inter', sans-serif;
-    color: var(--text-primary);
+/* Container principal da página */
+.eventos-container {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--background-light);
 }
 
 /* ======================================= */
-/* 1. SEÇÃO DE DESCRIÇÃO (HEADER)          */
+/* SEÇÃO DE DESCRIÇÃO (HEADER)             */
 /* ======================================= */
 
 .desc-eventos {
-  color: var(--text-primary); /* Ajustado para texto escuro no fundo claro */
-  padding: 8rem 24px 4rem; /* Mais espaçoso no topo */
+  color: var(--text-primary);
+  padding: 8rem 24px 4rem;
   text-align: center;
   width: 100%;
-  min-height: auto; /* Remove min-height para se adequar ao conteúdo */
   background: var(--background-light);
 }
 
@@ -68,9 +40,8 @@ body {
 }
 
 .desc-titulo {
-  font-size: 3rem; /* Maior e mais impactante */
+  font-size: 3rem;
   font-weight: 900;
-  /* Gradiente no título */
   background: linear-gradient(90deg, var(--primary-purple), var(--secondary-purple));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -78,7 +49,7 @@ body {
 }
 
 .desc-texto {
-  font-size: 1.25rem; /* Texto mais legível */
+  font-size: 1.25rem;
   line-height: 1.6;
   color: var(--text-secondary);
   margin-bottom: 3rem;
@@ -96,7 +67,7 @@ body {
   background: var(--secondary-purple);
   border: none;
   border-radius: 10px;
-  padding: 1rem 2.5rem; /* Botão maior */
+  padding: 1rem 2.5rem;
   color: var(--white);
   font-size: 1.1rem;
   font-weight: 700;
@@ -112,18 +83,18 @@ body {
 }
 
 /* ======================================= */
-/* 2. BARRA DE FILTROS (CLEAN DESIGN)      */
+/* BARRA DE FILTROS                        */
 /* ======================================= */
 
 .filtro-eve {
   display: flex;
-  justify-content: center; /* Centraliza os blocos */
+  justify-content: center;
   align-items: center;
   gap: 3rem;
   color: var(--text-primary);
   padding: 1.5rem 3rem;
   border-radius: 16px;
-  margin: 2rem auto 3rem; /* Mais margem inferior */
+  margin: 2rem auto 3rem;
   max-width: 1000px;
   background: var(--white);
   box-shadow: var(--shadow-main);
@@ -147,17 +118,18 @@ body {
 .filtro-select {
   background-color: var(--background-light);
   color: var(--text-primary);
-  border: 1px solid var(--border-color); /* Borda mais suave */
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 0.75rem 1.25rem;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  appearance: none; /* Esconde o ícone nativo */
+  appearance: none;
   background-image: url('data:image/svg+xml;utf8,<svg fill="%2364748b" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
   background-repeat: no-repeat;
   background-position-x: 95%;
   background-position-y: center;
+  min-width: 150px;
 }
 
 .filtro-select:hover {
@@ -172,30 +144,27 @@ body {
 }
 
 /* ======================================= */
-/* 3. GRID PRINCIPAL E CARDS (PREMIUM)     */
+/* GRID DE EVENTOS E CARDS                 */
 /* ======================================= */
 
 .eventos-list {
   display: grid;
-  /* Auto-fit com minmax mais apertado para permitir mais colunas em telas grandes */
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px; /* Mais espaçamento */
+  gap: 30px;
   padding: 2rem 24px 5rem;
   width: 100%;
-  max-width: 1300px; /* Mais largo */
+  max-width: 1300px;
   margin: 0 auto;
-  align-items: stretch; /* Garante que todos os cards tenham a mesma altura por linha */
+  align-items: stretch;
   justify-items: center;
 }
 
-/* CARD DO EVENTO (Visual Escuro/Premium) */
 .card-evento {
-  background: var(--card-dark); /* Fundo escuro */
-  border-radius: 20px; /* Mais arredondado */
+  background: var(--card-dark);
+  border-radius: 20px;
   overflow: hidden;
   width: 100%;
   max-width: 400px;
-  /* Removido min-height para se ajustar ao conteúdo */
   box-shadow: var(--shadow-main);
   transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
   cursor: pointer;
@@ -204,14 +173,13 @@ body {
 }
 
 .card-evento:hover {
-  transform: translateY(-8px); /* Efeito de elevação mais perceptível */
+  transform: translateY(-8px);
   box-shadow: var(--shadow-purple-glow);
 }
 
-/* CAPA E IMAGEM */
 .card-capa {
   width: 100%;
-  height: 200px; /* Altura da capa aumentada */
+  height: 200px;
   overflow: hidden;
   background-color: var(--primary-purple);
 }
@@ -226,12 +194,11 @@ body {
 
 .card-evento:hover .card-imagem {
   opacity: 1;
-  transform: scale(1.05); /* Zoom sutil no hover */
+  transform: scale(1.05);
 }
 
-/* CONTEÚDO */
 .card-conteudo {
-  padding: 1.5rem; /* Mais padding */
+  padding: 1.5rem;
   color: var(--white);
   flex: 1;
   display: flex;
@@ -240,7 +207,7 @@ body {
 }
 
 .card-titulo {
-  font-size: 1.5rem; /* Título maior */
+  font-size: 1.5rem;
   font-weight: 900;
   margin-bottom: 0.75rem;
   line-height: 1.2;
@@ -250,44 +217,46 @@ body {
   font-size: 1rem;
   opacity: 0.8;
   line-height: 1.6;
-  margin-bottom: 1rem; /* Espaçamento da descrição */
+  margin-bottom: 1rem;
 }
 
-/* 🚩 Área de Metadados (A ser adicionada no componente React) */
 .card-meta {
-    font-size: 0.9em;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.7);
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    justify-content: space-between;
+  font-size: 0.9em;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
 }
-
 
 /* ======================================= */
-/* 4. RESPONSIVIDADE                       */
+/* RESPONSIVIDADE                          */
 /* ======================================= */
 
 @media (max-width: 900px) {
-    .desc-titulo {
-        font-size: 2.5rem;
-    }
-    .desc-texto {
-        font-size: 1.1rem;
-    }
-    .filtro-eve {
-        flex-direction: column;
-        gap: 1.5rem;
-        padding: 2rem 1.5rem;
-    }
-    .filtro-bloco {
-        width: 100%;
-        align-items: stretch;
-    }
-    .filtro-select {
-        width: 100%;
-    }
+  .desc-titulo {
+    font-size: 2.5rem;
+  }
+  
+  .desc-texto {
+    font-size: 1.1rem;
+  }
+  
+  .filtro-eve {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem 1.5rem;
+  }
+  
+  .filtro-bloco {
+    width: 100%;
+    align-items: stretch;
+  }
+  
+  .filtro-select {
+    width: 100%;
+  }
 }
 
 @media (max-width: 500px) {
@@ -295,169 +264,20 @@ body {
     grid-template-columns: 1fr;
     padding: 2rem 1rem;
   }
+  
   .desc-eventos {
     padding: 4rem 15px 2rem;
   }
+  
   .card-capa {
-      height: 150px;
+    height: 150px;
   }
-}
-  margin-bottom: 2.5rem;
-}
-
-.desc-botao-container {
-  display: flex;
-  justify-content: center;
-}
-
-.desc-botao {
-  background-color: #a064db;
-  border: none;
-  border-radius: 8px;
-  padding: 0.9rem 1.8rem;
-  color: #ffffff;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.desc-botao:hover {
-  background-color: #780bf5;
-  transform: scale(1.05);
-}
-
-.filtro-eve {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 2rem;
-  color: #ffffff;
-  padding: 1.5rem 2rem;
-  border-radius: 12px;
-  margin: 2rem auto;
-  max-width: 1000px;
-  font-family: "Inter", Arial, sans-serif;
-}
-
-.filtro-bloco {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.filtro-titulo {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #a064db;
-}
-
-.filtro-select {
-  background-color: #7441b6;
-  color: #ffffff;
-  border: 2px solid #30363d;
-  border-radius: 8px;
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.filtro-select:hover {
-  border-color: #58a6ff;
-  background-color: #1f2937;
-}
-
-.filtro-select:focus {
-  outline: none;
-  border-color: #1f6feb;
-  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
-}
-
-/* GRID PRINCIPAL */
-.eventos-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2rem;
-  padding: 3rem 24px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  align-items: start;
-  justify-items: center;
-}
-
-/* CARD DO EVENTO  */
-.card-evento {
-  background-color: #a064db;
-  border-radius: 16px;
-  overflow: hidden;
-  width: 100%;
-  max-width: 380px;
-  min-height: 320px;
-  box-shadow: 0 4px 15px rgba(160, 100, 219, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-}
-
-.card-evento:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 6px 20px rgba(160, 100, 219, 0.4);
-}
-
-/* CAPA E IMAGEM */
-.card-capa {
-  width: 100%;
-  height: 180px;
-  overflow: hidden;
-  background-color: #a064db;
-}
-
-.card-imagem {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.85;
-  transition: opacity 0.3s ease;
-}
-
-.card-evento:hover .card-imagem {
-  opacity: 1;
-}
-
-/*  CONTEÚDO */
-.card-conteudo {
-  padding: 1.2rem 1rem;
-  color: #fff;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.card-titulo {
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-
-.card-descricao {
-  font-size: 1rem;
-  opacity: 0.9;
-  line-height: 1.5;
-}
-
-
-@media (max-width: 768px) {
-  .eventos-list {
-    grid-template-columns: 1fr;
-    padding: 2rem 1rem;
+  
+  .desc-titulo {
+    font-size: 2rem;
   }
-
-  .card-evento {
-    max-width: 100%;
+  
+  .desc-texto {
+    font-size: 1rem;
   }
 }
