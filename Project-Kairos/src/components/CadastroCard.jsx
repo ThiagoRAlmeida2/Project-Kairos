@@ -89,7 +89,7 @@ export default function CadastroCard() {
   return (
     <div className="card-container">
       <div className="card">
-        <h1>Faça o seu cadastro</h1>
+        <h1>📝 Faça o seu cadastro</h1>
 
         {/* Alert */}
         {showAlert && (
@@ -106,13 +106,13 @@ export default function CadastroCard() {
             onClick={() => setTipo("ALUNO")}
             className={tipo === "ALUNO" ? "active-tab" : ""}
           >
-            Aluno
+🎓 Aluno
           </button>
           <button
             onClick={() => setTipo("EMPRESA")}
             className={tipo === "EMPRESA" ? "active-tab" : ""}
           >
-            Empresa
+🏢 Empresa
           </button>
         </div>
 
@@ -230,7 +230,7 @@ export default function CadastroCard() {
 
         {/* Botão */}
         <button onClick={handleSubmit} className="submit-btn">
-          Finalizar Cadastro
+          ✅ Finalizar Cadastro
         </button>
       </div>
     </div>

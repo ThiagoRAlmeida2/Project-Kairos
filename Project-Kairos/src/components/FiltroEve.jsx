@@ -1,11 +1,11 @@
 import React from "react";
 import "../css/Eventos.css";
 
-export default function FiltroEv() {
+export default function FiltroEve() {
   return (
     <section className="filtro-eve">
       <div className="filtro-bloco">
-        <h4 className="filtro-titulo">Filtrar por</h4>
+        <h4 className="filtro-titulo">📊 Filtrar por</h4>
         <select className="filtro-select">
           <option>Data</option>
           <option>Workshops</option>
@@ -15,7 +15,7 @@ export default function FiltroEv() {
       </div>
 
       <div className="filtro-bloco">
-        <h4 className="filtro-titulo">Ordenar por</h4>
+        <h4 className="filtro-titulo">🔄 Ordenar por</h4>
         <select className="filtro-select">
           <option>Relevância</option>
           <option>Mais recentes</option>

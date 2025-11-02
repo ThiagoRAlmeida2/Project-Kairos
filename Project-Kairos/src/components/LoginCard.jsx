@@ -72,7 +72,7 @@ export default function LoginCard({ onLoginSuccess }) {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1 className="brand">Bem-vindo</h1>
+        <h1 className="brand">👋 Bem-vindo</h1>
         <p className="subtitle">
           {resetMode ? "Redefinir Senha" : "Entre na sua conta"}
         </p>
@@ -113,7 +113,7 @@ export default function LoginCard({ onLoginSuccess }) {
             </label>
 
             <button type="submit" className="btn">
-              Entrar
+              🔑 Entrar
             </button>
 
             <p
@@ -163,7 +163,7 @@ export default function LoginCard({ onLoginSuccess }) {
             </label>
 
             <button type="submit" className="btn">
-              Redefinir Senha
+              🔄 Redefinir Senha
             </button>
 
             <p
