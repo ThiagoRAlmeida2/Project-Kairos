@@ -60,9 +60,7 @@ body {
 
 .titulo-projetos {
   font-size: 2.8rem;
-  background: var(--gradient-main);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--primary-color);
   font-weight: 900;
 }
 
@@ -230,20 +228,15 @@ body {
   line-height: 1.2;
 }
 
-/* --- ESTILO ADICIONAL: Título do Projeto no Card (Gradiente) --- */
+/* --- ESTILO ADICIONAL: Título do Projeto no Card --- */
 
 .project-title-link {
-    font-size: 1.5rem; /* Levemente maior que o 1.4rem original */
+    font-size: 1.5rem;
     font-weight: 900;
     line-height: 1.2;
     transition: all 0.3s ease;
-    
-    /* Aplicando o gradiente principal */
-    background: var(--gradient-main);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: inline-block; /* Necessário para o gradiente funcionar */
-    cursor: pointer; /* Imita um link/chamada */
+    color: var(--primary-color);
+    cursor: pointer;
 }
 
 /* Efeito sutil ao passar o mouse para dar vida ao nome */
@@ -891,22 +884,3 @@ body {
     margin-top: 10px; /* Ajusta a margem para separar do grupo de tags */
 }
 
-.project-title-link {
-    font-size: 1.5rem; /* Levemente maior que o 1.4rem original */
-    font-weight: 900;
-    line-height: 1.2;
-    transition: all 0.3s ease;
-    
-    /* Aplicando o gradiente principal */
-    background: var(--gradient-main);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: inline-block; /* Necessário para o gradiente funcionar */
-    cursor: pointer; /* Imita um link/chamada */
-}
-
-/* Efeito sutil ao passar o mouse para dar vida ao nome */
-.project-card:hover .project-title-link {
-    filter: brightness(1.2);
-    transform: scale(1.02);
-}

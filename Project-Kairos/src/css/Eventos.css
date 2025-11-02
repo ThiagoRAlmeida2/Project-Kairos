@@ -42,9 +42,7 @@
 .desc-titulo {
   font-size: 3rem;
   font-weight: 900;
-  background: linear-gradient(90deg, var(--primary-purple), var(--secondary-purple));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--primary-purple);
   margin-bottom: 1.5rem;
 }
 

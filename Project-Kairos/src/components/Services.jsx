@@ -22,7 +22,7 @@ export default function Services() {
   return (
     <section id="servicos" className="services" aria-labelledby="servicos-title">
       <div className="container">
-        <h2 id="servicos-title">Serviços</h2>
+        <h2 id="servicos-title">🛠️ Serviços</h2>
         <p className="section-subtitle">
           Explore as categorias mais populares e encontre o profissional ideal para seu projeto.
         </p>
@@ -36,7 +36,7 @@ export default function Services() {
         </div>
 
         <div className="services__cta">
-          <a href="#" className="btn btn--light"><span>Enviar Projeto</span></a>
+          <a href="#" className="btn btn--light"><span>📤 Enviar Projeto</span></a>
         </div>
       </div>
     </section>

@@ -10,5 +10,5 @@ const items = [
 ]
 
 export default function Hero(){
-  return <Carousel title="Projetos & Eventos" items={items} />
+  return <Carousel title="📊 Projetos & Eventos" items={items} />
 }

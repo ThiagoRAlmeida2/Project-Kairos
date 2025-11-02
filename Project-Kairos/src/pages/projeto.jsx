@@ -383,7 +383,7 @@ export default function ProjetosList() {
             <div className="filter-controls-bar">
                 <input
                     className="search-input"
-                    placeholder="🔍 Buscar projeto ou tag..." 
+                    placeholder="Buscar projeto ou tag..." 
                     value={filtroTexto}
                     onChange={(e) => setFiltroTexto(e.target.value)}
                 />

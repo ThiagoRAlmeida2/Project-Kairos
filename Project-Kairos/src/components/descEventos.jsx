@@ -6,7 +6,7 @@ export default function DescEventos() {
   return (
     <section className="desc-eventos">
       <div className="desc-container">
-        <h1 className="desc-titulo">Ache seu próximo evento Tech</h1>
+        <h1 className="desc-titulo">🎉 Ache seu próximo evento Tech</h1>
 
         <p className="desc-texto">
           Quer viver experiências incríveis no mundo da inovação? <br />
@@ -20,7 +20,7 @@ export default function DescEventos() {
         </p>
 
         <div className="desc-botao-container">
-          <button className="desc-botao">Buscar experiências</button>
+          <button className="desc-botao">🔍 Buscar experiências</button>
         </div>
       </div>
     </section>
