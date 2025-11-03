@@ -15,7 +15,7 @@ export default function Carousel({ title = 'Projetos & Eventos', items = [] }) {
           {items.map((it, i) => (
             <article className="card" key={i}>
               <div className="card__media">
-                
+                <img src={it.image} alt={it.alt} className="card__image" />
                 {it.badge && <div className="card__badge">{it.badge}</div>}
               </div>
               <div className="card__body">
