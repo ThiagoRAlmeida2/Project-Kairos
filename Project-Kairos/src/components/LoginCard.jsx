@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../css/CardLogin.css";
 
-export default function LoginCard({ onLoginSuccess }) {
+export default function LoginCard({ onLoginSuccess, onClose }) {
   const [formData, setFormData] = useState({ email: "", senha: "" });
   const [resetData, setResetData] = useState({
     email: "",
@@ -70,8 +70,8 @@ export default function LoginCard({ onLoginSuccess }) {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
+    <div className="login-container" onClick={onClose}>
+      <div className="login-card" onClick={(e) => e.stopPropagation()}>
         <h1 className="brand">👋 Bem-vindo</h1>
         <p className="subtitle">
           {resetMode ? "Redefinir Senha" : "Entre na sua conta"}
