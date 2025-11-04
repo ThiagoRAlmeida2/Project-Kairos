@@ -19,7 +19,7 @@ function Alert({ message, type = "success", onClose }) {
   );
 }
 
-export default function CadastroCard() {
+export default function CadastroCard({ onClose }) {
   const [tipo, setTipo] = useState("ALUNO");
 
   // Estado único para todos os campos
@@ -87,8 +87,8 @@ export default function CadastroCard() {
   };
 
   return (
-    <div className="card-container">
-      <div className="card">
+    <div className="card-container" onClick={onClose}>
+      <div className="card" onClick={(e) => e.stopPropagation()}>
         <h1>📝 Faça o seu cadastro</h1>
 
         {/* Alert */}

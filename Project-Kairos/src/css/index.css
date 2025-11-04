@@ -225,6 +225,30 @@ a{ color:inherit; text-decoration:none; }
 .nav__actions{ display:flex; align-items:center; gap:12px; }
 .link{ color:#4b5563; }
 
+.nav__actions .btn {
+  appearance:none; 
+  border:0; 
+  border-radius:8px; 
+  padding:12px 20px; 
+  font-weight:600;
+  font-size: 0.95rem;
+  box-shadow: var(--shadow); 
+  cursor:pointer; 
+  display:inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+  color: #fff;
+}
+
+.nav__actions .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(106,48,147,0.3);
+}
+
 .btn{
   appearance:none; 
   border:0; 
@@ -625,4 +649,161 @@ a{ color:inherit; text-decoration:none; }
   .cta__inner{ padding: 30px 20px; }
   .cta__title{ font-size: 1.8rem; }
   .cta__subtitle{ font-size: 1rem; }
+}
+
+/* New Footer Styles */
+.footer{ margin-top: 80px; }
+.footer__banner{ 
+  background: linear-gradient(135deg, rgba(106, 48, 147, 0.85) 0%, rgba(160, 68, 255, 0.85) 100%), url('/src/assets/IMG/Banner-rodapé.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
+}
+.footer__content{ 
+  position: relative;
+  z-index: 1;
+  color: #fff;
+}
+
+/* CTA Section */
+.footer__cta {
+  padding: 80px 0 60px;
+  text-align: center;
+  position: relative;
+}
+.cta__content h2 {
+  font-size: 2.5rem;
+  margin: 0 0 16px;
+  font-weight: 700;
+  background: linear-gradient(45deg, #fff, #e0e7ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.cta__content p {
+  font-size: 1.2rem;
+  margin: 0 0 32px;
+  opacity: 0.9;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cta__button {
+  background: linear-gradient(135deg, #fff 0%, #f0f9ff 100%);
+  color: var(--brand);
+  border: none;
+  padding: 16px 32px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(255,255,255,0.2);
+  transition: all 0.3s ease;
+}
+.cta__button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(255,255,255,0.3);
+}
+
+/* Floating Icons */
+.floating-icon {
+  position: absolute;
+  font-size: 2rem;
+  animation: float 3s ease-in-out infinite;
+}
+.floating-icon.laptop {
+  top: 20%;
+  left: 15%;
+  animation-delay: 0s;
+}
+.floating-icon.pen {
+  top: 30%;
+  right: 20%;
+  animation-delay: 1.5s;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Footer Main */
+.footer__main {
+  padding: 40px 0 30px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+  margin-bottom: 30px;
+}
+.footer__brand h3 {
+  font-size: 1.8rem;
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+.footer__brand p {
+  margin: 0;
+  opacity: 0.8;
+  font-size: 1rem;
+}
+.footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.footer__links a {
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.footer__links a:hover {
+  color: #fff;
+  transform: translateX(5px);
+}
+.footer__social {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.social-link {
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.social-link:hover {
+  color: #fff;
+  transform: scale(1.05);
+}
+.footer__bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.footer__bottom p {
+  margin: 0;
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .footer__grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    text-align: center;
+  }
+  .cta__content h2 {
+    font-size: 2rem;
+  }
+  .footer__cta {
+    padding: 60px 0 40px;
+  }
+  .floating-icon {
+    display: none;
+  }
 }

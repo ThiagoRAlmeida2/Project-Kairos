@@ -139,7 +139,7 @@ export default function Navbar() {
       {showCadastro && (
         <div className="modal-overlay" onClick={() => setShowCadastro(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <CadastroCard />
+            <CadastroCard onClose={() => setShowCadastro(false)} />
           </div>
         </div>
       )}
@@ -149,6 +149,7 @@ export default function Navbar() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <LoginCard
               onLoginSuccess={handleLoginSuccess}
+              onClose={() => setShowLogin(false)}
             />
           </div>
         </div>

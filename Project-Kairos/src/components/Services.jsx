@@ -36,7 +36,7 @@ export default function Services() {
         </div>
 
         <div className="services__cta">
-          <a href="#" className="btn btn--light"><span>📤 Enviar Projeto</span></a>
+          <a href="/projetos" className="btn btn--light"><span>📤 Ver Projetos</span></a>
         </div>
       </div>
     </section>
