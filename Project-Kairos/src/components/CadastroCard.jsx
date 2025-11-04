@@ -106,13 +106,15 @@ export default function CadastroCard({ onClose }) {
             onClick={() => setTipo("ALUNO")}
             className={tipo === "ALUNO" ? "active-tab" : ""}
           >
-🎓 Aluno
+            <span className="tab-icon">🎓</span>
+            Aluno
           </button>
           <button
             onClick={() => setTipo("EMPRESA")}
             className={tipo === "EMPRESA" ? "active-tab" : ""}
           >
-🏢 Empresa
+            <span className="tab-icon">🏢</span>
+            Empresa
           </button>
         </div>
 
