@@ -43,7 +43,7 @@ export default function HowItWorks() {
             <Step index="3" title="📈 Evolua na prática" desc="Mentorias, feedbacks e experiências reais." />
           </article>
         </div>
-
+        
         <div className="how__action">
           <a className="btn btn--primary" href="#" onClick={handleInterestClick}>🚀 Tenho interesse</a>
         </div>
