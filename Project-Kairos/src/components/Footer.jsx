@@ -1,5 +1,4 @@
 import React from 'react'
-
 import footerBanner from '../assets/IMG/Banner-rodapé.png'; 
 
 export default function Footer() {
