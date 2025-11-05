@@ -4,6 +4,28 @@ Este projeto é uma aplicação *full-stack* desenvolvida para conectar alunos e
 
 ---
 
+## 📚 Sumário
+
+- [Visão Geral do Stack](#visão-geral-do-stack)
+- [Funcionalidades Principais](#funcionalidades-principais-implementadas)
+- [Estrutura de Pastas (Frontend - src)](#estrutura-de-pastas-frontend---src)
+- [Guia de Configuração Completa (Full-Stack)](#guia-de-configuração-completa-full-stack)
+  - [1. Configuração do Backend e Banco de Dados](#1️⃣-configuração-do-backend-e-banco-de-dados)
+  - [2. Configuração e Inicialização do Frontend (React)](#2️⃣-configuração-e-inicialização-do-frontend-react)
+- [Deploy em Produção (Vercel + Render + Railway)](#3️⃣-deploy-em-produção-vercel--render--railway)
+- [Tecnologias Complementares](#🧩-tecnologias-complementares)
+- [Contribuição](#💡-contribuição)
+- [Autor](#👨‍💻-autor)
+- [Licença](#🧾-licença)
+
+![Java](https://img.shields.io/badge/Java-24-red?logo=java)
+![React](https://img.shields.io/badge/React-18-blue?logo=react)
+![SpringBoot](https://img.shields.io/badge/Spring%20Boot-3.0-green?logo=springboot)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-blue?logo=mysql)
+![Vercel](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel)
+![Render](https://img.shields.io/badge/Backend-Render-purple?logo=render)
+![Railway](https://img.shields.io/badge/Database-Railway-0B0D0E?logo=railway)
+
 ## 🔹 Visão Geral do Stack
 
 | Componente | Tecnologia Principal | Finalidade |
@@ -53,13 +75,32 @@ Para rodar o projeto localmente, você precisa configurar o ambiente backend (Ja
 **Requisitos:**  
 Certifique-se de ter o **Java Development Kit (JDK 24+)**, **Maven** e um servidor **MySQL** rodando.
 
-#### 🛠️ Configuração do MySQL
+#### 🛠️ Configuração do MySQL local
+
 Crie um banco de dados vazio:
+
 ```sql
-CREATE DATABASE kairos_db;
+   CREATE DATABASE kairos_db;
 ```
 
-#### ⚙️ Configuração do Spring Boot
+#### 🛠️ Configuração do MySQL deploy
+
+### 🧱 Banco de Dados em Produção (Railway)
+
+O **Railway** é utilizado para hospedar o banco de dados **MySQL** de forma simples, estável e escalável.
+
+#### ⚙️ Passos
+
+1. Crie um novo projeto no [Railway.app](https://railway.app/).
+2. Adicione um **serviço MySQL**.
+3. Copie as variáveis de conexão (host, database, user, password).
+4. Cole-as nas variáveis de ambiente do **Render**, nos campos:
+
+```bash
+   SPRING_DATASOURCE_URL=
+   SPRING_DATASOURCE_USERNAME=
+   SPRING_DATASOURCE_PASSWORD=
+```
 
 1. Abra o projeto backend no seu IDE (IntelliJ, VS Code, Eclipse, etc.).
 2. Localize o arquivo de configuração (`application.properties` ou `application.yml`).
@@ -122,9 +163,20 @@ npm run dev
 
 ---
 
-## ☁️ 3. Configuração de Deploy em Produção (Vercel + Render/Railway)
+## ☁️ 3️⃣. Configuração de Deploy em Produção (Vercel + Render/Railway)
 
 O projeto usa o **Render** para o **Backend (API)** e o **Vercel** para o **Frontend**, permitindo acesso público seguro via **HTTPS**.
+
+### OBS: Para ativar a api, por favor acessar o link
+
+Aguardar a inicialização da API
+
+[https://project-api-1-bw7k.onrender.com](https://project-api-1-bw7k.onrender.com)
+
+### Após ela terminar de inicializar pode acessar o front end pelo link
+
+[https://project-kairos-wine.vercel.app](https://project-kairos-wine.vercel.app)
+pp
 
 ---
 
@@ -149,8 +201,9 @@ O arquivo `src/service/api.js` está configurado com um fallback, garantindo que
 ```javascript
 // O Axios usa a variável VITE_API_BASE_URL em produção,
 // e usa localhost apenas para o desenvolvimento local.
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081';
-
+const baseURL = import.meta.env.VITE_API_BASE_URL 
+||'http://localhost:8081';
+```
 
 ## 🧩 Tecnologias Complementares
 
@@ -191,4 +244,4 @@ const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081';
 ### 👨‍💻 Autor
 
 **Thiago Ribeiro**  
-💼 Projeto desenvolvido como parte da integração entre **universidade e empresas**, promovendo aprendizado prático e inovação colaborativa.
+💼 Projeto desenvolvido como parte da integração entre **universidade e empresas**, promovendo aprendizado prático e inovação colaborativa
