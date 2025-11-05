@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 import "../css/CardLogin.css";
+import api from '../service/api';
 
 export default function LoginCard({ onLoginSuccess, onClose }) {
   const [formData, setFormData] = useState({ email: "", senha: "" });
@@ -26,10 +26,8 @@ export default function LoginCard({ onLoginSuccess, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8081/api/auth/login",
-        formData
-      );
+    const response = await api.post("/api/auth/login", formData);
+
 
       const { token, email, role } = response.data;
       localStorage.setItem("token", token);
@@ -51,7 +49,7 @@ export default function LoginCard({ onLoginSuccess, onClose }) {
     }
 
     try {
-      const res = await axios.post("http://localhost:8081/api/auth/resetar-senha", {
+      const res = await api.post("/api/auth/resetar-senha", {
         email: resetData.email,
         novaSenha: resetData.novaSenha,
       });
