@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import "../css/CadastroCard.css";
 import api from '../service/api';
 
@@ -62,8 +61,7 @@ export default function CadastroCard({ onClose }) {
               role: "ROLE_EMPRESA",
             };
 
-      await axios.post("/api/auth/register", payload);
-
+      await api.post("/api/auth/register", payload);
       setAlertMessage("Cadastro realizado com sucesso!");
       setShowAlert(true);
 
