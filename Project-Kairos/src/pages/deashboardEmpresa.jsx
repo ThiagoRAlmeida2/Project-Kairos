@@ -1,25 +1,20 @@
+// src/pages/deashboardEmpresa.jsx 
+
 import React, { useState, useEffect } from "react";
-import api from "../api";
+import api from "../service/api";
+// Importei FaCheckCircle e FaTimesCircle para um visual melhor no status concluído
+import { FaUser, FaCheck, FaTimes, FaSync, FaProjectDiagram, FaArrowLeft, FaCheckCircle, FaTimesCircle } from "react-icons/fa"; 
 import { useNavigate } from 'react-router-dom'; 
-
-const IconUser = (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>;
-const IconCheck = (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>;
-const IconTimes = (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>;
-const IconSync = (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.5 2v6h-6"/><path d="M2.5 22v-6h6"/><path d="M21.5 8a10 10 0 1 0-7.39 3.41"/><path d="M2.5 16a10 10 0 1 1 7.39-3.41"/></svg>;
-const IconProjectDiagram = (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h10"/><path d="M7 12h10"/><path d="M7 17h10"/></svg>;
-const IconArrowLeft = (props) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>;
+import "../css/deashboardEmpresa.css"; 
 
 
-const FaUser = IconUser;
-const FaCheck = IconCheck;
-const FaTimes = IconTimes;
-const FaSync = IconSync;
-const FaProjectDiagram = IconProjectDiagram;
-const FaArrowLeft = IconArrowLeft;
-
+// -----------------------------------------------------
+// FUNÇÕES UTILS (Para visualização no modal - Reintroduzidas aqui)
+// -----------------------------------------------------
 const parseTagsString = (tagsString) => tagsString?.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0) || [];
 const getTagClassName = (tag) => `tag-chip tag-${tag.replace(/\s|#/g, '-').replace(/\+\+/g, 'plus-plus').replace(/\./g, '')}`;
 
+// Função parseDate (para datas do Java LocalDate)
 const parseDate = (dateData) => {
     if (!dateData) return null;
     if (Array.isArray(dateData) && dateData.length >= 3) {
@@ -45,7 +40,6 @@ const PerfilAlunoModal = ({ alunoId, onClose }) => {
             setLoading(true);
             try {
                 const token = localStorage.getItem("token");
-                // 🔑 Usando 'api' e URL relativa
                 const res = await api.get(`/api/usuario/aluno/${alunoId}/perfil-detalhado`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
@@ -129,14 +123,11 @@ export default function EmpresaDashboard() {
     const [loading, setLoading] = useState(true);
     const [alunoSelecionadoId, setAlunoSelecionadoId] = useState(null);
     const token = localStorage.getItem("token");
-    
-    // 🔑 MUDANÇA: Usando o caminho relativo e deixando o 'api' lidar com o baseURL
-    const baseURL = "/api/usuario"; 
+    const baseURL = "/api/usuario";
 
     const fetchCandidatos = async () => {
         setLoading(true);
         try {
-            // 🔑 MUDANÇA: Usando 'api'
             const res = await api.get(`${baseURL}/dashboard/candidatos`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -175,6 +166,8 @@ export default function EmpresaDashboard() {
             await api.post(endpoint, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
+
+            // ATUALIZA O STATUS NA TABELA NO FRONTEND com o status final correto
             setCandidatos(cands => cands.map(c => 
                 c.inscricaoId === inscricaoId ? {...c, status: finalStatus} : c
             ));
@@ -186,6 +179,7 @@ export default function EmpresaDashboard() {
 
     if (loading) return <div className="dashboard-container"><FaSync className="loading-spinner" size={30} /> Carregando...</div>;
     
+    // Layout de retorno
     return (
         <div className="dashboard-container">
             <div className="dashboard-header-controls">
@@ -194,7 +188,6 @@ export default function EmpresaDashboard() {
                     className="btn-voltar-projetos" 
                     onClick={() => navigate("/projetos")}
                 >
-                    {/* 🔑 MUDANÇA: Usando FaArrowLeft como componente SVG */}
                     <FaArrowLeft size={16} style={{marginRight: '8px'}} />
                     Voltar para Projetos
                 </button>
@@ -220,12 +213,12 @@ export default function EmpresaDashboard() {
                         </thead>
                         <tbody>
                             {candidatos.map((c) => (
+                                // Usando inscricaoId como key para o <tr>
                                 <tr key={c.inscricaoId}> 
                                     {/* CORREÇÃO 1: Removendo o aluno-link da TD e tratando o clique. */}
                                     <td onClick={() => setAlunoSelecionadoId(c.alunoId)}>
                                         {/* CORREÇÃO 2: Aplicando a classe aluno-link em um DIV interno para manter o layout da TD */}
                                         <div className="aluno-link" style={{cursor: 'pointer'}}>
-                                            {/* 🔑 MUDANÇA: Usando FaUser como componente SVG */}
                                             <FaUser size={14} style={{marginRight: '8px'}} />
                                             {c.alunoNome} 
                                             <span style={{color: 'var(--text-medium)', marginLeft: '6px'}}>
@@ -249,14 +242,12 @@ export default function EmpresaDashboard() {
                                                     className="btn-aprovar" 
                                                     onClick={() => handleAction(c.inscricaoId, 'Aprovar')}
                                                 >
-                                                    {/* 🔑 MUDANÇA: Usando FaCheck como componente SVG */}
                                                     <FaCheck /> Aprovar
                                                 </button>
                                                 <button 
                                                     className="btn-declinar" 
                                                     onClick={() => handleAction(c.inscricaoId, 'Rejeitar')}
                                                 >
-                                                    {/*SVG */}
                                                     <FaTimes /> Rejeitar
                                                 </button>
                                             </div>
