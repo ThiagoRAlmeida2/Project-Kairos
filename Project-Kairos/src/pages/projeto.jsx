@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "../css/projetos.css";
+import api from "../service/api";
 
 // Lista de tags para o Multi-Select (usaremos para o filtro também)
 const LINGUAGENS_OPTIONS = [
@@ -31,7 +31,7 @@ export default function ProjetosList() {
     const [modoAluno, setModoAluno] = useState("TODOS"); 
     const [projetosInscritosIds, setProjetosInscritosIds] = useState([]);
 
-    const baseURL = "http://localhost:8081/api/projetos";
+    const baseURL = "/api/projetos";
     const user = JSON.parse(localStorage.getItem("user"));
     const token = localStorage.getItem("token");
     const role = user?.role || "";
@@ -117,11 +117,11 @@ export default function ProjetosList() {
                 }
             }
 
-            const res = await axios.get(url, config);
+            const res = await api.get(url, config);
             
             // Busca a lista de IDs inscritos para desabilitar o botão 'Inscrever-se' (modo TODOS)
             if (role === "ROLE_ALUNO" && token) {
-                const inscricoesRes = await axios.get(`${baseURL}/inscricoes`, 
+                const inscricoesRes = await api.get(`${baseURL}/inscricoes`, 
                     { headers: { Authorization: `Bearer ${token}` } });
                     
                 const ids = inscricoesRes.data.map(p => p.id); 
@@ -185,7 +185,7 @@ export default function ProjetosList() {
         }
 
         try {
-            const res = await axios.post(
+            const res = await api.post(
                 `${baseURL}/criar`,
                 { 
                     nome, 
@@ -244,7 +244,7 @@ export default function ProjetosList() {
         if (!window.confirm("Tem certeza que deseja encerrar este projeto?")) return;
 
         try {
-            await axios.post(
+            await api.post(
                 `${baseURL}/${id}/encerrar`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
@@ -264,7 +264,7 @@ export default function ProjetosList() {
         if (!token) return alert("Você precisa estar logado para se inscrever!");
         
         try {
-            await axios.post(
+            await api.post(
                 `${baseURL}/${projetoId}/inscrever`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
@@ -286,7 +286,7 @@ export default function ProjetosList() {
         if (!window.confirm("Tem certeza que deseja cancelar sua inscrição neste projeto?")) return;
 
         try {
-            await axios.delete(
+            await api.delete(
                 `${baseURL}/${projetoId}/cancelar-inscricao`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );

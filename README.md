@@ -122,6 +122,36 @@ npm run dev
 
 ---
 
+## ☁️ 3. Configuração de Deploy em Produção (Vercel + Render/Railway)
+
+O projeto usa o **Render** para o **Backend (API)** e o **Vercel** para o **Frontend**, permitindo acesso público seguro via **HTTPS**.
+
+---
+
+### 🔧 Variáveis de Ambiente Necessárias
+
+O sistema depende das seguintes variáveis, que devem ser configuradas nos painéis de deploy e lidas pelo código:
+
+| Serviço | Variável (Key) | Valor de Exemplo | Finalidade |
+| :------- | :-------------- | :----------------------------- | :----------- |
+| **Vercel (Frontend)** | `VITE_API_BASE_URL` | `https://project-api-1-bw7k.onrender.com` | Endereço público da API do Render (necessário para o Axios). |
+| **Render (Backend)** | `SPRING_DATASOURCE_URL` | URL da sua instância MySQL (Railway) | Conexão com o banco de dados. |
+|  | `SPRING_DATASOURCE_USERNAME` | Usuário do seu banco |  |
+|  | `SPRING_DATASOURCE_PASSWORD` | Senha do seu banco |  |
+|  | `APP_JWT_SECRET` | `MinhaChaveSecretaSuperSegura123456` | Chave de segurança para JWT. |
+
+---
+
+### ⚙️ Configuração Crítica no Frontend (`api.js`)
+
+O arquivo `src/service/api.js` está configurado com um fallback, garantindo que ele sempre use o endereço correto:
+
+```javascript
+// O Axios usa a variável VITE_API_BASE_URL em produção,
+// e usa localhost apenas para o desenvolvimento local.
+const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081';
+
+
 ## 🧩 Tecnologias Complementares
 
 - **Axios:** comunicação entre frontend e backend.

@@ -1,7 +1,7 @@
 // src/pages/deashboardEmpresa.jsx 
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../service/api";
 // Importei FaCheckCircle e FaTimesCircle para um visual melhor no status concluído
 import { FaUser, FaCheck, FaTimes, FaSync, FaProjectDiagram, FaArrowLeft, FaCheckCircle, FaTimesCircle } from "react-icons/fa"; 
 import { useNavigate } from 'react-router-dom'; 
@@ -40,7 +40,7 @@ const PerfilAlunoModal = ({ alunoId, onClose }) => {
             setLoading(true);
             try {
                 const token = localStorage.getItem("token");
-                const res = await axios.get(`http://localhost:8081/api/usuario/aluno/${alunoId}/perfil-detalhado`, {
+                const res = await api.get(`/api/usuario/aluno/${alunoId}/perfil-detalhado`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setPerfil(res.data);
@@ -123,12 +123,12 @@ export default function EmpresaDashboard() {
     const [loading, setLoading] = useState(true);
     const [alunoSelecionadoId, setAlunoSelecionadoId] = useState(null);
     const token = localStorage.getItem("token");
-    const baseURL = "http://localhost:8081/api/usuario";
+    const baseURL = "/api/usuario";
 
     const fetchCandidatos = async () => {
         setLoading(true);
         try {
-            const res = await axios.get(`${baseURL}/dashboard/candidatos`, {
+            const res = await api.get(`${baseURL}/dashboard/candidatos`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setCandidatos(res.data);
@@ -163,7 +163,7 @@ export default function EmpresaDashboard() {
         }
 
         try {
-            await axios.post(endpoint, {}, {
+            await api.post(endpoint, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

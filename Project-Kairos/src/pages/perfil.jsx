@@ -1,8 +1,8 @@
 // src/pages/Perfil.jsx
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "../css/perfil.css";
 import { FaPencilAlt, FaTimes, FaProjectDiagram } from "react-icons/fa"; 
+import api from "../service/api";
 
 // Lista de tags para o Multi-Select (usadas nos checkboxes)
 const LINGUAGENS_OPTIONS = [
@@ -42,7 +42,7 @@ export default function Perfil() {
   const fetchPerfil = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:8081/api/usuario/me", {
+      const res = await api.get("/api/usuario/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = res.data;
@@ -107,8 +107,8 @@ export default function Perfil() {
           payload = usuario.empresa;
       }
       
-      const res = await axios.put(
-        "http://localhost:8081/api/usuario/me",
+      const res = await api.put(
+        "/api/usuario/me",
         payload,
         { headers: { Authorization: `Bearer ${token}` } }
       );
