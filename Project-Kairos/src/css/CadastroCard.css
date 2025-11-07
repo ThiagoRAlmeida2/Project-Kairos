@@ -38,7 +38,7 @@
   padding: 1.5rem 2rem;
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  max-width: 450px;
+  max-width: 600px;
   width: 90%;
   box-sizing: border-box;
 }
@@ -209,26 +209,24 @@
 }
 /* Campos do formulário */
 .form-fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem 1.5rem;
-  margin: 1rem 0;
+  margin: 1.5rem 0;
 }
 
-.form-fields label:last-child {
-  grid-column: 1 / -1;
-  margin-top: 0.5rem;
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.form-row-full {
+  margin-bottom: 1rem;
 }
 
 @media (max-width: 768px) {
-  .form-fields {
+  .form-row {
     grid-template-columns: 1fr;
-    gap: 1.2rem;
-  }
-  
-  .form-fields label:last-child {
-    grid-column: 1;
-    margin-top: 0;
+    gap: 1rem;
   }
 }
 

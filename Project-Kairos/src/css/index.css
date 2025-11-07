@@ -89,13 +89,16 @@ main {
   flex: 1;
   width: 100%;
   overflow-x: hidden;
+  padding-top: 72px;
 }
 
 /* --- NAV BAR --- */
 .nav{
-  position: sticky;
+  position: fixed;
   top:0;
-  z-index: 10;
+  left:0;
+  right:0;
+  z-index: 9999;
   background:rgba(255,255,255,0.95);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border-color);
@@ -365,10 +368,11 @@ main {
 .carousel__header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     margin-bottom: 24px;
     position: relative;
     z-index: 2;
+    text-align: center;
 }
 
 .carousel__title {
@@ -605,26 +609,7 @@ main {
   margin-top: 40px;
 }
 
-.services__cta .btn {
-  background: rgba(255, 255, 255, 0.95);
-  color: var(--brand);
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  padding: 14px 28px;
-  font-size: 1rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.2);
-}
 
-.services__cta .btn:hover {
-  background: white;
-  color: var(--brand-2);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(255, 255, 255, 0.3);
-  border-color: white;
-}
 .how{ padding: 60px 0 40px; }
 .how .container{ max-width: 1000px; margin: 0 auto; padding: 0 24px; }
 .how h2{ text-align:center; margin:0 0 12px; font-size: 2.2rem; }
@@ -768,7 +753,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2000;
+  z-index: 10000;
 }
 
 .modal-content {

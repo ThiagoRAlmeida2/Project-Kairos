@@ -12,13 +12,13 @@ function Step({ index, title, desc }) {
   )
 }
 
-export default function HowItWorks() {
-  // Função para rolar suavemente até o topo da página
+export default function HowItWorks({ onCadastroClick }) {
+  // Função para abrir o modal de cadastro
   const handleInterestClick = (e) => {
     e.preventDefault();
-    // Rola para o topo com comportamento suave
-    if (typeof window !== 'undefined' && window.scrollTo) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    console.log('Botão cadastre-se clicado', onCadastroClick);
+    if (onCadastroClick) {
+      onCadastroClick();
     }
   };
 
@@ -45,7 +45,7 @@ export default function HowItWorks() {
         </div>
         
         <div className="how__action">
-          <a className="btn btn--primary" href="#" onClick={handleInterestClick}>🚀 Tenho interesse</a>
+          <button className="btn btn--primary" onClick={handleInterestClick}>🚀 Cadastre-se</button>
         </div>
       </div>
     </section>

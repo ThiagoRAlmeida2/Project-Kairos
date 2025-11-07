@@ -82,13 +82,19 @@ export default function Navbar() {
               <>
                 <button
                   className="btn"
-                  onClick={() => setShowLogin(true)}
+                  onClick={() => {
+                    setShowCadastro(false);
+                    setShowLogin(true);
+                  }}
                 >
                   Entrar
                 </button>
                 <button
                   className="btn"
-                  onClick={() => setShowCadastro(true)}
+                  onClick={() => {
+                    setShowLogin(false);
+                    setShowCadastro(true);
+                  }}
                 >
                   Criar conta
                 </button>
@@ -144,7 +150,7 @@ export default function Navbar() {
         </div>
       )}
 
-      {showLogin && (
+      {showLogin && !showCadastro && (
         <div className="modal-overlay" onClick={() => setShowLogin(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <LoginCard
