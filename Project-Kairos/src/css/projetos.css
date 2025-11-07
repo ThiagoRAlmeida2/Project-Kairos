@@ -42,10 +42,13 @@ body {
 
 .projetos-container {
   width: 100%;
+  max-width: 100%;
   min-height: 50vh;
   padding: 80px 40px 40px 40px;
   background: var(--background-light);
   color: var(--text-dark);
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* --- TOPO --- */
@@ -91,11 +94,13 @@ body {
 }
 
 .search-input {
-    width: 300px; 
+    width: 300px;
+    max-width: 100%;
 }
 
 .filter-select {
-    width: 200px; 
+    width: 200px;
+    max-width: 100%;
     appearance: none; 
     background-image: url('data:image/svg+xml;utf8,<svg fill="%237f8c8d" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
     background-repeat: no-repeat;
@@ -164,8 +169,10 @@ body {
   display: grid;
   gap: 30px;
   padding: 20px 0;
-  /* Alinhamento que permite que os itens cresçam em altura */
-  align-items: start; 
+  align-items: start;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 @media (min-width: 768px) {
@@ -637,7 +644,7 @@ body {
         gap: 20px;
     }
     .projetos-container {
-        padding: 50px 20px 20px 20px;
+        padding: 50px 16px 20px 16px;
     }
     .top-bar {
         flex-direction: column;
@@ -651,7 +658,16 @@ body {
     }
     .search-input {
         width: 100%;
+        max-width: 100%;
         order: 3;
+    }
+    .filter-select {
+        width: 100%;
+        max-width: 100%;
+    }
+    .filter-controls-bar {
+        flex-direction: column;
+        gap: 12px;
     }
     .titulo-projetos {
         font-size: 2.2rem;
@@ -673,11 +689,17 @@ body {
     .lista-projetos-grid {
         grid-template-columns: 1fr;
     }
+    .projetos-container {
+        padding: 40px 12px 20px 12px;
+    }
     .criar-projeto-btn, .meus-projetos-btn {
         width: 100%;
     }
     .project-card {
-        padding: 20px;
+        padding: 16px;
+    }
+    .titulo-projetos {
+        font-size: 1.8rem;
     }
 }
 

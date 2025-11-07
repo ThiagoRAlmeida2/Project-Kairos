@@ -27,6 +27,10 @@
     min-height: 100vh;
     color: var(--text-dark);
     font-family: 'Inter', sans-serif;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .dashboard-header-controls {
@@ -76,12 +80,14 @@
 /* ================================================= */
 
 .dashboard-table-wrapper {
-    /* CRÍTICO: Esconde o excesso para respeitar o border-radius */
     overflow: hidden; 
     overflow-x: auto;
     background: var(--card-bg); 
     border-radius: 15px; 
     box-shadow: var(--shadow-main);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .candidatos-table {
@@ -410,7 +416,7 @@
 
 @media (max-width: 992px) {
     .dashboard-container {
-        padding: 50px 30px;
+        padding: 50px 24px;
     }
     /* Passa para coluna única */
     .perfil-detalhe-body {
@@ -437,7 +443,7 @@
     
     @media (max-width: 600px) {
         .dashboard-container {
-            padding: 20px 15px;
+            padding: 20px 12px;
         }
         .dashboard-title {
             font-size: 2rem;
@@ -447,8 +453,12 @@
             align-items: stretch;
         }
         .candidatos-table {
-            min-width: 600px; 
+            min-width: 500px; 
             font-size: 0.85em;
+        }
+        .dashboard-table-wrapper {
+            margin: 0 -12px;
+            width: calc(100% + 24px);
         }
         .candidatos-table th, .candidatos-table td {
             padding: 12px 15px;

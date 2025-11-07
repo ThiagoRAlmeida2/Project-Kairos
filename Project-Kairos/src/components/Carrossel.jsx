@@ -8,23 +8,20 @@ export default function Carousel({ title = 'Projetos & Eventos', items = [] }) {
 
   return (
      <section className="carousel-section" aria-label={title}>
-       <div className="container">
         <div className="carousel__header">
           <h2 className="carousel__title">{title}</h2>
           
-          {/* 🚩 BOTÕES DE NAVEGAÇÃO AQUI */}
           <div className="carousel__actions">
-              <button className="carousel__btn" onClick={() => scrollBy(-350)} aria-label="Voltar">
-                  <FaArrowLeft size={16} />
+              <button className="carousel__btn" onClick={() => scrollBy(-300)} aria-label="Voltar">
+                  <FaArrowLeft size={14} />
               </button>
-              <button className="carousel__btn" onClick={() => scrollBy(350)} aria-label="Próximo">
-                  <FaArrowRight size={16} />
+              <button className="carousel__btn" onClick={() => scrollBy(300)} aria-label="Próximo">
+                  <FaArrowRight size={14} />
               </button>
           </div>
         </div>
         
-        {/* VIEWPORT DOS CARDS */}
-       <div className="carousel__viewport" ref={ref} tabIndex="0">
+        <div className="carousel__viewport" ref={ref} tabIndex="0">
         {items.map((it, i) => (
             <article className="card" key={i}>
               <div className="card__media">
@@ -38,7 +35,6 @@ export default function Carousel({ title = 'Projetos & Eventos', items = [] }) {
             </article>
           ))}
         </div>
-      </div>
     </section>
   )
 }

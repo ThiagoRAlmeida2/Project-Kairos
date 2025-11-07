@@ -18,8 +18,11 @@
 /* Container principal da página */
 .eventos-container {
   width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   background: var(--background-light);
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* ======================================= */
@@ -31,7 +34,10 @@
   padding: 8rem 24px 4rem;
   text-align: center;
   width: 100%;
+  max-width: 100%;
   background: var(--background-light);
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .desc-container {
@@ -94,8 +100,10 @@
   border-radius: 16px;
   margin: 2rem auto 3rem;
   max-width: 1000px;
+  width: calc(100% - 48px);
   background: var(--white);
   box-shadow: var(--shadow-main);
+  box-sizing: border-box;
 }
 
 .filtro-bloco {
@@ -155,6 +163,8 @@
   margin: 0 auto;
   align-items: stretch;
   justify-items: center;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .card-evento {
@@ -260,11 +270,17 @@
 @media (max-width: 500px) {
   .eventos-list {
     grid-template-columns: 1fr;
-    padding: 2rem 1rem;
+    padding: 2rem 12px;
   }
   
   .desc-eventos {
-    padding: 4rem 15px 2rem;
+    padding: 4rem 12px 2rem;
+  }
+  
+  .filtro-eve {
+    margin: 2rem 12px 3rem;
+    width: calc(100% - 24px);
+    padding: 1.5rem 1rem;
   }
   
   .card-capa {
