@@ -19,7 +19,8 @@ export default createBrowserRouter([
       { path: "projetos", element: <ProjetosList /> },      // "/projetos"
       { path: "eventos", element: <Eventos /> },           // "/eventos"
       { path: "perfil", element: <Perfil /> },             // "/perfil"
-      { path: "dashboard", element: <EmpresaDashboard /> } // "/dashboard"
+      { path: "dashboard", element: <EmpresaDashboard /> }, // "/dashboard"
+      { path: "*", element: <Home /> }                     // Fallback para home
     ],
   },
 ]);

@@ -40,11 +40,25 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
-.projetos-container {
+.page-projetos {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 100%;
+  gap: 48px;
+  padding: 36px 0 80px;
+  flex: 1;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  background: var(--background-light);
+}
+
+.projetos-container {
+  width: 100%;
+  max-width: 1200px;
   min-height: 50vh;
-  padding: 80px 40px 40px 40px;
+  padding: 40px 40px 40px 40px;
+  margin: 0 auto;
   background: var(--background-light);
   color: var(--text-dark);
   overflow-x: hidden;
@@ -56,21 +70,26 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px; 
+  margin-bottom: 30px; 
   flex-wrap: wrap;
   gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .titulo-projetos {
-  font-size: 2.8rem;
+  font-size: 2.5rem;
   color: var(--primary-color);
   font-weight: 900;
+  margin: 0;
+  line-height: 1.2;
 }
 
 .actions {
   display: flex;
   align-items: center;
   gap: 15px;
+  flex-wrap: wrap;
 }
 
 /* 🚩 NOVO BLOCO: Estilos para a Barra de Filtros (Texto e Selects) */
@@ -644,7 +663,10 @@ body {
         gap: 20px;
     }
     .projetos-container {
-        padding: 50px 16px 20px 16px;
+        padding: 20px 16px 20px 16px;
+    }
+    .page-projetos {
+        padding: 16px 0 40px;
     }
     .top-bar {
         flex-direction: column;
@@ -690,7 +712,10 @@ body {
         grid-template-columns: 1fr;
     }
     .projetos-container {
-        padding: 40px 12px 20px 12px;
+        padding: 20px 12px 20px 12px;
+    }
+    .page-projetos {
+        padding: 12px 0 20px;
     }
     .criar-projeto-btn, .meus-projetos-btn {
         width: 100%;

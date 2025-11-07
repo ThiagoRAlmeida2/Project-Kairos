@@ -335,7 +335,8 @@ export default function ProjetosList() {
     // =========================================================================
 
     return (
-        <div className="projetos-container">
+        <div className="container page-projetos">
+            <div className="projetos-container">
             <div className="top-bar">
                 <h1 className="titulo-projetos">
                     {role === "ROLE_EMPRESA" 
@@ -624,6 +625,7 @@ export default function ProjetosList() {
                     </div>
                 </div>
             )}
+            </div>
         </div>
     );
 }

@@ -21,7 +21,7 @@ const items = [
   },
 ]
 
-export default function Hero(){
+export default function Hero({ onCadastroClick }){
   return (
     <section className="hero">
         <div className="hero__content-grid">
@@ -39,7 +39,7 @@ export default function Hero(){
                 </p>
                 <div className="about__buttons">
                     <a href="/projetos" className="btn btn--primary">Ver Projetos Ativos</a>
-                    <a href="/cadastro" className="btn btn--light">Cadastre-se</a>
+                    <button onClick={onCadastroClick} className="btn btn--light">Cadastre-se</button>
                 </div>
             </div>
 

@@ -121,109 +121,121 @@ export default function CadastroCard({ onClose }) {
         <div className="form-fields">
           {tipo === "ALUNO" ? (
             <>
-              <label>
-                Nome:*
-                <input
-                  name="nome"
-                  value={formData.nome}
-                  onChange={handleChange}
-                  type="text"
-                  placeholder="Digite seu nome"
-                />
-              </label>
-              <label>
-                Curso:*
-                <input
-                  name="curso"
-                  value={formData.curso}
-                  onChange={handleChange}
-                  type="text"
-                  placeholder="Digite seu curso"
-                />
-              </label>
-              <label>
-                Matrícula:*
-                <input
-                  name="matricula"
-                  value={formData.matricula}
-                  onChange={handleChange}
-                  type="text"
-                  placeholder="Digite sua matrícula"
-                />
-              </label>
-              <label>
-                E-mail:*
-                <input
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  type="email"
-                  placeholder="Digite seu e-mail"
-                />
-              </label>
-              <label>
-                Senha:*
-                <input
-                  name="senha"
-                  value={formData.senha}
-                  onChange={handleChange}
-                  type="password"
-                  placeholder="Digite sua senha"
-                />
-              </label>
+              <div className="form-row">
+                <label>
+                  Nome:*
+                  <input
+                    name="nome"
+                    value={formData.nome}
+                    onChange={handleChange}
+                    type="text"
+                    placeholder="Digite seu nome"
+                  />
+                </label>
+                <label>
+                  Curso:*
+                  <input
+                    name="curso"
+                    value={formData.curso}
+                    onChange={handleChange}
+                    type="text"
+                    placeholder="Digite seu curso"
+                  />
+                </label>
+              </div>
+              <div className="form-row">
+                <label>
+                  Matrícula:*
+                  <input
+                    name="matricula"
+                    value={formData.matricula}
+                    onChange={handleChange}
+                    type="text"
+                    placeholder="Digite sua matrícula"
+                  />
+                </label>
+                <label>
+                  E-mail:*
+                  <input
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    type="email"
+                    placeholder="Digite seu e-mail"
+                  />
+                </label>
+              </div>
+              <div className="form-row-full">
+                <label>
+                  Senha:*
+                  <input
+                    name="senha"
+                    value={formData.senha}
+                    onChange={handleChange}
+                    type="password"
+                    placeholder="Digite sua senha"
+                  />
+                </label>
+              </div>
             </>
           ) : (
             <>
-              <label>
-                Nome da Empresa:*
-                <input
-                  name="nome"
-                  value={formData.nome}
-                  onChange={handleChange}
-                  type="text"
-                  placeholder="Digite o nome da empresa"
-                />
-              </label>
-              <label>
-                CNPJ:*
-                <input
-                  name="cnpj"
-                  value={formData.cnpj}
-                  onChange={handleChange}
-                  type="text"
-                  placeholder="Digite o CNPJ"
-                />
-              </label>
-              <label>
-                Telefone:*
-                <input
-                  name="telefone"
-                  value={formData.telefone}
-                  onChange={handleChange}
-                  type="tel"
-                  placeholder="Digite o telefone"
-                />
-              </label>
-              <label>
-                Email:*
-                <input
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  type="email"
-                  placeholder="Digite o email"
-                />
-              </label>
-              <label>
-                Senha:*
-                <input
-                  name="senha"
-                  value={formData.senha}
-                  onChange={handleChange}
-                  type="password"
-                  placeholder="Digite sua senha"
-                />
-              </label>
+              <div className="form-row">
+                <label>
+                  Nome da Empresa:*
+                  <input
+                    name="nome"
+                    value={formData.nome}
+                    onChange={handleChange}
+                    type="text"
+                    placeholder="Digite o nome da empresa"
+                  />
+                </label>
+                <label>
+                  CNPJ:*
+                  <input
+                    name="cnpj"
+                    value={formData.cnpj}
+                    onChange={handleChange}
+                    type="text"
+                    placeholder="Digite o CNPJ"
+                  />
+                </label>
+              </div>
+              <div className="form-row">
+                <label>
+                  Telefone:*
+                  <input
+                    name="telefone"
+                    value={formData.telefone}
+                    onChange={handleChange}
+                    type="tel"
+                    placeholder="Digite o telefone"
+                  />
+                </label>
+                <label>
+                  Email:*
+                  <input
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    type="email"
+                    placeholder="Digite o email"
+                  />
+                </label>
+              </div>
+              <div className="form-row-full">
+                <label>
+                  Senha:*
+                  <input
+                    name="senha"
+                    value={formData.senha}
+                    onChange={handleChange}
+                    type="password"
+                    placeholder="Digite sua senha"
+                  />
+                </label>
+              </div>
             </>
           )}
         </div>

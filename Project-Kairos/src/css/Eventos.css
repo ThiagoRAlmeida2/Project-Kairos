@@ -16,6 +16,19 @@
 }
 
 /* Container principal da página */
+.page-eventos {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  gap: 48px;
+  padding: 36px 0 80px;
+  flex: 1;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  background: var(--background-light);
+}
+
 .eventos-container {
   width: 100%;
   max-width: 100%;
@@ -31,7 +44,7 @@
 
 .desc-eventos {
   color: var(--text-primary);
-  padding: 8rem 24px 4rem;
+  padding: 2rem 24px 4rem;
   text-align: center;
   width: 100%;
   max-width: 100%;
@@ -274,7 +287,11 @@
   }
   
   .desc-eventos {
-    padding: 4rem 12px 2rem;
+    padding: 1rem 12px 2rem;
+  }
+  
+  .page-eventos {
+    padding: 12px 0 20px;
   }
   
   .filtro-eve {

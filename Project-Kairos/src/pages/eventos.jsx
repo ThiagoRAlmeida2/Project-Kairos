@@ -6,7 +6,7 @@ import "../css/Eventos.css";
 
 export default function Eventos() {
   return (
-    <div className="eventos-container">
+    <div className="container page-eventos">
       <DescEventos />
       <FiltroEve />
       <EventosList />
