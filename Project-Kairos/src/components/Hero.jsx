@@ -39,7 +39,7 @@ export default function Hero({ onCadastroClick }){
                 </p>
                 <div className="about__buttons">
                     <a href="/projetos" className="btn btn--primary">Ver Projetos Ativos</a>
-                    <button onClick={onCadastroClick} className="btn btn--light">Cadastre-se</button>
+                    <a href="/eventos" className="btn btn--light">Eventos</a>
                 </div>
             </div>
 
