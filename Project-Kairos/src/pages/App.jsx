@@ -1,17 +1,19 @@
 // src/pages/App.jsx
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 
 export default function App() {
+  const location = useLocation();
+  
   return (
     <div className="app">
       <Navbar />
       <main>
         <Outlet />
       </main>
-      <Footer />
+      {location.pathname === '/' && <Footer />}
     </div>
   );
 }

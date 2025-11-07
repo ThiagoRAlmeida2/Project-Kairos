@@ -35,9 +35,12 @@ body {
   display: flex;
   justify-content: center;
   width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   padding: 60px 24px;
   background: var(--background-light);
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .perfil-card {
@@ -47,6 +50,8 @@ body {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
   width: 100%;
   max-width: 950px;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* --- TÍTULO --- */
@@ -408,6 +413,10 @@ body {
 }
 
 @media (max-width: 768px) {
+  .perfil-container {
+    padding: 60px 16px;
+  }
+  
   .perfil-card {
     padding: 20px;
   }
@@ -420,5 +429,19 @@ body {
   
   .projetos-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .perfil-container {
+    padding: 40px 12px;
+  }
+  
+  .perfil-card {
+    padding: 16px;
+  }
+  
+  .perfil-titulo {
+    font-size: 1.8rem;
   }
 }
