@@ -1,9 +1,11 @@
-// src/pages/Navbar.jsx
 import React, { useState, useEffect, useRef } from "react";
 import CadastroCard from "../components/CadastroCard.jsx";
 import LoginCard from "../components/LoginCard.jsx";
 import logo from "../assets/logo.svg";
 import { Menu, X } from "lucide-react";
+
+// Defina a breakpoint do CSS como uma constante para uso no JS
+const MOBILE_BREAKPOINT = 880;
 
 export default function Navbar() {
   const [showCadastro, setShowCadastro] = useState(false);
@@ -20,38 +22,51 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      // Verifica se o clique ocorreu fora da área do menu dropdown
+      // Fecha o dropdown de desktop
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setMenuOpen(false);
-        setMobileOpen(false);
       }
     };
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  const closeMobileMenu = () => {
+    setMobileOpen(false);
+  };
+  
+  const handleToggleMenu = (e) => {
+    e.stopPropagation();
+    // Verifica a largura da tela para decidir qual menu abrir/fechar
+    if (window.innerWidth <= MOBILE_BREAKPOINT) {
+        setMobileOpen(v => !v);
+        setMenuOpen(false);
+    } else {
+        // Para desktop, o toggle do botão principal não é usado, o clique é no avatar
+        // Este toggle é apenas para o botão hamburguer (que some em desktop)
+    }
+  }
+
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     setUser(null);
     setMenuOpen(false);
-
-    // 🚩 CORREÇÃO: Força o recarregamento e redireciona para a página inicial
+    setMobileOpen(false);
     window.location.href = "/";
   };
   
-  // Função que será passada para o LoginCard para atualizar o estado do user
   const handleLoginSuccess = (userData) => {
     setUser(userData);
     setShowLogin(false);
-    // Opcional: Recarregar a página para atualizar o conteúdo que depende do login
     window.location.reload(); 
   };
 
+  // Funções utilitárias para renderização condicional no menu principal
+  const isMobileView = window.innerWidth <= MOBILE_BREAKPOINT;
+
   return (
     <>
-
-      {/* ✅ NAVBAR */}
       <header className="nav">
         <div className="container nav__inner">
           <a href="/" className="brand" aria-label="Kairos Home">
@@ -63,22 +78,37 @@ export default function Navbar() {
             className="nav__toggle"
             aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
             aria-expanded={mobileOpen}
-            onClick={(e) => {
-              e.stopPropagation();
-              setMobileOpen((v) => !v);
-            }}
+            onClick={handleToggleMenu}
           >
             {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
+          {/* 🚩 CORREÇÃO APLICADA: Links do usuário logado só aparecem se for mobile */}
           <nav className={`menu ${mobileOpen ? 'menu--open' : ''}`} aria-label="Menu Principal">
-            <a href="/" onClick={() => setMobileOpen(false)}>Início</a>
-            <a href="/eventos" onClick={() => setMobileOpen(false)}>Eventos</a>
-            <a href="/projetos" onClick={() => setMobileOpen(false)}>Projetos</a>
+            <a href="/" onClick={closeMobileMenu}>Início</a>
+            <a href="/eventos" onClick={closeMobileMenu}>Eventos</a>
+            <a href="/projetos" onClick={closeMobileMenu}>Projetos</a>
+            
+            {/* Somente renderiza Perfis e Sair no menu principal SE for mobile E estiver logado */}
+            {user && isMobileView && (
+              <>
+                <div className="mobile-divider" style={{ borderTop: '1px solid rgba(0,0,0,0.1)', margin: '5px 0', width: '100%' }}></div>
+                <a href="/perfil" onClick={closeMobileMenu}>Perfil</a>
+                <a 
+                    href="#" 
+                    onClick={handleLogout} 
+                    className="menu-logout-link" 
+                >
+                    Sair
+                </a>
+              </>
+            )}
+            
           </nav>
 
           <div className="nav__actions">
             {!user ? (
+              // BOTOES DESLOGADO
               <>
                 <button
                   className="btn"
@@ -100,6 +130,7 @@ export default function Navbar() {
                 </button>
               </>
             ) : (
+              // MENU DROPDOWN (Visível apenas no Desktop/Telas maiores)
               <div className="user-menu" ref={dropdownRef}>
                 <div
                   className="user-info"
@@ -118,18 +149,20 @@ export default function Navbar() {
                       width: 40,
                       height: 40,
                       borderRadius: "50%",
-                      border: "2px solid #7b5cf5", // Cor ajustada para consistência
+                      border: "2px solid #7b5cf5", 
                     }}
                   />
-                  {menuOpen ? <X size={24} /> : <Menu size={24} />}
+                  {/* Ícone para o dropdown de DESKTOP (se o mobile não estiver aberto) */}
+                  {!mobileOpen && (menuOpen ? <X size={24} /> : <Menu size={24} />)}
                 </div>
 
                 {menuOpen && (
                   <ul className="dropdown">
-                    <li><a href="/perfil">Perfil</a></li>
+                    <li><a href="/perfil" onClick={() => setMenuOpen(false)}>Perfil</a></li>
+                    <li><a href="/projetos" onClick={() => setMenuOpen(false)}>Projetos</a></li>
                     <li 
                       onClick={handleLogout}
-                      style={{ cursor: 'pointer' }} // Torna explícito que é clicável
+                      style={{ cursor: 'pointer' }}
                     >
                       Sair
                     </li>
@@ -141,7 +174,7 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* ✅ MODAIS */}
+      {/* MODAIS (mantidos) */}
       {showCadastro && (
         <div className="modal-overlay" onClick={() => setShowCadastro(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -150,7 +183,7 @@ export default function Navbar() {
         </div>
       )}
 
-      {showLogin && !showCadastro && (
+      {showLogin && (
         <div className="modal-overlay" onClick={() => setShowLogin(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <LoginCard
