@@ -37,7 +37,7 @@ body {
   width: 100%;
   max-width: 100%;
   min-height: 100vh;
-  padding: 10px 24px;
+  padding: 60px 24px;
   background: var(--background-light);
   overflow-x: hidden;
   box-sizing: border-box;

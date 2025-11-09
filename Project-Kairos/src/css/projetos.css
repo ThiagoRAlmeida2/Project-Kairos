@@ -57,6 +57,7 @@ body {
   width: 100%;
   max-width: 1200px;
   min-height: 50vh;
+  padding: 40px 40px 40px 40px;
   margin: 0 auto;
   background: var(--background-light);
   color: var(--text-dark);
@@ -929,3 +930,4 @@ body {
 .form-group-tags small {
     margin-top: 10px; /* Ajusta a margem para separar do grupo de tags */
 }
+
