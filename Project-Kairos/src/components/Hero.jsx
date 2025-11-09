@@ -1,6 +1,7 @@
 // src/components/Hero.jsx
 import React from 'react'
 import Carousel from '../components/Carrossel.jsx'
+import '../css/Hero.css'
 
 // IMPORTAÇÕES DE IMAGEM MANTIDAS
 import appspagamentoImg from '../assets/IMG/appspagamento.png';

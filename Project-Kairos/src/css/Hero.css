@@ -1,0 +1,138 @@
+/* === HERO SECTION === */
+.hero {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #312e81 0%, #1e1b4b 50%, #111827 100%);
+  color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 80px 24px;
+  position: relative;
+}
+
+/* Brilho sutil decorativo */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(99,102,241,0.3), transparent 70%);
+  filter: blur(90px);
+  z-index: 0;
+}
+
+.hero__content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 60px;
+  width: 100%;
+  max-width: 1400px;
+  z-index: 2;
+}
+
+/* === TEXTO (Coluna Esquerda) === */
+.hero__about {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  animation: fadeUp 0.8s ease-in-out;
+}
+
+.about__title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #a5b4fc;
+  line-height: 1.2;
+}
+
+.about__subtitle {
+  font-size: 1.1rem;
+  color: #e0e7ff;
+  line-height: 1.7;
+  max-width: 600px;
+}
+
+.about__section-title {
+  margin-top: 1rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #c7d2fe;
+}
+
+.about__description {
+  font-size: 1rem;
+  color: #d1d5db;
+  line-height: 1.6;
+  max-width: 580px;
+}
+
+.about__buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+/* === BOTÕES === */
+.btn {
+  padding: 12px 24px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.btn--primary {
+  background: linear-gradient(90deg, #6366f1, #4f46e5);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+}
+
+.btn--primary:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(90deg, #4f46e5, #3730a3);
+}
+
+.btn--light {
+  border: 1px solid #a5b4fc;
+  color: #a5b4fc;
+}
+
+.btn--light:hover {
+  background: rgba(165, 180, 252, 0.1);
+  color: #fff;
+}
+
+/* === ANIMAÇÕES === */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === RESPONSIVIDADE === */
+@media (max-width: 900px) {
+  .hero__content-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 40px;
+  }
+
+  .about__title {
+    font-size: 2rem;
+  }
+
+  .about__buttons {
+    justify-content: center;
+  }
+}

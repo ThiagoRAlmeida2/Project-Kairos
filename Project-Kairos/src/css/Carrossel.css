@@ -1,0 +1,111 @@
+/* === CARROSSEL === */
+.carousel-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+.carousel__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #a5b4fc;
+  margin-bottom: 1rem;
+}
+
+.carousel__viewport {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+/* === CARD === */
+.card {
+  width: 100%;
+  max-width: 480px;
+  background: #1f2937;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  overflow: hidden;
+  text-align: left;
+  animation: fadeIn 0.5s ease-in-out;
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+/* Imagem */
+.card__media {
+  position: relative;
+}
+
+.card__image {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Badge */
+.card__badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: linear-gradient(90deg, #6366f1, #4f46e5);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+/* Corpo do Card */
+.card__body {
+  padding: 20px;
+}
+
+.card__title {
+  font-size: 1.2rem;
+  color: #f9fafb;
+  margin-bottom: 8px;
+}
+
+.card__desc {
+  font-size: 0.95rem;
+  color: #d1d5db;
+  line-height: 1.5;
+}
+
+/* === Animação === */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* === RESPONSIVIDADE === */
+@media (max-width: 768px) {
+  .carousel__viewport {
+    max-width: 90%;
+  }
+
+  .card__image {
+    height: 220px;
+  }
+
+  .card__title {
+    font-size: 1.1rem;
+  }
+}
