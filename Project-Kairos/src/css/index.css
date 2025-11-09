@@ -74,6 +74,7 @@ button {
   margin: 0 auto;
   padding: 0 24px;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .app {
@@ -115,6 +116,7 @@ main {
   margin: 0 auto;
   position: relative;
   box-sizing: border-box;
+  overflow: hidden;
 }
 .brand{ display:flex; align-items:center; gap:10px; font-weight:700; }
 .brand__logo{ height:52px; }
