@@ -336,297 +336,300 @@ export default function ProjetosList() {
     // =========================================================================
 
     return (
-        <div className="container page-projetos">
-            <div className="projetos-container">
-            <div className="top-bar">
-                <h1 className="titulo-projetos">
-                    {role === "ROLE_EMPRESA" 
-                        ? "📁 Meus Projetos" 
-                        : modoAluno === "INSCRITOS" ? "📋 Minhas Inscrições" : "📋 Projetos Disponíveis"
-                    }
-                </h1>
-                <div className="actions">
-                    {/* Botão de alternância para o ALUNO */}
-                    {role === "ROLE_ALUNO" && (
-                        <button
-                            className={`meus-projetos-btn ${modoAluno === 'INSCRITOS' ? 'active' : ''}`}
-                            onClick={() => setModoAluno((prev) => 
-                                prev === "TODOS" ? "INSCRITOS" : "TODOS"
-                            )}
-                        >
-                            {modoAluno === "TODOS" ? "Minhas Inscrições" : "Ver Todos"}
-                        </button>
-                    )}
-
-                    {/* 🚩 BOTÃO: DASHBOARD CANDIDATOS (Apenas Empresa) */}
-                    {role === "ROLE_EMPRESA" && (
-                        <a 
-                            href="/dashboard" 
-                            className="btn-candidatos-dashboard" 
-                        >
-                            Candidatos
-                        </a>
-                    )}
-
-                    {/* Botão Criar Projeto SÓ DEVE APARECER para a EMPRESA */}
-                    {role === "ROLE_EMPRESA" && (
-                        <button 
-                            className="criar-projeto-btn" 
-                            onClick={() => {setShowModal(true); resetForm();}}
-                        >
-                            + Criar Projeto
-                        </button>
-                    )}
-
-                </div>
-            </div>
-
-            {/* 🚩 SEÇÃO DE FILTROS */}
-            <div className="filter-controls-bar">
-                <input
-                    className="search-input"
-                    placeholder="Buscar projeto ou tag..." 
-                    value={filtroTexto}
-                    onChange={(e) => setFiltroTexto(e.target.value)}
-                />
-                
-                {/* Filtro de Regime */}
-                <select
-                    className="filter-select"
-                    value={filtroRegime}
-                    onChange={(e) => setFiltroRegime(e.target.value)}
-                >
-                    <option value="TODOS">Regime: Todos</option>
-                    <option value="PJ">PJ</option>
-                    <option value="CLT">CLT</option>
-                </select>
-                
-                {/* Filtro de Tag Específica */}
-                <select
-                    className="filter-select"
-                    value={filtroTag}
-                    onChange={(e) => setFiltroTag(e.target.value)}
-                >
-                    <option value="TODAS">Tecnologia: Todas</option>
-                    {LINGUAGENS_OPTIONS.map(lang => (
-                        <option key={lang} value={lang}>{lang}</option>
-                    ))}
-                </select>
-            </div>
-
-            <div className="lista-projetos-grid"> 
-                {projetosFiltrados.length > 0 ? (
-                    projetosFiltrados.map((p) => (
-                        <div
-                            key={p.id}
-                            className={`project-card ${p.encerrado ? "encerrado" : ""}`}
-                        >
-                            <div className="project-header">
-                                <h3 className="project-title-link">{p.nome}</h3>
-                                <div className="status-tags">
-                                    <span className={`status-regime regime-${p.regime?.toLowerCase()}`}>{p.regime}</span>
-                                    {p.encerrado && <span className="status-tag encerrado">Encerrado</span>}
-                                </div>
-                            </div>
-
-                            
-                            
-                            <div className="card-info-group">
-                                <span className="card-info">
-                                    📅 Início: {p.dataInicio ? parseDate(p.dataInicio).toLocaleDateString("pt-BR") : "N/I"}
-                                </span>
-                                <span className="card-info">
-                                    ⌛ Duração: {getDurationInMonths(p.dataInicio, p.dataFim)}
-                                </span>
-                            </div>
-                            
-                            {/* GERAÇÃO DE TAGS */}
-                            <div className="tags-list">
-                                {p.tags.map(tag => {
-                                    const className = generateTagClassName(tag); 
-                                    return (
-                                        <span 
-                                            key={tag} 
-                                            className={`tag-chip ${className}`} 
-                                        >
-                                            {tag}
-                                        </span>
-                                    );
-                                })}
-                            </div>
-
-                            <p className="descricao-completa">{p.descricao}</p> 
-
-                            <div className="project-footer">
-                                <span>Empresa: {p.empresaNome}</span>
-                                
-                                {/*Exibe Aprovados na linha de baixo, se houver */}
-                                <span>
-                                    Criado em:{" "}
-                                    {parseDate(p.dataCriacao) ? parseDate(p.dataCriacao).toLocaleDateString("pt-BR") : "-"}
-                                </span>
-                                
-                                {role === "ROLE_EMPRESA" && p.aprovados > 0 && (
-                                    <span className="aprovados-count-footer">
-                                        Aprovados: 
-                                        <strong style={{ color: 'var(--color-success)', marginLeft: '5px' }}>{p.aprovados}</strong>
-                                    </span>
+        <>
+            <div className="container page-projetos">
+                <div className="projetos-container">
+                <div className="top-bar">
+                    <h1 className="titulo-projetos">
+                        {role === "ROLE_EMPRESA" 
+                            ? "📁 Meus Projetos" 
+                            : modoAluno === "INSCRITOS" ? "📋 Minhas Inscrições" : "📋 Projetos Disponíveis"
+                        }
+                    </h1>
+                    <div className="actions">
+                        {/* Botão de alternância para o ALUNO */}
+                        {role === "ROLE_ALUNO" && (
+                            <button
+                                className={`meus-projetos-btn ${modoAluno === 'INSCRITOS' ? 'active' : ''}`}
+                                onClick={() => setModoAluno((prev) => 
+                                    prev === "TODOS" ? "INSCRITOS" : "TODOS"
                                 )}
-                                
-                                {/* Lógica do Botão para ALUNO (Inscrever / Inscrito / Cancelar) */}
-                                {!p.encerrado && role === "ROLE_ALUNO" && (
-                                    <>
-                                        {modoAluno === "INSCRITOS" ? (
-                                            // BLOCO CORRIGIDO PARA EXIBIR O STATUS DA INSCRIÇÃO
-                                            <div className="status-and-action">
-                                                <span className={`status-tag status-${(p.statusInscricao || 'PENDENTE').toLowerCase()}`}>
-                                                    {p.statusInscricao || 'PENDENTE'}
-                                                </span>
-                                                
-                                                {/* SÓ MOSTRA O BOTÃO DE CANCELAR SE ESTIVER PENDENTE */}
-                                                {p.statusInscricao === 'PENDENTE' && (
-                                                    <button
-                                                        className="cancelar-inscricao-btn"
-                                                        onClick={() => handleCancelRegistration(p.id)}
-                                                    >
-                                                        Cancelar Inscrição
-                                                    </button>
-                                                )}
-                                            </div>
-                                        ) : (
-                                            <button
-                                                className={`inscrever-btn ${projetosInscritosIds.includes(p.id) ? 'inscrito' : ''}`}
-                                                onClick={() => handleInscrever(p.id)}
-                                                disabled={projetosInscritosIds.includes(p.id)}
-                                            >
-                                                {projetosInscritosIds.includes(p.id) ? 'Inscrito' : 'Inscrever-se'}
-                                            </button>
-                                        )}
-                                    </>
-                                )}
+                            >
+                                {modoAluno === "TODOS" ? "Minhas Inscrições" : "Ver Todos"}
+                            </button>
+                        )}
 
-                                {!p.encerrado && role === "ROLE_EMPRESA" && (
-                                    <button
-                                        className="encerrar-btn"
-                                        onClick={() => handleEncerrarProjeto(p.id)}
-                                    >
-                                        Encerrar Projeto
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    ))
-                ) : (
-                    <p className="sem-projetos">Nenhum projeto encontrado</p>
-                )}
-            </div>
+                        {/* 🚩 BOTÃO: DASHBOARD CANDIDATOS (Apenas Empresa) */}
+                        {role === "ROLE_EMPRESA" && (
+                            <a 
+                                href="/dashboard" 
+                                className="btn-candidatos-dashboard" 
+                            >
+                                Candidatos
+                            </a>
+                        )}
 
-            {/* MODAL DE CRIAÇÃO */}
-            {showModal && (
-                <div className="modal-overlay" onClick={() => {setShowModal(false); resetForm();}}>
-                    <div className="modal-content large-modal" onClick={(e) => e.stopPropagation()}>
-                        <h2>Novo Projeto</h2>
-                        <form onSubmit={handleCreateProject} className="create-project-form">
-                            
-                            <input
-                                placeholder="Nome do Projeto"
-                                value={nome}
-                                onChange={(e) => setNome(e.target.value)}
-                                required
-                            />
-                            <textarea
-                                placeholder="Descrição Completa do Projeto"
-                                value={descricao}
-                                onChange={(e) => setDescricao(e.target.value)}
-                                rows="6"
-                                required
-                            />
+                        {/* Botão Criar Projeto SÓ DEVE APARECER para a EMPRESA */}
+                        {role === "ROLE_EMPRESA" && (
+                            <button 
+                                className="criar-projeto-btn" 
+                                onClick={() => {setShowModal(true); resetForm();}}
+                            >
+                                + Criar Projeto
+                            </button>
+                        )}
 
-                            <div className="form-row">
-                                <label>
-                                    Data de Início:
-                                    <input 
-                                        type="date" 
-                                        value={dataInicio}
-                                        onChange={(e) => setDataInicio(e.target.value)}
-                                        required
-                                    />
-                                </label>
-                                <label>
-                                    Data de Fim (Previsão):
-                                    <input 
-                                        type="date" 
-                                        value={dataFim}
-                                        onChange={(e) => setDataFim(e.target.value)}
-                                        required
-                                    />
-                                </label>
-                            </div>
-
-                            <div className="form-regime">
-                                <label>Regime de Contratação:</label>
-                                <div className="radio-group-modal">
-                                    <label>
-                                        <input 
-                                            type="radio" 
-                                            value="PJ" 
-                                            checked={regime === "PJ"}
-                                            onChange={(e) => setRegime(e.target.value)}
-                                        />
-                                        Pessoa Jurídica (PJ)
-                                    </label>
-                                    <label>
-                                        <input 
-                                            type="radio" 
-                                            value="CLT" 
-                                            checked={regime === "CLT"}
-                                            onChange={(e) => setRegime(e.target.value)}
-                                        />
-                                        CLT
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div className="form-group-tags">
-                                <label>Tags / Linguagens de Programação:</label>
-                                {/* 🚩 SUBSTITUÍDO: Multi-Select por Checkboxes */}
-                                <div className="tag-checkbox-group">
-                                    {/* Para o modal de criação, use input[type="checkbox"] no lugar do select */}
-                                    {LINGUAGENS_OPTIONS.map(lang => (
-                                        <label key={lang} className="tag-checkbox-label">
-                                            <input
-                                                type="checkbox"
-                                                value={lang}
-                                                checked={tags.includes(lang)}
-                                                onChange={handleTagChange}
-                                                required={tags.length === 0}
-                                            />
-                                            <span className={`tag-chip ${generateTagClassName(lang)} checkbox-style`}>
-                                                {lang}
-                                            </span>
-                                        </label>
-                                    ))}
-                                </div>
-                                <small>Selecione uma ou mais tecnologias.</small>
-                            </div>
-                            
-                            <div className="modal-buttons">
-                                <button
-                                    type="button"
-                                    className="cancelar-btn"
-                                    onClick={() => {setShowModal(false); resetForm();}}
-                                >
-                                    Cancelar
-                                </button>
-                                <button type="submit" className="salvar-btn">
-                                    Criar Projeto
-                                </button>
-                            </div>
-                        </form>
                     </div>
                 </div>
-            )}
+
+                {/* 🚩 SEÇÃO DE FILTROS */}
+                <div className="filter-controls-bar">
+                    <input
+                        className="search-input"
+                        placeholder="Buscar projeto ou tag..." 
+                        value={filtroTexto}
+                        onChange={(e) => setFiltroTexto(e.target.value)}
+                    />
+                    
+                    {/* Filtro de Regime */}
+                    <select
+                        className="filter-select"
+                        value={filtroRegime}
+                        onChange={(e) => setFiltroRegime(e.target.value)}
+                    >
+                        <option value="TODOS">Regime: Todos</option>
+                        <option value="PJ">PJ</option>
+                        <option value="CLT">CLT</option>
+                    </select>
+                    
+                    {/* Filtro de Tag Específica */}
+                    <select
+                        className="filter-select"
+                        value={filtroTag}
+                        onChange={(e) => setFiltroTag(e.target.value)}
+                    >
+                        <option value="TODAS">Tecnologia: Todas</option>
+                        {LINGUAGENS_OPTIONS.map(lang => (
+                            <option key={lang} value={lang}>{lang}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="lista-projetos-grid"> 
+                    {projetosFiltrados.length > 0 ? (
+                        projetosFiltrados.map((p) => (
+                            <div
+                                key={p.id}
+                                className={`project-card ${p.encerrado ? "encerrado" : ""}`}
+                            >
+                                <div className="project-header">
+                                    <h3 className="project-title-link">{p.nome}</h3>
+                                    <div className="status-tags">
+                                        <span className={`status-regime regime-${p.regime?.toLowerCase()}`}>{p.regime}</span>
+                                        {p.encerrado && <span className="status-tag encerrado">Encerrado</span>}
+                                    </div>
+                                </div>
+
+                                
+                                
+                                <div className="card-info-group">
+                                    <span className="card-info">
+                                        📅 Início: {p.dataInicio ? parseDate(p.dataInicio).toLocaleDateString("pt-BR") : "N/I"}
+                                    </span>
+                                    <span className="card-info">
+                                        ⌛ Duração: {getDurationInMonths(p.dataInicio, p.dataFim)}
+                                    </span>
+                                </div>
+                                
+                                {/* GERAÇÃO DE TAGS */}
+                                <div className="tags-list">
+                                    {p.tags.map(tag => {
+                                        const className = generateTagClassName(tag); 
+                                        return (
+                                            <span 
+                                                key={tag} 
+                                                className={`tag-chip ${className}`} 
+                                            >
+                                                {tag}
+                                            </span>
+                                        );
+                                    })}
+                                </div>
+
+                                <p className="descricao-completa">{p.descricao}</p> 
+
+                                <div className="project-footer">
+                                    <span>Empresa: {p.empresaNome}</span>
+                                    
+                                    {/*Exibe Aprovados na linha de baixo, se houver */}
+                                    <span>
+                                        Criado em:{" "}
+                                        {parseDate(p.dataCriacao) ? parseDate(p.dataCriacao).toLocaleDateString("pt-BR") : "-"}
+                                    </span>
+                                    
+                                    {role === "ROLE_EMPRESA" && p.aprovados > 0 && (
+                                        <span className="aprovados-count-footer">
+                                            Aprovados: 
+                                            <strong style={{ color: 'var(--color-success)', marginLeft: '5px' }}>{p.aprovados}</strong>
+                                        </span>
+                                    )}
+                                    
+                                    {/* Lógica do Botão para ALUNO (Inscrever / Inscrito / Cancelar) */}
+                                    {!p.encerrado && role === "ROLE_ALUNO" && (
+                                        <>
+                                            {modoAluno === "INSCRITOS" ? (
+                                                // BLOCO CORRIGIDO PARA EXIBIR O STATUS DA INSCRIÇÃO
+                                                <div className="status-and-action">
+                                                    <span className={`status-tag status-${(p.statusInscricao || 'PENDENTE').toLowerCase()}`}>
+                                                        {p.statusInscricao || 'PENDENTE'}
+                                                    </span>
+                                                    
+                                                    {/* SÓ MOSTRA O BOTÃO DE CANCELAR SE ESTIVER PENDENTE */}
+                                                    {p.statusInscricao === 'PENDENTE' && (
+                                                        <button
+                                                            className="cancelar-inscricao-btn"
+                                                            onClick={() => handleCancelRegistration(p.id)}
+                                                        >
+                                                            Cancelar Inscrição
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <button
+                                                    className={`inscrever-btn ${projetosInscritosIds.includes(p.id) ? 'inscrito' : ''}`}
+                                                    onClick={() => handleInscrever(p.id)}
+                                                    disabled={projetosInscritosIds.includes(p.id)}
+                                                >
+                                                    {projetosInscritosIds.includes(p.id) ? 'Inscrito' : 'Inscrever-se'}
+                                                </button>
+                                            )}
+                                        </>
+                                    )}
+
+                                    {!p.encerrado && role === "ROLE_EMPRESA" && (
+                                        <button
+                                            className="encerrar-btn"
+                                            onClick={() => handleEncerrarProjeto(p.id)}
+                                        >
+                                            Encerrar Projeto
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="sem-projetos">Nenhum projeto encontrado</p>
+                    )}
+                </div>
+
+                {/* MODAL DE CRIAÇÃO */}
+                {showModal && (
+                    <div className="modal-overlay" onClick={() => {setShowModal(false); resetForm();}}>
+                        <div className="modal-content large-modal" onClick={(e) => e.stopPropagation()}>
+                            <h2>Novo Projeto</h2>
+                            <form onSubmit={handleCreateProject} className="create-project-form">
+                                
+                                <input
+                                    placeholder="Nome do Projeto"
+                                    value={nome}
+                                    onChange={(e) => setNome(e.target.value)}
+                                    required
+                                />
+                                <textarea
+                                    placeholder="Descrição Completa do Projeto"
+                                    value={descricao}
+                                    onChange={(e) => setDescricao(e.target.value)}
+                                    rows="6"
+                                    required
+                                />
+
+                                <div className="form-row">
+                                    <label>
+                                        Data de Início:
+                                        <input 
+                                            type="date" 
+                                            value={dataInicio}
+                                            onChange={(e) => setDataInicio(e.target.value)}
+                                            required
+                                        />
+                                    </label>
+                                    <label>
+                                        Data de Fim (Previsão):
+                                        <input 
+                                            type="date" 
+                                            value={dataFim}
+                                            onChange={(e) => setDataFim(e.target.value)}
+                                            required
+                                        />
+                                    </label>
+                                </div>
+
+                                <div className="form-regime">
+                                    <label>Regime de Contratação:</label>
+                                    <div className="radio-group-modal">
+                                        <label>
+                                            <input 
+                                                type="radio" 
+                                                value="PJ" 
+                                                checked={regime === "PJ"}
+                                                onChange={(e) => setRegime(e.target.value)}
+                                            />
+                                            Pessoa Jurídica (PJ)
+                                        </label>
+                                        <label>
+                                            <input 
+                                                type="radio" 
+                                                value="CLT" 
+                                                checked={regime === "CLT"}
+                                                onChange={(e) => setRegime(e.target.value)}
+                                            />
+                                            CLT
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div className="form-group-tags">
+                                    <label>Tags / Linguagens de Programação:</label>
+                                    {/* 🚩 SUBSTITUÍDO: Multi-Select por Checkboxes */}
+                                    <div className="tag-checkbox-group">
+                                        {/* Para o modal de criação, use input[type="checkbox"] no lugar do select */}
+                                        {LINGUAGENS_OPTIONS.map(lang => (
+                                            <label key={lang} className="tag-checkbox-label">
+                                                <input
+                                                    type="checkbox"
+                                                    value={lang}
+                                                    checked={tags.includes(lang)}
+                                                    onChange={handleTagChange}
+                                                    required={tags.length === 0}
+                                                />
+                                                <span className={`tag-chip ${generateTagClassName(lang)} checkbox-style`}>
+                                                    {lang}
+                                                </span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                    <small>Selecione uma ou mais tecnologias.</small>
+                                </div>
+                                
+                                <div className="modal-buttons">
+                                    <button
+                                        type="button"
+                                        className="cancelar-btn"
+                                        onClick={() => {setShowModal(false); resetForm();}}
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button type="submit" className="salvar-btn">
+                                        Criar Projeto
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
+                </div>
             </div>
-        </div>  
+        <Footer /> 
+        </> 
     );
 }

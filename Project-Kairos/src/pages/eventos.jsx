@@ -7,11 +7,13 @@ import Footer from "../components/Footer"
 
 export default function Eventos() {
   return (
-    <div className="container page-eventos">
-      <DescEventos />
-      <FiltroEve />
-      <EventosList />
-      <Footer /> 
-    </div>
+    <>
+      <div className="container page-eventos">
+        <DescEventos />
+        <FiltroEve />
+        <EventosList />
+      </div>
+      <Footer />
+    </>
   );
 }
