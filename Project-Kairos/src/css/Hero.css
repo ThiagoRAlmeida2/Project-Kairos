@@ -20,7 +20,7 @@
   right: -100px;
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(99,102,241,0.3), transparent 70%);
+  background: radial-gradient(circle, rgba(50,152,239,0.3), transparent 70%);
   filter: blur(90px);
   z-index: 0;
 }
@@ -46,7 +46,7 @@
 .about__title {
   font-size: 2.8rem;
   font-weight: 700;
-  color: #a5b4fc;
+  color: #ffffff;
   line-height: 1.2;
 }
 
@@ -61,7 +61,7 @@
   margin-top: 1rem;
   font-size: 1.3rem;
   font-weight: 600;
-  color: #c7d2fe;
+  color: #e6f3ff;
 }
 
 .about__description {
@@ -88,23 +88,23 @@
 }
 
 .btn--primary {
-  background: linear-gradient(90deg, #6366f1, #4f46e5);
+  background: linear-gradient(90deg, #3298EF, #0078D1);
   color: #fff;
-  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 20px rgba(50, 152, 239, 0.4);
 }
 
 .btn--primary:hover {
   transform: translateY(-2px);
-  background: linear-gradient(90deg, #4f46e5, #3730a3);
+  background: linear-gradient(90deg, #0078D1, #312e81);
 }
 
 .btn--light {
-  border: 1px solid #a5b4fc;
-  color: #a5b4fc;
+  border: 1px solid #ffffff;
+  color: #ffffff;
 }
 
 .btn--light:hover {
-  background: rgba(165, 180, 252, 0.1);
+  background: rgba(255, 255, 255, 0.1);
   color: #fff;
 }
 

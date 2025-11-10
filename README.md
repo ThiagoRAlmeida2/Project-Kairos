@@ -1,10 +1,10 @@
-# 🚀 Project Kairos: Plataforma de Conexão Universidade-Empresa
+# [ROCKET] Project Kairos: Plataforma de Conexão Universidade-Empresa
 
 Este projeto é uma aplicação *full-stack* desenvolvida para conectar alunos e empresas em projetos práticos, utilizando **React.js (Vite)** no frontend e **Spring Boot (Java)** no backend, com persistência de dados gerenciada pelo **MySQL**.
 
 ---
 
-## 📚 Sumário
+## [BOOKS] Sumário
 
 - [Visão Geral do Stack](#visão-geral-do-stack)
 - [Funcionalidades Principais](#funcionalidades-principais-implementadas)
@@ -26,7 +26,7 @@ Este projeto é uma aplicação *full-stack* desenvolvida para conectar alunos e
 ![Render](https://img.shields.io/badge/Backend-Render-purple?logo=render)
 ![Railway](https://img.shields.io/badge/Database-Railway-0B0D0E?logo=railway)
 
-## 🔹 Visão Geral do Stack
+## [DIAMOND] Visão Geral do Stack
 
 | Componente | Tecnologia Principal | Finalidade |
 | :--- | :--- | :--- |
@@ -37,7 +37,7 @@ Este projeto é uma aplicação *full-stack* desenvolvida para conectar alunos e
 
 ---
 
-## 🔹 Funcionalidades Principais Implementadas
+## [DIAMOND] Funcionalidades Principais Implementadas
 
 O projeto inclui funcionalidades específicas para cada perfil:
 
@@ -49,7 +49,7 @@ O projeto inclui funcionalidades específicas para cada perfil:
 
 ---
 
-## 🔹 Estrutura de Pastas (Frontend - `src/`)
+## [DIAMOND] Estrutura de Pastas (Frontend - `src/`)
 
 ```bash
 src/
@@ -64,18 +64,18 @@ src/
 
 ---
 
-## 🚀 Guia de Configuração Completa (Full-Stack)
+## [ROCKET] Guia de Configuração Completa (Full-Stack)
 
 Para rodar o projeto localmente, você precisa configurar o ambiente backend (Java/MySQL) e o ambiente frontend (Node/React).
 
 ---
 
-### 1️⃣ Configuração do Backend e Banco de Dados
+### [1] Configuração do Backend e Banco de Dados
 
 **Requisitos:**  
 Certifique-se de ter o **Java Development Kit (JDK 24+)**, **Maven** e um servidor **MySQL** rodando.
 
-#### 🛠️ Configuração do MySQL local
+#### [TOOLS] Configuração do MySQL local
 
 Crie um banco de dados vazio:
 
@@ -83,13 +83,13 @@ Crie um banco de dados vazio:
    CREATE DATABASE kairos_db;
 ```
 
-#### 🛠️ Configuração do MySQL deploy
+#### [TOOLS] Configuração do MySQL deploy
 
-### 🧱 Banco de Dados em Produção (Railway)
+### [BRICK] Banco de Dados em Produção (Railway)
 
 O **Railway** é utilizado para hospedar o banco de dados **MySQL** de forma simples, estável e escalável.
 
-#### ⚙️ Passos
+#### [GEAR] Passos
 
 1. Crie um novo projeto no [Railway.app](https://railway.app/).
 2. Adicione um **serviço MySQL**.
@@ -115,7 +115,7 @@ spring.jpa.show-sql=true
 server.port=8081
 ```
 
-#### ▶️ Inicie o Backend
+#### [PLAY] Inicie o Backend
 
 Execute o projeto usando Maven:
 
@@ -127,9 +127,9 @@ O backend deverá iniciar na porta **8081** (ou conforme configurado).
 
 ---
 
-### 2️⃣ Configuração e Inicialização do Frontend (React)
+### [2] Configuração e Inicialização do Frontend (React)
 
-#### 🔧 Clonar ou Fazer Fork
+#### [WRENCH] Clonar ou Fazer Fork
 
 - **FAZER FORK:** Se você pretende contribuir:
 
@@ -139,31 +139,31 @@ O backend deverá iniciar na porta **8081** (ou conforme configurado).
 
 - **CLONAR:** Caso contrário, clone o repositório principal.
 
-#### 📂 Acesse a pasta do frontend
+#### [FOLDER] Acesse a pasta do frontend
 
 ```bash
 cd Project-Kairos
 ```
 
-#### 📦 Instale as dependências
+#### [PACKAGE] Instale as dependências
 
 ```bash
 npm install
 ```
 
-#### ▶️ Inicie o servidor de desenvolvimento (Vite)
+#### [PLAY] Inicie o servidor de desenvolvimento (Vite)
 
 ```bash
 npm run dev
 ```
 
-#### 🌐 Acesse no navegador
+#### [GLOBE] Acesse no navegador
 
 [http://localhost:5173/](http://localhost:5173/)
 
 ---
 
-## ☁️ 3️⃣. Configuração de Deploy em Produção (Vercel + Render/Railway)
+## [CLOUD] [3]. Configuração de Deploy em Produção (Vercel + Render/Railway)
 
 O projeto usa o **Render** para o **Backend (API)** e o **Vercel** para o **Frontend**, permitindo acesso público seguro via **HTTPS**.
 
@@ -180,7 +180,7 @@ pp
 
 ---
 
-### 🔧 Variáveis de Ambiente Necessárias
+### [WRENCH] Variáveis de Ambiente Necessárias
 
 O sistema depende das seguintes variáveis, que devem ser configuradas nos painéis de deploy e lidas pelo código:
 
@@ -194,7 +194,7 @@ O sistema depende das seguintes variáveis, que devem ser configuradas nos pain�
 
 ---
 
-### ⚙️ Configuração Crítica no Frontend (`api.js`)
+### [GEAR] Configuração Crítica no Frontend (`api.js`)
 
 O arquivo `src/service/api.js` está configurado com um fallback, garantindo que ele sempre use o endereço correto:
 
@@ -205,7 +205,7 @@ const baseURL = import.meta.env.VITE_API_BASE_URL
 ||'http://localhost:8081';
 ```
 
-## 🧩 Tecnologias Complementares
+## [PUZZLE] Tecnologias Complementares
 
 - **Axios:** comunicação entre frontend e backend.
 - **React Router DOM:** gerenciamento de rotas.
@@ -216,7 +216,7 @@ const baseURL = import.meta.env.VITE_API_BASE_URL
 
 ---
 
-## 💡 Contribuição
+## [BULB] Contribuição
 
 1. Faça um **Fork** do projeto.
 2. Crie uma **branch** para sua feature:
@@ -241,7 +241,7 @@ const baseURL = import.meta.env.VITE_API_BASE_URL
 
 ---
 
-### 👨‍💻 Autor
+### [DEVELOPER] Autor
 
 **Thiago Ribeiro**  
 💼 Projeto desenvolvido como parte da integração entre **universidade e empresas**, promovendo aprendizado prático e inovação colaborativa

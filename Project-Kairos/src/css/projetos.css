@@ -4,15 +4,15 @@
 
 :root {
   /* Paleta de Cores */
-  --primary-color: #6a3093; 
-  --secondary-color: #a044ff; 
-  --background-light: #f4f7f9;
+  --primary-color: #3298EF; 
+  --secondary-color: #0078D1; 
+  --background-light: #f1f5f9;
   --card-bg: #ffffff;
-  --text-dark: #2c3e50;
-  --text-medium: #7f8c8d;
-  --shadow-purple: rgba(160, 68, 255, 0.3);
-  --shadow-subtle: rgba(44, 62, 80, 0.1);
-  --gradient-main: linear-gradient(90deg, #7b4397, #a044ff); 
+  --text-dark: #1e293b;
+  --text-medium: #64748b;
+  --shadow-purple: rgba(50, 152, 239, 0.3);
+  --shadow-subtle: rgba(30, 41, 59, 0.1);
+  --gradient-main: linear-gradient(90deg, #312e81, #1e1b4b); 
   
   /* Cores de Status */
   --color-success: #2ecc71;
@@ -46,6 +46,7 @@ body {
   padding: 80px 40px 40px 40px;
   background: var(--background-light);
   color: var(--text-dark);
+  animation: fadeIn 0.6s ease-in-out;
 }
 
 
@@ -61,7 +62,7 @@ body {
 
 .titulo-projetos {
   font-size: 2.8rem;
-  color: var(--primary-color);
+  color: #312e81;
   font-weight: 900;
 }
 
@@ -110,15 +111,15 @@ body {
 }
 
 .search-input:focus, .filter-select:focus {
-  border-color: var(--secondary-color);
+  border-color: #3298EF;
   outline: none;
-  box-shadow: 0 0 10px var(--shadow-purple);
+  box-shadow: 0 0 10px rgba(50, 152, 239, 0.4);
 }
 
 /* --- ESTILO DOS BOTÕES --- */
 
 .criar-projeto-btn, .salvar-btn {
-  background: var(--gradient-main);
+  background: linear-gradient(90deg, #3298EF, #0078D1);
   color: #fff;
   border: none;
   padding: 12px 22px;
@@ -128,13 +129,13 @@ body {
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  box-shadow: 0 6px 15px var(--shadow-purple);
+  box-shadow: 0 6px 15px rgba(50, 152, 239, 0.4);
 }
 
 .criar-projeto-btn:hover, .salvar-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px var(--shadow-purple);
-  opacity: 0.95;
+  background: linear-gradient(90deg, #0078D1, #312e81);
+  box-shadow: 0 8px 20px rgba(50, 152, 239, 0.6);
 }
 
 .meus-projetos-btn {
@@ -157,7 +158,7 @@ body {
   background: var(--primary-color);
   color: var(--card-bg);
   border-color: var(--primary-color);
-  box-shadow: 0 4px 8px rgba(106, 48, 147, 0.4);
+  box-shadow: 0 4px 8px rgba(50, 152, 239, 0.4);
 }
 
 /* --- LISTA DE PROJETOS GRID --- */
@@ -429,12 +430,12 @@ body {
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 3px 8px rgba(160, 68, 255, 0.4);
+  box-shadow: 0 3px 8px rgba(50, 152, 239, 0.4);
 }
 
 .inscrever-btn:hover:not(:disabled) {
   background: var(--primary-color);
-  box-shadow: 0 4px 10px rgba(106, 48, 147, 0.5);
+  box-shadow: 0 4px 10px rgba(50, 152, 239, 0.5);
 }
 
 .inscrever-btn:disabled,
@@ -527,8 +528,15 @@ body {
     border-radius: 10px;
     font-size: 1rem;
     transition: all 0.3s ease;
-    box-sizing: border-box; /* Garante que o padding não aumente a largura total */
+    box-sizing: border-box;
     background: var(--background-light);
+}
+
+.create-project-form input:not([type="radio"]):not([type="checkbox"]):focus, 
+.create-project-form textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 5px rgba(50, 152, 239, 0.4);
 }
 
 .create-project-form textarea {
@@ -624,6 +632,17 @@ body {
   opacity: 0.95;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* --- RESPONSIVIDADE --- */
 @media (max-width: 1000px) {
     .lista-projetos-grid {
@@ -703,7 +722,7 @@ body {
 .btn-candidatos-dashboard:hover {
   background: var(--primary-color);
   color: var(--card-bg);
-  box-shadow: 0 4px 10px rgba(106, 48, 147, 0.3);
+  box-shadow: 0 4px 10px rgba(50, 152, 239, 0.3);
 }
 
 .status-and-action {
@@ -755,7 +774,7 @@ body {
     gap: 10px; /* Espaço entre as tags */
     margin-top: 10px;
     padding: 10px;
-    border: 1px solid #b313db;
+    border: 1px solid #3298EF;
     border-radius: 10px;
     background: var(--background-light);
 }

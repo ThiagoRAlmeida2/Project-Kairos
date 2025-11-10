@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react' 
 import '../css/Carrossel.css'
 
-export default function Carousel({ title = 'Projetos & Eventos', items = [] }) {
+export default function Carousel({ title = 'Projetos em Destaque', items = [] }) {
    const [currentIndex, setCurrentIndex] = React.useState(0)
 
   useEffect(() => {

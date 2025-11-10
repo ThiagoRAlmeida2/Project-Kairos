@@ -45,11 +45,11 @@ export default function Footer() {
           </div>
           
           <div className="footer__bottom">
-            <p>© {new Date().getFullYear()} Kairos. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Kairos. Todos os direitos reservados.</p>
             <div className="footer__links">
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
-              <a href="#">Cookie Policy</a>
+              <a href="#">Política de Privacidade</a>
+              <a href="#">Termos de Serviço</a>
+              <a href="#">Política de Cookies</a>
             </div>
           </div>
         </div>

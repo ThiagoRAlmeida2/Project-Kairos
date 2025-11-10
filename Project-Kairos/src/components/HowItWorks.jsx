@@ -25,27 +25,27 @@ export default function HowItWorks({ onCadastroClick }) {
   return (
     <section id="como-funciona" className="how" aria-labelledby="como-title">
       <div className="container">
-        <h2 id="como-title">🚀 Como Funciona</h2>
+        <h2 id="como-title">Como Funciona</h2>
         <p className="section-subtitle">Um processo simples e seguro para conectar empresas e alunos</p>
 
         <div className="how__cards">
           <article className="how__card">
-            <h3>🏢 Para empresas</h3>
-            <Step index="1" title="📝 Descreva seu projeto" desc="Conte o que precisa, prazos e orçamento." />
-            <Step index="2" title="📩 Receba propostas" desc="Profissionais indicados enviam suas ideias." />
-            <Step index="3" title="✅ Acompanhe e aprove" desc="Trilhe junto, com entregas claras e checkpoints." />
+            <h3>Para Empresas</h3>
+            <Step index="1" title="Publique seu projeto" desc="Descreva o que precisa, prazos e requisitos técnicos." />
+            <Step index="2" title="Receba candidaturas" desc="Estudantes qualificados se inscrevem no seu projeto." />
+            <Step index="3" title="Gerencie e aprove" desc="Acompanhe o progresso e aprove os melhores candidatos." />
           </article>
 
         <article className="how__card">
-            <h3>🎓 Alunos</h3>
-            <Step index="1" title="👤 Cadastre seu perfil" desc="Destaque habilidades, portfólio e disponibilidade." />
-            <Step index="2" title="💼 Participe de projetos" desc="Receba convites e mostre seu talento." />
-            <Step index="3" title="📈 Evolua na prática" desc="Mentorias, feedbacks e experiências reais." />
+            <h3>Para Estudantes</h3>
+            <Step index="1" title="Complete seu perfil" desc="Destaque suas habilidades, tecnologias e experiência." />
+            <Step index="2" title="Candidate-se a projetos" desc="Encontre projetos que combinam com seu perfil." />
+            <Step index="3" title="Desenvolva na prática" desc="Ganhe experiência real e construa seu portfólio." />
           </article>
         </div>
         
         <div className="how__action">
-          <button className="btn btn--primary" onClick={handleInterestClick}>🚀 Cadastre-se</button>
+          <button className="btn btn--primary" onClick={handleInterestClick}>Comece Agora</button>
         </div>
       </div>
     </section>

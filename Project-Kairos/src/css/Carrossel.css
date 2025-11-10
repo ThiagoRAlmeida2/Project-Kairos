@@ -10,14 +10,14 @@
 .carousel__title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #a5b4fc;
+  color: #ffffff;
   margin-bottom: 1rem;
 }
 
 .carousel__viewport {
   position: relative;
   width: 100%;
-  max-width: 500px;
+  max-width: 650px;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -26,7 +26,7 @@
 /* === CARD === */
 .card {
   width: 100%;
-  max-width: 480px;
+  max-width: 620px;
   background: #1f2937;
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.3);
@@ -47,7 +47,7 @@
 
 .card__image {
   width: 100%;
-  height: 260px;
+  height: 320px;
   object-fit: cover;
   display: block;
 }
@@ -68,19 +68,19 @@
 
 /* Corpo do Card */
 .card__body {
-  padding: 20px;
+  padding: 24px;
 }
 
 .card__title {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: #f9fafb;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .card__desc {
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   color: #d1d5db;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 /* === Animação === */

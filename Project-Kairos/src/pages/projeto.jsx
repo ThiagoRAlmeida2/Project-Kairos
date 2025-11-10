@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../css/projetos.css";
 import api from "../service/api";
 import Footer from "../components/Footer"
+import { FaFolder, FaClipboardList, FaCalendarAlt, FaClock } from "react-icons/fa";
 
 // Lista de tags para o Multi-Select (usaremos para o filtro também)
 const LINGUAGENS_OPTIONS = [
@@ -342,8 +343,8 @@ export default function ProjetosList() {
                 <div className="top-bar">
                     <h1 className="titulo-projetos">
                         {role === "ROLE_EMPRESA" 
-                            ? "📁 Meus Projetos" 
-                            : modoAluno === "INSCRITOS" ? "📋 Minhas Inscrições" : "📋 Projetos Disponíveis"
+                            ? <><FaFolder /> Meus Projetos</> 
+                            : modoAluno === "INSCRITOS" ? <><FaClipboardList /> Minhas Inscrições</> : <><FaClipboardList /> Projetos Disponíveis</>
                         }
                     </h1>
                     <div className="actions">
@@ -434,10 +435,10 @@ export default function ProjetosList() {
                                 
                                 <div className="card-info-group">
                                     <span className="card-info">
-                                        📅 Início: {p.dataInicio ? parseDate(p.dataInicio).toLocaleDateString("pt-BR") : "N/I"}
+                                        <FaCalendarAlt /> Início: {p.dataInicio ? parseDate(p.dataInicio).toLocaleDateString("pt-BR") : "N/I"}
                                     </span>
                                     <span className="card-info">
-                                        ⌛ Duração: {getDurationInMonths(p.dataInicio, p.dataFim)}
+                                        <FaClock /> Duração: {getDurationInMonths(p.dataInicio, p.dataFim)}
                                     </span>
                                 </div>
                                 
