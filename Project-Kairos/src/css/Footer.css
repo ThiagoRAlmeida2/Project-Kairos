@@ -1,26 +1,27 @@
-/* === FOOTER MODERNO (MESMA COR DO HERO) === */
-.footer {
+/* ======= CORRIGE O FOOTER BRANCO ======= */
+footer.footer {
   width: 100%;
-  background: linear-gradient(135deg, #0d1117 0%, #1c1f26 100%);
-  color: #f9fafb;
+  background: linear-gradient(135deg, #312e81 0%, #1e1b4b 50%, #111827 100%) ;
+  color: #fff;
   padding: 80px 24px 40px;
   position: relative;
   overflow: hidden;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 1;
 }
 
-/* Efeito de brilho sutil no fundo */
-.footer::before {
+/* Brilho sutil no fundo */
+footer.footer::before {
   content: "";
   position: absolute;
   top: -100px;
   left: -100px;
   width: 300px;
   height: 300px;
-  background: rgba(88, 166, 255, 0.1); /* Azul igual ao destaque do Hero */
+  background: rgba(88, 166, 255, 0.1);
   border-radius: 50%;
   filter: blur(80px);
-  z-index: 1;
+  z-index: 0;
 }
 
 /* Estrutura principal */
@@ -54,13 +55,13 @@
 .footer__description {
   font-size: 0.95rem;
   line-height: 1.6;
-  color: #c9d1d9;
+  color: #fff;
 }
 
 /* Seções */
 .footer__section h4 {
   font-size: 1.1rem;
-  color: #58a6ff;
+  color: #58a6ff; /* Mesmo azul do Hero */
   margin-bottom: 16px;
 }
 
@@ -74,7 +75,7 @@
 }
 
 .footer__section a {
-  color: #e6edf3;
+  color: #fff;
   text-decoration: none;
   font-size: 0.95rem;
   transition: color 0.3s ease, transform 0.2s ease;

@@ -3,6 +3,7 @@ import FiltroEve from "../components/FiltroEve";
 import EventosList from "../components/Eventoslist";
 import DescEventos from "../components/descEventos";
 import "../css/Eventos.css";
+import Footer from "../components/Footer"
 
 export default function Eventos() {
   return (
@@ -10,6 +11,7 @@ export default function Eventos() {
       <DescEventos />
       <FiltroEve />
       <EventosList />
+      <Footer /> 
     </div>
   );
 }

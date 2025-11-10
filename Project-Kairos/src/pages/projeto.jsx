@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../css/projetos.css";
 import api from "../service/api";
+import Footer from "../components/Footer"
 
 // Lista de tags para o Multi-Select (usaremos para o filtro também)
 const LINGUAGENS_OPTIONS = [
@@ -626,6 +627,6 @@ export default function ProjetosList() {
                 </div>
             )}
             </div>
-        </div>
+        </div>  
     );
 }
