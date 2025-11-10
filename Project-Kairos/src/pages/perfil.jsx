@@ -1,7 +1,7 @@
 // src/pages/Perfil.jsx
 import React, { useState, useEffect } from "react";
 import "../css/perfil.css";
-import { FaPencilAlt, FaTimes, FaProjectDiagram } from "react-icons/fa"; 
+import { FaPencilAlt, FaTimes, FaProjectDiagram, FaCalendarAlt, FaFlag, FaBriefcase } from "react-icons/fa"; 
 import api from "../service/api";
 
 // Lista de tags para o Multi-Select (usadas nos checkboxes)
@@ -400,9 +400,9 @@ function ProjetosParticipados({ projetos }) {
 
                                 {/* Detalhes (Oculta Empresa) */}
                                 <div className="card-details">
-                                    <p className="card-info">📅 Início: <span>{p.dataInicio ? parseDate(p.dataInicio).toLocaleDateString('pt-BR') : 'N/I'}</span></p>
-                                    <p className="card-info">🏁 Fim (Previsto): <span>{p.dataFim ? parseDate(p.dataFim).toLocaleDateString('pt-BR') : 'N/I'}</span></p>
-                                    <p className="card-info">💼 Regime: <span className={`status-regime regime-${p.regime?.toLowerCase()}`}>{p.regime || 'N/I'}</span></p>
+                                    <p className="card-info"><FaCalendarAlt /> Início: <span>{p.dataInicio ? parseDate(p.dataInicio).toLocaleDateString('pt-BR') : 'N/I'}</span></p>
+                                    <p className="card-info"><FaFlag /> Fim (Previsto): <span>{p.dataFim ? parseDate(p.dataFim).toLocaleDateString('pt-BR') : 'N/I'}</span></p>
+                                    <p className="card-info"><FaBriefcase /> Regime: <span className={`status-regime regime-${p.regime?.toLowerCase()}`}>{p.regime || 'N/I'}</span></p>
                                 </div>
                             </div>
                         </div>

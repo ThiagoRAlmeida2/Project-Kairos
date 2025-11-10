@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import CadastroCard from "../components/CadastroCard.jsx";
 import LoginCard from "../components/LoginCard.jsx";
-import logo from "../assets/logo.svg";
+import logo from "../assets/IMG/Work-UP_logo-Principal.png";
 import { Menu, X } from "lucide-react";
 
 // Defina a breakpoint do CSS como uma constante para uso no JS

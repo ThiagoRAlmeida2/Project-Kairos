@@ -1,6 +1,8 @@
 :root {
-  --primary-1: #6A3093;
-  --primary-2: #A044FF;
+  --primary-1: #312e81;
+  --primary-2: #1e1b4b;
+  --accent-1: #3298EF;
+  --accent-2: #0078D1;
   --card-bg: #ffffff;
   --muted: #6b7280;
 }
@@ -49,7 +51,7 @@ body {
 
 .brand {
   font-size: 34px;
-  color: var(--primary-1);
+  color: #312e81;
   margin: 0;
 }
 
@@ -90,8 +92,8 @@ body {
 }
 
 .form input:focus {
-  border-color: var(--primary-2); /* roxo */
-  box-shadow: 0 0 0 4px rgba(160, 68, 255, 0.1); /* sombra suave */
+  border-color: #312e81;
+  box-shadow: 0 0 0 4px rgba(49, 46, 129, 0.2);
   background-color: #ffffff;
 }
 
@@ -102,9 +104,9 @@ body {
   border: none;
   cursor: pointer;
   font-weight: 600;
-  background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
+  background: linear-gradient(90deg, #312e81, #1e1b4b);
   color: white;
-  box-shadow: 0 8px 20px rgba(106,48,147,0.2);
+  box-shadow: 0 8px 20px rgba(49, 46, 129, 0.4);
   transition: 0.2s ease;
 }
 
@@ -126,7 +128,7 @@ body {
 }
 
 .link {
-  color: #7b5cf5;
+  color: #312e81;
   font-size: 14px;
   cursor: pointer;
   text-align: center;
@@ -135,7 +137,7 @@ body {
 }
 
 .link:hover {
-  color: #5b3ac7;
+  color: #1e1b4b;
 }
 
 .alert {
