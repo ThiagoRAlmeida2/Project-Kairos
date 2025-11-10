@@ -29,14 +29,13 @@ export default function Hero({ onCadastroClick }){
             
             {/* SOBRE NÓS - Coluna 1 */}
             <div className="hero__about">
-                <h1 className="about__title">Conectando o Aprendizado ao Mercado</h1>
+                <h1 className="about__title">Pratique o Futuro da Tecnologia. Hoje.</h1>
                 <p className="about__subtitle">
-                    O **Project Kairos** é a ponte entre a excelência acadêmica e a inovação empresarial. Nosso objetivo é transformar a teoria em prática, oferecendo aos estudantes a oportunidade de trabalhar em projetos reais propostos por empresas.
+                  Somos a ponte essencial entre a excelência acadêmica e a inovação empresarial. Nossa plataforma transforma o aprendizado teórico em experiência prática, conectando estudantes talentosos a desafios reais de desenvolvimento propostos por empresas líderes.                
                 </p>
-                
                 <h3 className="about__section-title">Nossa Missão</h3>
                 <p className="about__description">
-                    Oferecer um ambiente colaborativo onde estudantes de tecnologia possam desenvolver habilidades valiosas e construir portfólios robustos, enquanto fornecemos às empresas acesso direto a talentos emergentes para resolver desafios de desenvolvimento e tecnologia.
+                  Oferecer um ambiente colaborativo e de alto impacto, onde estudantes podem desenvolver habilidades de mercado, construir portfólios verificados e receber mentoria especializada. Consequentemente, garantimos às empresas acesso direto e eficiente a talentos emergentes e soluções inovadoras.    
                 </p>
                 <div className="about__buttons">
                     <a href="/projetos" className="btn btn--primary">Ver Projetos Ativos</a>
