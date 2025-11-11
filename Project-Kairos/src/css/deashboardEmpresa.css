@@ -14,7 +14,7 @@
     --border-color: #e8e8e8; /* Borda sutil */
     --shadow-soft: 0 6px 15px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04); 
     --shadow-main: 0 12px 30px rgba(0, 0, 0, 0.1); 
-    --gradient-purple: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+--gradient-blue: linear-gradient(135deg, #3730a3 0%, #1f2937 50%, #374151 100%);
 }
 
 /* ================================================= */
@@ -99,7 +99,7 @@
 
 /* 🚩 NOVO: Aplica o fundo e arredondamento principal ao THEAD */
 .candidatos-table thead { 
-    background: var(--gradient-purple); 
+    background: var(--gradient-blue);
     color: white;
 }
 
