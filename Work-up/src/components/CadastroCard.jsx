@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../css/CadastroCard.css";
 import api from '../service/api';
 import { FaGraduationCap, FaBuilding, FaEdit, FaCheck } from "react-icons/fa";
@@ -36,6 +36,18 @@ export default function CadastroCard({ onClose }) {
 
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+
+    useEffect(() => {
+    setFormData({
+      nome: "",
+      curso: "",
+      matricula: "",
+      cnpj: "",
+      email: "",
+      telefone: "",
+      senha: "",
+    });
+  }, [tipo]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
