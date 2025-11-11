@@ -343,8 +343,8 @@ export default function ProjetosList() {
                 <div className="top-bar">
                     <h1 className="titulo-projetos">
                         {role === "ROLE_EMPRESA" 
-                            ? <><FaFolder /> Meus Projetos</> 
-                            : modoAluno === "INSCRITOS" ? <><FaClipboardList /> Minhas Inscrições</> : <><FaClipboardList /> Projetos Disponíveis</>
+                            ? "📁 Meus Projetos" 
+                            : modoAluno === "INSCRITOS" ? "📋 Minhas Inscrições" : "📋 Projetos Disponíveis"
                         }
                     </h1>
                     <div className="actions">
@@ -434,11 +434,11 @@ export default function ProjetosList() {
                                 
                                 
                                 <div className="card-info-group">
-                                    <span className="card-info">
-                                        <FaCalendarAlt /> Início: {p.dataInicio ? parseDate(p.dataInicio).toLocaleDateString("pt-BR") : "N/I"}
+                                   <span className="card-info">
+                                        📅 Início: {p.dataInicio ? parseDate(p.dataInicio).toLocaleDateString("pt-BR") : "N/I"}
                                     </span>
                                     <span className="card-info">
-                                        <FaClock /> Duração: {getDurationInMonths(p.dataInicio, p.dataFim)}
+                                        ⌛ Duração: {getDurationInMonths(p.dataInicio, p.dataFim)}
                                     </span>
                                 </div>
                                 
