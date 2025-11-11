@@ -7,6 +7,7 @@ import Footer from "../components/Footer.jsx";
 export default function App() {
   const location = useLocation();
   
+  
   return (
     <div className="app">
       <Navbar />
