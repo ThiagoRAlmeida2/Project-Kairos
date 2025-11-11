@@ -1,6 +1,6 @@
 :root {
-  --primary-1: #4338ca;
-  --primary-2: #3730a3;
+  --primary-1: #312e81;
+  --primary-2: #1e1b4b;
   --accent-1: #3298EF;
   --accent-2: #0078D1;
   --card-bg: #ffffff;
@@ -61,7 +61,7 @@ body {
 
 .brand {
   font-size: 1.8rem;
-  color: #4338ca;
+  color: #312e81;
   margin: 0 0 0.5rem 0;
   font-weight: 700;
   display: flex;
@@ -109,8 +109,8 @@ body {
 }
 
 .form input:focus {
-  border-color: #4338ca;
-  box-shadow: 0 0 0 4px rgba(67, 56, 202, 0.2);
+  border-color: #312e81;
+  box-shadow: 0 0 0 4px rgba(49, 46, 129, 0.2);
   background-color: #ffffff;
 }
 
@@ -121,9 +121,9 @@ body {
   cursor: pointer;
   font-weight: 600;
   font-size: 1rem;
-  background: linear-gradient(90deg, #4338ca, #3730a3);
+  background: linear-gradient(90deg, #312e81, #1e1b4b);
   color: white;
-  box-shadow: 0 4px 12px rgba(67, 56, 202, 0.3);
+  box-shadow: 0 4px 12px rgba(49, 46, 129, 0.3);
   transition: all 0.2s ease;
   height: 44px;
   display: flex;
@@ -150,7 +150,7 @@ body {
 }
 
 .link {
-  color: #4338ca;
+  color: #312e81;
   font-size: 14px;
   cursor: pointer;
   text-align: center;
@@ -159,7 +159,7 @@ body {
 }
 
 .link:hover {
-  color: #3730a3;
+  color: #1e1b4b;
 }
 
 .alert {

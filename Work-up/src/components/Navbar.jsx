@@ -149,7 +149,7 @@ export default function Navbar() {
                       width: 40,
                       height: 40,
                       borderRadius: "50%",
-                      border: "2px solid #7b5cf5", 
+                      border: "2px solid #3298EF", 
                     }}
                   />
                   {/* Ícone para o dropdown de DESKTOP (se o mobile não estiver aberto) */}
