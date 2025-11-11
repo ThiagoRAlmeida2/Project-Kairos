@@ -3,6 +3,7 @@ import "../css/projetos.css";
 import api from "../service/api";
 import Footer from "../components/Footer"
 import Toast from "../components/Toast";
+import LoginCard from "../components/LoginCard";
 import { FaFolder, FaClipboardList, FaCalendarAlt, FaClock } from "react-icons/fa";
 
 // Lista de tags para o Multi-Select (usaremos para o filtro também)
@@ -15,6 +16,9 @@ const LINGUAGENS_OPTIONS = [
 export default function ProjetosList() {
     const [projetos, setProjetos] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [modalProjeto, setModalProjeto] = useState(null); // projeto selecionado no modal
+    const [showLogin, setShowLogin] = useState(false); // 🚩 Modal de login
+
     
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
@@ -267,8 +271,10 @@ export default function ProjetosList() {
 
     // 🔹 Inscrever-se em projeto
     const handleInscrever = async (projetoId) => {
-        if (!token) return alert("Você precisa estar logado para se inscrever!");
-        
+        if (!token) {
+        setShowLogin(true); // 🚩 Abre login se não estiver logado
+        return;
+        }
         try {
             await api.post(
                 `${baseURL}/${projetoId}/inscrever`,
@@ -473,7 +479,7 @@ export default function ProjetosList() {
                                     })}
                                 </div>
 
-                                <p className="descricao-completa">{p.descricao}</p> 
+                                <p className="descricao-resumida">{p.descricao}</p> 
 
                                 <div className="project-footer">
                                     <div className="project-info">
@@ -491,8 +497,7 @@ export default function ProjetosList() {
                                     </div>
                                     
                                     {/* Lógica do Botão para ALUNO (Inscrever / Inscrito / Cancelar) */}
-                                    {!p.encerrado && role === "ROLE_ALUNO" && (
-                                        <>
+                                        {!p.encerrado && (role === "ROLE_ALUNO" || !token) && (                                        <>
                                             {modoAluno === "INSCRITOS" ? (
                                                 // BLOCO CORRIGIDO PARA EXIBIR O STATUS DA INSCRIÇÃO
                                                 <div className="status-and-action">
@@ -511,13 +516,13 @@ export default function ProjetosList() {
                                                     )}
                                                 </div>
                                             ) : (
-                                                <button
-                                                    className={`inscrever-btn ${projetosInscritosIds.includes(p.id) ? 'inscrito' : ''}`}
-                                                    onClick={() => handleInscrever(p.id)}
-                                                    disabled={projetosInscritosIds.includes(p.id)}
-                                                >
-                                                    {projetosInscritosIds.includes(p.id) ? 'Inscrito' : 'Inscrever-se'}
-                                                </button>
+                                         <button
+                                            className={`inscrever-btn ${projetosInscritosIds.includes(p.id) ? 'inscrito' : ''}`}
+                                            onClick={() => setModalProjeto(p)}
+                                            disabled={projetosInscritosIds.includes(p.id)}
+                                            >
+                                            {projetosInscritosIds.includes(p.id) ? 'Inscrito' : 'Inscrever-se'}
+                                            </button>
                                             )}
                                         </>
                                     )}
@@ -539,7 +544,58 @@ export default function ProjetosList() {
                         <p className="sem-projetos">Nenhum projeto encontrado</p>
                     )}
                 </div>
-
+                      {/* 🚩 Modal de Login (para usuários deslogados) */}
+                {showLogin && (
+                    <div className="modal-overlay" onClick={() => setShowLogin(false)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <LoginCard
+                        onLoginSuccess={() => {
+                            setShowLogin(false);
+                            window.location.reload();
+                        }}
+                        onClose={() => setShowLogin(false)}
+                        />
+                    </div>
+                    </div>
+                )}
+                {/* MODAL DE DESCRIÇÃO COMPLETA */}
+                {modalProjeto && (
+                    <div className="modal-overlay" onClick={() => setModalProjeto(null)}>
+                        <div
+                            className="modal-content large-modal"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <h2>{modalProjeto.nome}</h2>
+                            <div
+                                style={{
+                                    maxHeight: "300px",
+                                    overflowY: "auto",
+                                    marginBottom: "20px",
+                                    lineHeight: "1.6",
+                                }}
+                            >
+                                <p>{modalProjeto.descricao}</p>
+                            </div>
+                            <div className="modal-buttons">
+                                <button
+                                    className="cancelar-btn"
+                                    onClick={() => setModalProjeto(null)}
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    className="salvar-btn"
+                                    onClick={() => {
+                                        handleInscrever(modalProjeto.id);
+                                        setModalProjeto(null);
+                                    }}
+                                >
+                                    Confirmar Inscrição
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 {/* MODAL DE CRIAÇÃO */}
                 {showModal && (
                     <div className="modal-overlay" onClick={() => {setShowModal(false); resetForm();}}>

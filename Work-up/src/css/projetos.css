@@ -383,12 +383,90 @@ body {
 }
 
 /* Descrição */
-.descricao-completa {
-    flex-grow: 1; 
-    margin: 10px 0 20px 0;
-    color: var(--text-medium);
-    line-height: 1.5;
-    /* 🚩 REMOVIDO: max-height, overflow, e -webkit-line-clamp para permitir que a descrição cresça */
+.descricao-resumida {
+  color: var(--text-medium);
+  line-height: 1.5;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* número de linhas exibidas */
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+
+/* --- MODAL DE INSCRIÇÃO --- */
+.modal-inscricao-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(30, 41, 59, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-inscricao-content {
+  background: var(--card-bg);
+  padding: 35px 40px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: modalFade 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.modal-inscricao-content h2 {
+  color: var(--primary-color);
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.modal-inscricao-descricao {
+  color: var(--text-medium);
+  line-height: 1.6;
+  margin-bottom: 25px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.modal-inscricao-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.confirmar-btn {
+  background: var(--color-success);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.confirmar-btn:hover {
+  background: #27ae60;
+}
+
+.cancelar-btn-modal {
+  background: var(--color-danger);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cancelar-btn-modal:hover {
+  background: #c0392b;
 }
 
 /* --- FOOTER E BOTÕES DE AÇÃO --- */
