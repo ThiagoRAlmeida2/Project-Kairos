@@ -96,26 +96,49 @@ export default function Perfil() {
     fetchPerfil(); 
   };
 
+  const handleSaveImage = async () => {
+    if (!selectedImage) {
+      alert("Selecione uma imagem primeiro!");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const formData = new FormData();
+      formData.append('image', selectedImage);
+      
+      const response = await api.post('/api/usuario/upload-avatar', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+      // Atualiza o usuário com a nova imagem
+      const updatedUser = { ...usuario, avatar: response.data.avatarUrl || imagemPreview };
+      setUsuario(updatedUser);
+      setOriginalUsuario(updatedUser);
+      
+      // Atualiza o localStorage para refletir no navbar
+      const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+      storedUser.avatar = response.data.avatarUrl || imagemPreview;
+      localStorage.setItem("user", JSON.stringify(storedUser));
+      
+      setImagemPreview(null);
+      setSelectedImage(null);
+      alert("Imagem salva com sucesso!");
+      
+      // Recarrega a página para atualizar o navbar
+      window.location.reload();
+    } catch (err) {
+      console.error('Erro ao fazer upload da imagem:', err);
+      alert("Erro ao salvar imagem. Tente novamente.");
+    }
+  };
+
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      
-      // Handle image upload if there's a selected image
-      if (selectedImage) {
-        const formData = new FormData();
-        formData.append('image', selectedImage);
-        
-        try {
-          await api.post('/api/usuario/upload-avatar', formData, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'multipart/form-data'
-            }
-          });
-        } catch (imgErr) {
-          console.error('Erro ao fazer upload da imagem:', imgErr);
-        }
-      }
       
       let payload;
       if (usuario.role === "ROLE_ALUNO") {
@@ -133,8 +156,6 @@ export default function Perfil() {
       setUsuario(res.data);
       setOriginalUsuario(res.data);
       setEditando(false);
-      setImagemPreview(null);
-      setSelectedImage(null);
       alert("Perfil atualizado com sucesso!");
     } catch (err) {
       console.error("Erro ao atualizar perfil:", err);
@@ -170,7 +191,7 @@ export default function Perfil() {
               alt="Foto de perfil"
               className="foto-perfil"
             />
-            <label htmlFor="input-foto" className={`editar-foto ${editando ? 'editing' : ''}`}>
+            <label htmlFor="input-foto" className="editar-foto">
               <FaPencilAlt size={16} />
             </label>
             <input
@@ -180,6 +201,11 @@ export default function Perfil() {
               onChange={handleImageChange}
               style={{ display: 'none' }}
             />
+            {selectedImage && (
+              <button className="btn-salvar-imagem" onClick={handleSaveImage}>
+                Salvar Imagem
+              </button>
+            )}
           </div>
 
           <div className="perfil-info">
