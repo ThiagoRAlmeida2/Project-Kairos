@@ -139,26 +139,29 @@ body {
 }
 
 .meus-projetos-btn {
-  background: var(--card-bg);
-  color: var(--primary-color);
+  background: var(--primary-color);
+  color: var(--card-bg);
   border: 2px solid var(--primary-color);
   padding: 10px 18px;
   border-radius: 10px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(50, 152, 239, 0.4);
 }
 
 .meus-projetos-btn:hover:not(.active) {
-  background: var(--primary-color);
-  color: var(--card-bg);
+  transform: translateY(-2px);
+  background: var(--secondary-color);
+  border-color: var(--secondary-color);
+  box-shadow: 0 8px 20px rgba(50, 152, 239, 0.6);
 }
 
 .meus-projetos-btn.active {
-  background: var(--primary-color);
+  background: var(--secondary-color);
   color: var(--card-bg);
-  border-color: var(--primary-color);
-  box-shadow: 0 4px 8px rgba(50, 152, 239, 0.4);
+  border-color: var(--secondary-color);
+  box-shadow: 0 4px 10px rgba(50, 152, 239, 0.6);
 }
 
 /* --- LISTA DE PROJETOS GRID --- */
@@ -435,7 +438,7 @@ body {
 }
 
 .inscrever-btn {
-  background: var(--secondary-color);
+  background: var(--primary-color);
   color: white;
   border: none;
   border-radius: 8px;
@@ -447,7 +450,7 @@ body {
 }
 
 .inscrever-btn:hover:not(:disabled) {
-  background: var(--primary-color);
+  background: var(--secondary-color);
   box-shadow: 0 4px 10px rgba(50, 152, 239, 0.5);
 }
 
@@ -461,20 +464,20 @@ body {
 }
 
 .cancelar-inscricao-btn {
-    background-color: var(--color-warning);
+    background-color: var(--color-danger);
     border: none;
-    color: var(--text-dark);
+    color: white;
     border-radius: 8px;
     padding: 10px 16px;
     font-weight: 700;
     cursor: pointer;
     transition: 0.2s;
     font-size: 0.9rem;
-    box-shadow: 0 3px 8px rgba(243, 156, 18, 0.4);
+    box-shadow: 0 3px 8px rgba(231, 76, 60, 0.4);
 }
 
 .cancelar-inscricao-btn:hover {
-    background-color: #f39c12; 
+    background-color: #c0392b; 
 }
 
 
@@ -763,8 +766,8 @@ body {
 }
 
 .status-tag.status-pendente {
-    background-color: var(--color-danger);
-    color: white; 
+    background-color: var(--color-warning);
+    color: var(--text-dark); 
 }
 
 .status-tag.status-aprovado {
