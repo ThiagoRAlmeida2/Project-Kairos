@@ -106,7 +106,6 @@
 
 .btn--light:hover {
    transform: translateY(-2px);
-   width: 100%;
    background: linear-gradient(90deg, #111827, #312e81);
 }
 
