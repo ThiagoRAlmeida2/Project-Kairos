@@ -3,19 +3,29 @@ import "../css/Eventos.css";
 import Footer from "../components/Footer"
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
+// Importações de imagens
+import techConferenceImg from '../assets/IMG/Conferencia de tecnologia.jpg';
+import reactImg from '../assets/IMG/React.png';
+import pitchImg from '../assets/IMG/Pitch.jpg';
+import pythonImg from '../assets/IMG/Python.png';
+import designThinkingImg from '../assets/IMG/Design Thinking.jpg';
+import devOpsImg from '../assets/IMG/DevOps.jpg';
+import uxUiImg from '../assets/IMG/UX_UI.jpg';
+import hackathonImg from '../assets/IMG/Hackathon.jpg';
+import codeChallengeImg from '../assets/IMG/Code Challenge.jpg';
+import startupWeekendImg from '../assets/IMG/Startup weekend.jpg';
+
 const allEvents = [
-  { id: 1, title: "Tech Conference 2025", date: "15 Jan", location: "São Paulo", image: "/api/placeholder/300/200", category: "Conferência" },
-  { id: 2, title: "React Workshop", date: "20 Jan", location: "Online", image: "/api/placeholder/300/200", category: "Workshop" },
-  { id: 3, title: "Startup Pitch Day", date: "25 Jan", location: "Rio de Janeiro", image: "/api/placeholder/300/200", category: "Networking" },
-  { id: 4, title: "AI & Machine Learning", date: "30 Jan", location: "Belo Horizonte", image: "/api/placeholder/300/200", category: "Conferência" },
-  { id: 5, title: "Python para Iniciantes", date: "18 Jan", location: "Online", image: "/api/placeholder/300/200", category: "Workshop" },
-  { id: 6, title: "Design Thinking", date: "22 Jan", location: "São Paulo", image: "/api/placeholder/300/200", category: "Workshop" },
-  { id: 7, title: "DevOps Essentials", date: "28 Jan", location: "Online", image: "/api/placeholder/300/200", category: "Curso" },
-  { id: 8, title: "UX/UI Masterclass", date: "02 Fev", location: "Curitiba", image: "/api/placeholder/300/200", category: "Workshop" },
-  { id: 9, title: "Global Hackathon 2025", date: "05 Fev", location: "São Paulo", image: "/api/placeholder/300/200", category: "Hackathon" },
-  { id: 10, title: "Code Challenge", date: "10 Fev", location: "Online", image: "/api/placeholder/300/200", category: "Competição" },
-  { id: 11, title: "Innovation Contest", date: "15 Fev", location: "Brasília", image: "/api/placeholder/300/200", category: "Competição" },
-  { id: 12, title: "Startup Weekend", date: "20 Fev", location: "Porto Alegre", image: "/api/placeholder/300/200", category: "Hackathon" },
+  { id: 1, title: "Tech Conference 2025", date: "15 Jan", location: "São Paulo", image: techConferenceImg, category: "Conferência", featured: true },
+  { id: 2, title: "React Workshop", date: "20 Jan", location: "Online", image: reactImg, category: "Workshop", featured: true },
+  { id: 3, title: "Startup Pitch Day", date: "25 Jan", location: "Rio de Janeiro", image: pitchImg, category: "Networking", featured: true },
+  { id: 4, title: "Python para Iniciantes", date: "18 Jan", location: "Online", image: pythonImg, category: "Workshop" },
+  { id: 5, title: "Design Thinking", date: "22 Jan", location: "São Paulo", image: designThinkingImg, category: "Workshop" },
+  { id: 6, title: "DevOps Essentials", date: "28 Jan", location: "Online", image: devOpsImg, category: "Curso" },
+  { id: 7, title: "UX/UI Masterclass", date: "02 Fev", location: "Curitiba", image: uxUiImg, category: "Workshop" },
+  { id: 8, title: "Global Hackathon 2025", date: "05 Fev", location: "São Paulo", image: hackathonImg, category: "Hackathon" },
+  { id: 9, title: "Code Challenge", date: "10 Fev", location: "Online", image: codeChallengeImg, category: "Competição" },
+  { id: 10, title: "Startup Weekend", date: "20 Fev", location: "Porto Alegre", image: startupWeekendImg, category: "Hackathon" },
 ];
 
 export default function Eventos() {
@@ -56,17 +66,17 @@ export default function Eventos() {
 
   const eventCategories = useMemo(() => {
     const categories = [
-      { title: "Eventos em Destaque", filter: () => true },
-      { title: "Workshops e Cursos", filter: (event) => ["Workshop", "Curso"].includes(event.category) },
+      { title: "Eventos em Destaque", filter: (event) => event.featured === true },
+      { title: "Workshops e Cursos", filter: (event) => ["Workshop", "Curso"].includes(event.category) && !event.featured },
       { title: "Hackathons e Competições", filter: (event) => ["Hackathon", "Competição"].includes(event.category) }
     ];
 
     return categories.map((cat, index) => {
-      const allEvents = filteredEvents.filter(cat.filter);
+      const categoryEvents = filteredEvents.filter(cat.filter);
       return {
         ...cat,
-        events: expandedCategories[index] ? allEvents : allEvents.slice(0, 8),
-        totalEvents: allEvents.length
+        events: expandedCategories[index] ? categoryEvents : categoryEvents.slice(0, 8),
+        totalEvents: categoryEvents.length
       };
     }).filter(cat => cat.totalEvents > 0);
   }, [filteredEvents, expandedCategories]);
