@@ -45,7 +45,7 @@ export default function Footer() {
           </div>
           
           <div className="footer__bottom">
-            <p>© {new Date().getFullYear()} Kairos. Todos os direitos reservados.</p>
+            <p>© {new Date().getFullYear()} Work Up. Todos os direitos reservados.</p>
             <div className="footer__links">
               <a href="#">Política de Privacidade</a>
               <a href="#">Termos de Serviço</a>

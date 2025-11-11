@@ -40,6 +40,8 @@
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   max-width: 600px;
   width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
   box-sizing: border-box;
 }
 
@@ -47,8 +49,18 @@
 
 @media (max-width: 768px) {
   .card, .modal-content {
-    padding: 1.2rem;
+    padding: 1rem 1.2rem;
     margin: 10px;
+    width: 95%;
+    max-height: 85vh;
+  }
+  
+  .form-fields {
+    margin: 0.8rem 0 0.3rem 0;
+  }
+  
+  .card .submit-btn {
+    margin: 0.8rem auto 0.5rem;
   }
 }
 
@@ -88,7 +100,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 2rem 0;
+  margin: 1.5rem 0;
   padding: 0 1rem;
   background: #e5e7eb;
   border-radius: 9999px;
@@ -147,7 +159,7 @@
   display: block;
   width: 100%;
   max-width: 320px;
-  margin: 4rem auto 0.5rem;
+  margin: 2.5rem auto 1rem;
   padding: 0.7rem 1.5rem;
   border: none !important;
   border-radius: 9999px;
@@ -209,7 +221,7 @@
 }
 /* Campos do formulário */
 .form-fields {
-  margin: 1.5rem 0;
+  margin: 1rem 0 0.5rem 0;
 }
 
 .form-row {
@@ -261,11 +273,13 @@
 
 @media (max-width: 480px) {
   .card, .modal-content {
-    padding: 1rem;
+    padding: 0.8rem;
+    width: 98%;
+    max-height: 90vh;
   }
   
   .form-fields {
-    gap: 0.8rem;
+    margin: 0.5rem 0 0.2rem 0;
   }
   
   .form-fields input {
@@ -275,6 +289,14 @@
   
   .card h1, .modal-content h1 {
     font-size: 1.4rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card .submit-btn {
+    margin: 0.5rem auto 0.3rem;
+  }
+  
+  .tab-buttons {
+    margin: 1rem 0;
   }
 }

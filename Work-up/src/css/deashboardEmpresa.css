@@ -1,20 +1,20 @@
 /* src/css/empresa-dashboard.css (CÓDIGO COMPLETO E MODERNO - FINAL 3.0 - SCROLL CONTROLADO) */
 
 :root {
-    --primary-color: #6a3093; /* Roxo Escuro Principal */
-    --secondary-color: #a044ff; /* Roxo Claro Vibrante */
-    --tertiary-color: #4a1f63; /* Roxo para hover */
-    --background-light: #f9f9f9; /* Fundo mais claro */
-    --card-bg: #ffffff;
-    --text-dark: #2c3e50;
-    --text-medium: #7f8c8d;
-    --success-color: #2ecc71;
-    --danger-color: #e74c3c;
-    --warning-color: #f1c40f;
-    --border-color: #e8e8e8; /* Borda sutil */
-    --shadow-soft: 0 6px 15px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04); 
-    --shadow-main: 0 12px 30px rgba(0, 0, 0, 0.1); 
---gradient-blue: linear-gradient(135deg, #3730a3 0%, #1f2937 50%, #374151 100%);
+     --primary-color: #312e81;
+     --secondary-color: #3298EF;
+     --tertiary-color: #1e1b4b;
+     --background-light: #f9f9f9;
+     --card-bg: #ffffff;
+     --text-dark: #2c3e50;
+     --text-medium: #7f8c8d;
+     --success-color: #2ecc71;
+     --danger-color: #e74c3c;
+     --warning-color: #f1c40f;
+     --border-color: #e8e8e8;
+     --shadow-soft: 0 6px 15px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+     --shadow-main: 0 12px 30px rgba(0, 0, 0, 0.1);
+     --gradient-blue: linear-gradient(135deg, #312e81 0%, #1e1b4b 50%, #111827 100%);
 }
 
 /* ================================================= */
