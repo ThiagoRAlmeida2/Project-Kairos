@@ -5,14 +5,14 @@
 :root {
   /* Paleta de Cores */
   --primary-color: #3298EF; 
-  --secondary-color: #0078D1; 
+  --secondary-color: #3298EF; 
   --background-light: #f1f5f9;
   --card-bg: #ffffff;
   --text-dark: #1e293b;
   --text-medium: #64748b;
   --shadow-purple: rgba(50, 152, 239, 0.3);
   --shadow-subtle: rgba(30, 41, 59, 0.1);
-  --gradient-main: linear-gradient(90deg, #312e81, #1e1b4b); 
+  --gradient-main: linear-gradient(90deg, #312e81, #1e1b4b);
   
   /* Cores de Status */
   --color-success: #2ecc71;
@@ -133,35 +133,35 @@ body {
 }
 
 .criar-projeto-btn:hover, .salvar-btn:hover {
-  transform: translateY(-2px);
-  background: linear-gradient(90deg, #0078D1, #312e81);
-  box-shadow: 0 8px 20px rgba(50, 152, 239, 0.6);
+   transform: translateY(-2px);
+   background: linear-gradient(90deg, #111827, #312e81);
+   box-shadow: 0 8px 20px rgba(50, 152, 239, 0.6);
 }
 
 .meus-projetos-btn {
-  background: var(--primary-color);
+  background: #312e81;
   color: var(--card-bg);
-  border: 2px solid var(--primary-color);
+  border: 2px solid #312e81;
   padding: 10px 18px;
   border-radius: 10px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(50, 152, 239, 0.4);
+  box-shadow: 0 4px 8px rgba(49, 46, 129, 0.4);
 }
 
 .meus-projetos-btn:hover:not(.active) {
-  transform: translateY(-2px);
-  background: var(--secondary-color);
-  border-color: var(--secondary-color);
-  box-shadow: 0 8px 20px rgba(50, 152, 239, 0.6);
+   transform: translateY(-2px);
+   background: #111827;
+   border-color: #111827;
+   box-shadow: 0 8px 20px rgba(30, 27, 75, 0.6);
 }
 
 .meus-projetos-btn.active {
-  background: var(--secondary-color);
-  color: var(--card-bg);
-  border-color: var(--secondary-color);
-  box-shadow: 0 4px 10px rgba(50, 152, 239, 0.6);
+   background: #111827;
+   color: var(--card-bg);
+   border-color: #111827;
+   box-shadow: 0 4px 10px rgba(30, 27, 75, 0.6);
 }
 
 /* --- LISTA DE PROJETOS GRID --- */
@@ -925,4 +925,3 @@ body {
 .form-group-tags small {
     margin-top: 10px; /* Ajusta a margem para separar do grupo de tags */
 }
-

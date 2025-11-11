@@ -71,10 +71,12 @@ export default function LoginCard({ onLoginSuccess, onClose }) {
   return (
     <div className="login-container" onClick={onClose}>
       <div className="login-card" onClick={(e) => e.stopPropagation()}>
-        <h1 className="brand"><FaHandPaper /> Bem-vindo</h1>
-        <p className="subtitle">
-          {resetMode ? "Redefinir Senha" : "Entre na sua conta"}
-        </p>
+        <div className="login-header">
+          <h1 className="brand"><FaHandPaper /> Bem-vindo</h1>
+          <p className="subtitle">
+            {resetMode ? "Redefinir Senha" : "Entre na sua conta"}
+          </p>
+        </div>
 
         {alert && (
           <div

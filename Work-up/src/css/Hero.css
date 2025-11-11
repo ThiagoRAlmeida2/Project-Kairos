@@ -88,25 +88,26 @@
 }
 
 .btn--primary {
-  background: linear-gradient(90deg, #3298EF, #0078D1);
-  color: #fff;
-  box-shadow: 0 4px 20px rgba(50, 152, 239, 0.4);
+   background: linear-gradient(90deg, #3298EF, #0078D1);
+   color: #fff;
+   box-shadow: 0 4px 20px rgba(50, 152, 239, 0.4);
 }
 
 .btn--primary:hover {
-  transform: translateY(-2px);
-  background: linear-gradient(90deg, #0078D1, #312e81);
+   transform: translateY(-2px);
+   background: linear-gradient(90deg, #111827, #312e81);
 }
 
 .btn--light {
-  background: linear-gradient(90deg, #3298EF, #0078D1);
-  color: #fff;
-  box-shadow: 0 4px 20px rgba(50, 152, 239, 0.4);
+   background: linear-gradient(90deg, #3298EF, #0078D1);
+   color: #fff;
+   box-shadow: 0 4px 20px rgba(50, 152, 239, 0.4);
 }
 
 .btn--light:hover {
-  transform: translateY(-2px);
-  background: linear-gradient(90deg, #0078D1, #312e81);
+   transform: translateY(-2px);
+   width: 100%;
+   background: linear-gradient(90deg, #111827, #312e81);
 }
 
 /* === ANIMAÇÕES === */

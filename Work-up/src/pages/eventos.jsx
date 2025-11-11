@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import "../css/Eventos.css";
 import Footer from "../components/Footer"
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const allEvents = [
   { id: 1, title: "Tech Conference 2025", date: "15 Jan", location: "São Paulo", image: "/api/placeholder/300/200", category: "Conferência" },
@@ -19,6 +20,29 @@ const allEvents = [
 
 export default function Eventos() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [expandedCategories, setExpandedCategories] = useState({});
+  const scrollRefs = useRef({});
+
+  const scrollLeft = (categoryIndex) => {
+    const container = scrollRefs.current[categoryIndex];
+    if (container) {
+      container.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = (categoryIndex) => {
+    const container = scrollRefs.current[categoryIndex];
+    if (container) {
+      container.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  };
+
+  const toggleCategory = (categoryIndex) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [categoryIndex]: !prev[categoryIndex]
+    }));
+  };
 
   const filteredEvents = useMemo(() => {
     if (!searchTerm.trim()) return allEvents;
@@ -37,11 +61,15 @@ export default function Eventos() {
       { title: "Hackathons e Competições", filter: (event) => ["Hackathon", "Competição"].includes(event.category) }
     ];
 
-    return categories.map(cat => ({
-      ...cat,
-      events: filteredEvents.filter(cat.filter).slice(0, 8)
-    })).filter(cat => cat.events.length > 0);
-  }, [filteredEvents]);
+    return categories.map((cat, index) => {
+      const allEvents = filteredEvents.filter(cat.filter);
+      return {
+        ...cat,
+        events: expandedCategories[index] ? allEvents : allEvents.slice(0, 8),
+        totalEvents: allEvents.length
+      };
+    }).filter(cat => cat.totalEvents > 0);
+  }, [filteredEvents, expandedCategories]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -73,20 +101,37 @@ export default function Eventos() {
             <div className="category-header">
               <h2>Resultados da busca "{searchTerm}" ({filteredEvents.length})</h2>
             </div>
-            <div className="events-row">
-              {filteredEvents.map((event) => (
-                <div key={event.id} className="event-card">
-                  <div className="event-image">
-                    <img src={event.image} alt={event.title} />
-                    <div className="event-category-badge">{event.category}</div>
+            <div className="events-container-with-arrows">
+              <button 
+                className="nav-arrow nav-arrow-left"
+                onClick={() => scrollLeft('search')}
+              >
+                <FaChevronLeft />
+              </button>
+              <div 
+                className="events-row"
+                ref={(el) => scrollRefs.current['search'] = el}
+              >
+                {filteredEvents.map((event) => (
+                  <div key={event.id} className="event-card">
+                    <div className="event-image">
+                      <img src={event.image} alt={event.title} />
+                      <div className="event-category-badge">{event.category}</div>
+                    </div>
+                    <div className="event-info">
+                      <h3>{event.title}</h3>
+                      <p className="event-date">{event.date}</p>
+                      <p className="event-location">{event.location}</p>
+                    </div>
                   </div>
-                  <div className="event-info">
-                    <h3>{event.title}</h3>
-                    <p className="event-date">{event.date}</p>
-                    <p className="event-location">{event.location}</p>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              <button 
+                className="nav-arrow nav-arrow-right"
+                onClick={() => scrollRight('search')}
+              >
+                <FaChevronRight />
+              </button>
             </div>
             {filteredEvents.length === 0 && (
               <div className="no-results">
@@ -100,22 +145,50 @@ export default function Eventos() {
             <section key={index} className="event-category">
               <div className="category-header">
                 <h2>{category.title}</h2>
-                <button className="see-all">Ver todos</button>
+                {category.totalEvents > 8 && (
+                  <button 
+                    className="see-all"
+                    onClick={() => toggleCategory(index)}
+                  >
+                    {expandedCategories[index] ? 'Ver menos' : `Ver todos (${category.totalEvents})`}
+                  </button>
+                )}
               </div>
-              <div className="events-row">
-                {category.events.map((event) => (
-                  <div key={event.id} className="event-card">
-                    <div className="event-image">
-                      <img src={event.image} alt={event.title} />
-                      <div className="event-category-badge">{event.category}</div>
+              <div className="events-container-with-arrows">
+                {!expandedCategories[index] && (
+                  <button 
+                    className="nav-arrow nav-arrow-left"
+                    onClick={() => scrollLeft(index)}
+                  >
+                    <FaChevronLeft />
+                  </button>
+                )}
+                <div 
+                  className={`events-row ${expandedCategories[index] ? 'expanded' : ''}`}
+                  ref={(el) => scrollRefs.current[index] = el}
+                >
+                  {category.events.map((event) => (
+                    <div key={event.id} className="event-card">
+                      <div className="event-image">
+                        <img src={event.image} alt={event.title} />
+                        <div className="event-category-badge">{event.category}</div>
+                      </div>
+                      <div className="event-info">
+                        <h3>{event.title}</h3>
+                        <p className="event-date">{event.date}</p>
+                        <p className="event-location">{event.location}</p>
+                      </div>
                     </div>
-                    <div className="event-info">
-                      <h3>{event.title}</h3>
-                      <p className="event-date">{event.date}</p>
-                      <p className="event-location">{event.location}</p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                {!expandedCategories[index] && (
+                  <button 
+                    className="nav-arrow nav-arrow-right"
+                    onClick={() => scrollRight(index)}
+                  >
+                    <FaChevronRight />
+                  </button>
+                )}
               </div>
             </section>
           ))

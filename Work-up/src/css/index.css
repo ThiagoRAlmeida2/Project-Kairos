@@ -24,12 +24,12 @@ html, body {
 }
 
 a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+   font-weight: 500;
+   color: var(--primary);
+   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+   color: #0078D1;
 }
 
 body {
@@ -44,18 +44,18 @@ h1 {
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #7B3AA6;
-  cursor: pointer;
-  transition: border-color 0.25s;
+   border-radius: 8px;
+   border: 1px solid transparent;
+   padding: 0.6em 1.2em;
+   font-size: 1em;
+   font-weight: 500;
+   font-family: inherit;
+   background-color: var(--brand);
+   cursor: pointer;
+   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+   border-color: var(--primary);
 }
 button:focus,
 button:focus-visible {
@@ -63,16 +63,16 @@ button:focus-visible {
 }
 
 @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+   :root {
+     color: #213547;
+     background-color: #ffffff;
+   }
+   a:hover {
+     color: #0078D1;
+   }
+   button {
+     background-color: var(--brand);
+   }
 }
 
 #root {
@@ -87,10 +87,10 @@ button:focus-visible {
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #6A3093);
+   filter: drop-shadow(0 0 2em var(--brand));
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+   filter: drop-shadow(0 0 2em var(--primary));
 }
 
 @keyframes logo-spin {
@@ -123,7 +123,7 @@ button:focus-visible {
   --brand:#312e81;
   --brand-2:#1e1b4b;
   --primary:#3298EF;
-  --accent:#0078D1;
+  --accent:#3298EF;
   --dark:#111827;
   --gradient: linear-gradient(135deg, #312e81 0%, #1e1b4b 50%, #111827 100%);
   --radius:12px;
@@ -260,31 +260,31 @@ a{ color:inherit; text-decoration:none; }
 }
 .btn--primary:hover{ 
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(106,48,147,0.3);
+  box-shadow: 0 12px 28px rgba(49,46,129,0.3);
   background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
   color: #fff;
 }
-.btn.btn--light{ 
-  background: linear-gradient(90deg, #3298EF, #0078D1);
-  color: #fff;
-  padding: 12px 24px;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 10px;
-  border: none;
-  box-shadow: 0 4px 20px rgba(50, 152, 239, 0.4);
-  transition: all 0.3s ease;
+.btn.btn--light{
+   background: linear-gradient(90deg, var(--primary), #0078D1);
+   color: #fff;
+   padding: 12px 24px;
+   font-size: 1rem;
+   font-weight: 600;
+   border-radius: 10px;
+   border: none;
+   box-shadow: 0 4px 20px rgba(50, 152, 239, 0.4);
+   transition: all 0.3s ease;
 }
-.btn.btn--light:hover{ 
-  transform: translateY(-2px);
-  background: linear-gradient(90deg, #0078D1, #312e81);
-  color: #fff;
+.btn.btn--light:hover{
+   transform: translateY(-2px);
+   background: linear-gradient(90deg, var(--dark), var(--brand));
+   color: #fff;
 }
-.btn--inverted{ 
-  background:white; 
-  color:#111827; 
-  border:0; 
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+.btn--inverted{
+   background:white;
+   color:var(--dark);
+   border:0;
+   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .text-gradient{
@@ -301,8 +301,8 @@ a{ color:inherit; text-decoration:none; }
 .carousel__title{ margin:0; font-size:22px; }
 .carousel__actions{ display:flex; gap:8px; }
 .carousel__btn{
-  width:36px; height:36px; border-radius:999px; border:0; cursor:pointer; font-size:20px;
-  background:#111827; color:#fff; opacity:.85;
+   width:36px; height:36px; border-radius:999px; border:0; cursor:pointer; font-size:20px;
+   background:var(--dark); color:#fff; opacity:.85;
 }
 .carousel__btn:hover{ opacity:1; }
 .carousel__viewport{
@@ -348,16 +348,16 @@ a{ color:inherit; text-decoration:none; }
   transform: scale(1.05);
 }
 .card__badge{
-  position:absolute; 
-  right:12px; 
-  top:12px; 
-  background: rgba(17,24,39,.9); 
-  color:#fff;
-  padding:6px 12px; 
-  font-size:12px; 
-  border-radius:6px;
-  font-weight: 500;
-  backdrop-filter: blur(4px);
+   position:absolute;
+   right:12px;
+   top:12px;
+   background: rgba(17,24,39,.9);
+   color:#fff;
+   padding:6px 12px;
+   font-size:12px;
+   border-radius:6px;
+   font-weight: 500;
+   backdrop-filter: blur(4px);
 }
 .card__body{ padding:10px 12px 14px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
 .card__title{ margin:0 0 4px; font-size:15px; }
@@ -365,26 +365,26 @@ a{ color:inherit; text-decoration:none; }
 
 /* Services */
 .services{
-  background: linear-gradient(135deg, #312e81 0%, #1e1b4b 50%, #111827 100%);
-  color:#0b1020;
-  padding: 60px 0;
-  position: relative;
-  overflow: hidden;
-  border-radius: 20px;
-  margin: 20px 24px;
-  box-shadow: 0 20px 40px rgba(49,46,129,0.15);
-  width: calc(100% - 48px);
+   background: var(--gradient);
+   color:#0b1020;
+   padding: 60px 0;
+   position: relative;
+   overflow: hidden;
+   border-radius: 20px;
+   margin: 20px 24px;
+   box-shadow: 0 20px 40px rgba(49,46,129,0.15);
+   width: calc(100% - 48px);
 }
 .services::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #312e81 0%, #1e1b4b 50%, #111827 100%);
-  backdrop-filter: blur(10px);
-  border-radius: inherit;
+   content: '';
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background: var(--gradient);
+   backdrop-filter: blur(10px);
+   border-radius: inherit;
 }
 .services .container {
   position: relative;
@@ -459,12 +459,12 @@ a{ color:inherit; text-decoration:none; }
 .how__action{ text-align:center; margin-top:32px; }
 
 /* CTA */
-.cta{ 
-  margin-top: 60px; 
-  background: linear-gradient(135deg, #312e81 0%, #1e1b4b 100%); 
-  color:#fff; 
-  padding: 80px 0; 
-  position: relative;
+.cta{
+   margin-top: 60px;
+   background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+   color:#fff;
+   padding: 80px 0;
+   position: relative;
 }
 .cta .container{ max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
 .cta__inner{ 
