@@ -4,20 +4,20 @@
 
 :root {
   /* Cores Modernas */
-  --primary-color: #7b5cf5; 
-  --secondary-color: #927be6; 
+  --primary-color: #312e81; 
+  --secondary-color: #1e1b4b; 
   --background-light: #f4f7f9;
   --card-bg: #ffffff;
   --text-dark: #2c3e50;
   --text-medium: #7f8c8d;
-  --gradient-main: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  --gradient-main: linear-gradient(45deg, #312e81, #1e1b4b);
   --success-color: #22c55e;
   --danger-color: #e74c3c;
   --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.08);
 
   /* Cores de Tags (Referência) */
-  --tag-default-border: #927be6;
-  --tag-default-color: #7b5cf5;
+  --tag-default-border: #312e81;
+  --tag-default-color: #312e81;
   /* Cores específicas de tags (Ajuste ou defina estas no arquivo projetos.css ou global) */
   --tag-JavaScript: #f7df1e;
   --tag-Python: #306998;
@@ -84,7 +84,7 @@ body {
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid var(--secondary-color);
-  box-shadow: 0 0 0 8px rgba(123, 92, 245, 0.1); 
+  box-shadow: 0 0 0 8px rgba(49, 46, 129, 0.1); 
 }
 
 .editar-foto {
@@ -96,12 +96,26 @@ body {
   padding: 10px; 
   border-radius: 50%;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: all 0.3s ease;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  opacity: 0.8;
 }
 
 .editar-foto:hover {
   transform: scale(1.1);
+  opacity: 1;
+  box-shadow: 0 6px 15px rgba(49, 46, 129, 0.4);
+}
+
+.editar-foto.editing {
+  opacity: 1;
+  background: var(--primary-color);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
 /* --- INFORMAÇÕES E CAMPOS --- */
@@ -177,7 +191,7 @@ body {
 .input-editavel.is-editable .tags-checkbox-grid {
     border-color: var(--primary-color);
     background: #fff;
-    box-shadow: 0 0 5px rgba(123, 92, 245, 0.4);
+    box-shadow: 0 0 5px rgba(49, 46, 129, 0.4);
 }
 
 .input-editavel input:read-only,
@@ -223,7 +237,7 @@ body {
     white-space: nowrap;
     border: 2px solid var(--tag-default-border);
     color: var(--tag-default-color);
-    background: #f7f5ff;
+    background: rgba(49, 46, 129, 0.05);
 }
 
 .tag-chip:hover {
@@ -253,7 +267,7 @@ body {
   color: #fff;
   transition: all 0.3s ease;
   background: var(--gradient-main);
-  box-shadow: 0 4px 10px rgba(123, 92, 245, 0.4);
+  box-shadow: 0 4px 10px rgba(49, 46, 129, 0.4);
   display: flex;
   align-items: center;
 }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../css/CardLogin.css";
 import api from '../service/api';
+import { FaHandPaper, FaKey, FaSync } from "react-icons/fa";
 
 export default function LoginCard({ onLoginSuccess, onClose }) {
   const [formData, setFormData] = useState({ email: "", senha: "" });
@@ -70,7 +71,7 @@ export default function LoginCard({ onLoginSuccess, onClose }) {
   return (
     <div className="login-container" onClick={onClose}>
       <div className="login-card" onClick={(e) => e.stopPropagation()}>
-        <h1 className="brand">👋 Bem-vindo</h1>
+        <h1 className="brand"><FaHandPaper /> Bem-vindo</h1>
         <p className="subtitle">
           {resetMode ? "Redefinir Senha" : "Entre na sua conta"}
         </p>
@@ -111,7 +112,7 @@ export default function LoginCard({ onLoginSuccess, onClose }) {
             </label>
 
             <button type="submit" className="btn">
-              🔑 Entrar
+              <FaKey /> Entrar
             </button>
 
             <p
@@ -161,7 +162,7 @@ export default function LoginCard({ onLoginSuccess, onClose }) {
             </label>
 
             <button type="submit" className="btn">
-              🔄 Redefinir Senha
+              <FaSync /> Redefinir Senha
             </button>
 
             <p

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../css/projetos.css";
 import api from "../service/api";
 import Footer from "../components/Footer"
+import Toast from "../components/Toast";
 import { FaFolder, FaClipboardList, FaCalendarAlt, FaClock } from "react-icons/fa";
 
 // Lista de tags para o Multi-Select (usaremos para o filtro também)
@@ -32,6 +33,9 @@ export default function ProjetosList() {
     // Aluno:
     const [modoAluno, setModoAluno] = useState("TODOS"); 
     const [projetosInscritosIds, setProjetosInscritosIds] = useState([]);
+    
+    // Toast notifications
+    const [toast, setToast] = useState(null);
 
     const baseURL = "/api/projetos";
     const user = JSON.parse(localStorage.getItem("user"));
@@ -272,14 +276,20 @@ export default function ProjetosList() {
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            alert(`Inscrição no projeto ${projetoId} realizada com sucesso!`);
+            setToast({
+                message: 'Inscrição realizada com sucesso!',
+                type: 'success'
+            });
             
             setProjetosInscritosIds([...projetosInscritosIds, projetoId]);
 
         } catch (err) {
             const msg = err.response?.data || "Erro ao se inscrever. Tente novamente.";
             console.error("Erro ao se inscrever:", err.response?.data || err.message);
-            alert(msg);
+            setToast({
+                message: msg,
+                type: 'error'
+            });
         }
     };
 
@@ -293,7 +303,10 @@ export default function ProjetosList() {
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            alert(`Inscrição no projeto ${projetoId} cancelada com sucesso!`);
+            setToast({
+                message: 'Inscrição cancelada com sucesso!',
+                type: 'success'
+            });
             
             setProjetos(projetos.filter(p => p.id !== projetoId));
             setProjetosInscritosIds(prevIds => prevIds.filter(id => id !== projetoId));
@@ -301,7 +314,10 @@ export default function ProjetosList() {
         } catch (err) {
             const msg = err.response?.data || "Erro ao cancelar inscrição. Tente novamente.";
             console.error("Erro ao cancelar inscrição:", err.response?.data || err.message);
-            alert(msg);
+            setToast({
+                message: msg,
+                type: 'error'
+            });
         }
     };
 
@@ -460,20 +476,19 @@ export default function ProjetosList() {
                                 <p className="descricao-completa">{p.descricao}</p> 
 
                                 <div className="project-footer">
-                                    <span>Empresa: {p.empresaNome}</span>
-                                    
-                                    {/*Exibe Aprovados na linha de baixo, se houver */}
-                                    <span>
-                                        Criado em:{" "}
-                                        {parseDate(p.dataCriacao) ? parseDate(p.dataCriacao).toLocaleDateString("pt-BR") : "-"}
-                                    </span>
-                                    
-                                    {role === "ROLE_EMPRESA" && p.aprovados > 0 && (
-                                        <span className="aprovados-count-footer">
-                                            Aprovados: 
-                                            <strong style={{ color: 'var(--color-success)', marginLeft: '5px' }}>{p.aprovados}</strong>
+                                    <div className="project-info">
+                                        <span>Empresa: {p.empresaNome}</span>
+                                        <span>
+                                            Criado em:{" "}
+                                            {parseDate(p.dataCriacao) ? parseDate(p.dataCriacao).toLocaleDateString("pt-BR") : "-"}
                                         </span>
-                                    )}
+                                        {role === "ROLE_EMPRESA" && p.aprovados > 0 && (
+                                            <span className="aprovados-count-footer">
+                                                Aprovados: 
+                                                <strong style={{ color: 'var(--color-success)', marginLeft: '5px' }}>{p.aprovados}</strong>
+                                            </span>
+                                        )}
+                                    </div>
                                     
                                     {/* Lógica do Botão para ALUNO (Inscrever / Inscrito / Cancelar) */}
                                     {!p.encerrado && role === "ROLE_ALUNO" && (
@@ -507,14 +522,16 @@ export default function ProjetosList() {
                                         </>
                                     )}
 
-                                    {!p.encerrado && role === "ROLE_EMPRESA" && (
-                                        <button
-                                            className="encerrar-btn"
-                                            onClick={() => handleEncerrarProjeto(p.id)}
-                                        >
-                                            Encerrar Projeto
-                                        </button>
-                                    )}
+                                    <div className="project-actions">
+                                        {!p.encerrado && role === "ROLE_EMPRESA" && (
+                                            <button
+                                                className="encerrar-btn"
+                                                onClick={() => handleEncerrarProjeto(p.id)}
+                                            >
+                                                Encerrar Projeto
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         ))
@@ -631,6 +648,15 @@ export default function ProjetosList() {
                 </div>
             </div>
         <Footer /> 
+        
+        {/* Toast Notifications */}
+        {toast && (
+            <Toast
+                message={toast.message}
+                type={toast.type}
+                onClose={() => setToast(null)}
+            />
+        )}
         </> 
     );
 }
