@@ -37,7 +37,8 @@ export default function Perfil() {
   const [editando, setEditando] = useState(false);
   const [imagemPreview, setImagemPreview] = useState(null);
   const [tagsInput, setTagsInput] = useState([]); 
-  const [originalUsuario, setOriginalUsuario] = useState(null); 
+  const [originalUsuario, setOriginalUsuario] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null); 
 
   const fetchPerfil = async () => {
     try {
@@ -99,9 +100,25 @@ export default function Perfil() {
     try {
       const token = localStorage.getItem("token");
       
+      // Handle image upload if there's a selected image
+      if (selectedImage) {
+        const formData = new FormData();
+        formData.append('image', selectedImage);
+        
+        try {
+          await api.post('/api/usuario/upload-avatar', formData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+        } catch (imgErr) {
+          console.error('Erro ao fazer upload da imagem:', imgErr);
+        }
+      }
+      
       let payload;
       if (usuario.role === "ROLE_ALUNO") {
-          // O payload é o objeto aluno, que já está atualizado
           payload = usuario.aluno; 
       } else {
           payload = usuario.empresa;
@@ -117,6 +134,7 @@ export default function Perfil() {
       setOriginalUsuario(res.data);
       setEditando(false);
       setImagemPreview(null);
+      setSelectedImage(null);
       alert("Perfil atualizado com sucesso!");
     } catch (err) {
       console.error("Erro ao atualizar perfil:", err);
@@ -127,6 +145,7 @@ export default function Perfil() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setSelectedImage(file);
       setImagemPreview(URL.createObjectURL(file));
     }
   };
@@ -147,24 +166,20 @@ export default function Perfil() {
           
           <div className="foto-container">
             <img
-              src={imagemPreview || "/default-avatar.png"}
+              src={imagemPreview || usuario.avatar || "/default-avatar.png"}
               alt="Foto de perfil"
               className="foto-perfil"
             />
-            {editando && (
-              <>
-                <label htmlFor="input-foto" className="editar-foto">
-                  <FaPencilAlt size={16} />
-                </label>
-                <input
-                  id="input-foto"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  style={{ display: 'none' }}
-                />
-              </>
-            )}
+            <label htmlFor="input-foto" className={`editar-foto ${editando ? 'editing' : ''}`}>
+              <FaPencilAlt size={16} />
+            </label>
+            <input
+              id="input-foto"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: 'none' }}
+            />
           </div>
 
           <div className="perfil-info">

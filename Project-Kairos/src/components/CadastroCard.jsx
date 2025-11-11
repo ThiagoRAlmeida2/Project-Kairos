@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../css/CadastroCard.css";
 import api from '../service/api';
+import { FaGraduationCap, FaBuilding, FaEdit, FaCheck } from "react-icons/fa";
 
 // Componente de alerta
 function Alert({ message, type = "success", onClose }) {
@@ -88,7 +89,7 @@ export default function CadastroCard({ onClose }) {
   return (
     <div className="card-container" onClick={onClose}>
       <div className="card" onClick={(e) => e.stopPropagation()}>
-        <h1>📝 Faça o seu cadastro</h1>
+        <h1><FaEdit /> Faça o seu cadastro</h1>
 
         {/* Alert */}
         {showAlert && (
@@ -105,14 +106,14 @@ export default function CadastroCard({ onClose }) {
             onClick={() => setTipo("ALUNO")}
             className={tipo === "ALUNO" ? "active-tab" : ""}
           >
-            <span className="tab-icon">🎓</span>
+            <span className="tab-icon"><FaGraduationCap /></span>
             Aluno
           </button>
           <button
             onClick={() => setTipo("EMPRESA")}
             className={tipo === "EMPRESA" ? "active-tab" : ""}
           >
-            <span className="tab-icon">🏢</span>
+            <span className="tab-icon"><FaBuilding /></span>
             Empresa
           </button>
         </div>
@@ -243,7 +244,7 @@ export default function CadastroCard({ onClose }) {
 
         {/* Botão */}
         <button onClick={handleSubmit} className="submit-btn">
-          ✅ Finalizar Cadastro
+          <FaCheck /> Finalizar Cadastro
         </button>
       </div>
     </div>
