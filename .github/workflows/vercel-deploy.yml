@@ -8,6 +8,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      deployments: write
     steps:
       - name: Checkout do Código
         uses: actions/checkout@v4
