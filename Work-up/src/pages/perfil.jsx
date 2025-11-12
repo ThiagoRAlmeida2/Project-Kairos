@@ -331,6 +331,15 @@ export default function Perfil() {
               projetos={usuario.aluno?.projetosParticipados || []} 
           />
         )}
+
+        {/* Toast Notification */}
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        )}
       </div>
     </div>
   );
@@ -470,15 +479,6 @@ function ProjetosParticipados({ projetos }) {
                     <p className="no-projects">Ainda não há projetos registrados.</p>
                 )}
             </div>
-
-            {/* Toast Notification */}
-            {toast && (
-                <Toast 
-                    message={toast.message} 
-                    type={toast.type}
-                    onClose={() => setToast(null)}
-                />
-            )}
-        </div>
-    );
+    </div>
+  );
 }
