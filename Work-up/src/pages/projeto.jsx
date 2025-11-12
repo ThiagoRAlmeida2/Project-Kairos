@@ -4,6 +4,7 @@ import api from "../service/api";
 import Footer from "../components/Footer"
 import Toast from "../components/Toast";
 import LoginCard from "../components/LoginCard";
+import ConfirmDialog from "../components/ConfirmDialog";
 import { FaFolder, FaClipboardList, FaCalendarAlt, FaClock } from "react-icons/fa";
 
 // Lista de tags para o Multi-Select (usaremos para o filtro também)
@@ -18,6 +19,8 @@ export default function ProjetosList() {
     const [showModal, setShowModal] = useState(false);
     const [modalProjeto, setModalProjeto] = useState(null); // projeto selecionado no modal
     const [showLogin, setShowLogin] = useState(false); // 🚩 Modal de login
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false); // 🚩 Modal de confirmação
+    const [projetoToCancel, setProjetoToCancel] = useState(null); // Projeto a ser cancelado
 
     
     const [nome, setNome] = useState("");
@@ -301,7 +304,8 @@ export default function ProjetosList() {
 
     // 🔹 Cancelar inscrição em projeto 
     const handleCancelRegistration = async (projetoId) => {
-        if (!window.confirm("Tem certeza que deseja cancelar sua inscrição neste projeto?")) return;
+        setProjetoToCancel(projetoId);
+        setShowConfirmDialog(true);
 
         try {
             await api.delete(
@@ -325,6 +329,42 @@ export default function ProjetosList() {
                 type: 'error'
             });
         }
+    };
+
+    // 🔹 Confirmar cancelamento de inscrição
+    const confirmCancelRegistration = async () => {
+        setShowConfirmDialog(false);
+        
+        try {
+            await api.delete(
+                `${baseURL}/${projetoToCancel}/cancelar-inscricao`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            setToast({
+                message: 'Inscrição cancelada com sucesso!',
+                type: 'success'
+            });
+
+            setProjetos(projetos.filter(p => p.id !== projetoToCancel));
+            setProjetosInscritosIds(prevIds => prevIds.filter(id => id !== projetoToCancel));
+            setProjetoToCancel(null);
+
+        } catch (err) {
+            const msg = err.response?.data || "Erro ao cancelar inscrição. Tente novamente.";
+            console.error("Erro ao cancelar inscrição:", err.response?.data || err.message);
+            setToast({
+                message: msg,
+                type: 'error'
+            });
+            setProjetoToCancel(null);
+        }
+    };
+
+    // 🔹 Cancelar diálogo de confirmação
+    const cancelDialog = () => {
+        setShowConfirmDialog(false);
+        setProjetoToCancel(null);
     };
 
     // 🔹 LÓGICA DE ORDENAÇÃO E FILTRAGEM
