@@ -753,6 +753,15 @@ export default function ProjetosList() {
                 onClose={() => setToast(null)}
             />
         )}
+        
+        {/* Confirm Dialog */}
+        {showConfirmDialog && (
+            <ConfirmDialog
+                message="Tem certeza que deseja cancelar sua inscrição neste projeto?"
+                onConfirm={confirmCancelRegistration}
+                onCancel={cancelDialog}
+            />
+        )}
         </> 
     );
 }
