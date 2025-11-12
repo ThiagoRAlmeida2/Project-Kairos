@@ -1,0 +1,17 @@
+name: Auto Merge para Usuário Específico
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  auto_merge:
+    runs-on: ubuntu-latest
+    # ALERTA: Substitua 'nome-do-usuario' pelo login exato do GitHub
+    if: github.event.pull_request.user.login == 'MattheusRSG'
+    steps:
+      - name: ✅ Auto-Merge do PR
+        uses: pascalgn/automerge-action@v0.15.6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_METHOD: squash
