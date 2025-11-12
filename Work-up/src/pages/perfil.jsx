@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import "../css/perfil.css";
 import { FaPencilAlt, FaTimes, FaProjectDiagram, FaCalendarAlt, FaFlag, FaBriefcase } from "react-icons/fa"; 
 import api from "../service/api";
-import Toast from "../components/Toast";
 
 // Lista de tags para o Multi-Select (usadas nos checkboxes)
 const LINGUAGENS_OPTIONS = [
@@ -39,8 +38,7 @@ export default function Perfil() {
   const [imagemPreview, setImagemPreview] = useState(null);
   const [tagsInput, setTagsInput] = useState([]); 
   const [originalUsuario, setOriginalUsuario] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [toast, setToast] = useState(null); 
+  const [selectedImage, setSelectedImage] = useState(null); 
 
   const fetchPerfil = async () => {
     try {
@@ -100,10 +98,7 @@ export default function Perfil() {
 
   const handleSaveImage = async () => {
     if (!selectedImage) {
-      setToast({
-        message: 'Selecione uma imagem primeiro!',
-        type: 'error'
-      });
+      alert("Selecione uma imagem primeiro!");
       return;
     }
 
@@ -131,19 +126,13 @@ export default function Perfil() {
       
       setImagemPreview(null);
       setSelectedImage(null);
-      setToast({
-        message: 'Imagem salva com sucesso!',
-        type: 'success'
-      });
+      alert("Imagem salva com sucesso!");
       
       // Recarrega a página para atualizar o navbar
       window.location.reload();
     } catch (err) {
       console.error('Erro ao fazer upload da imagem:', err);
-      setToast({
-        message: 'Erro ao salvar imagem. Tente novamente.',
-        type: 'error'
-      });
+      alert("Erro ao salvar imagem. Tente novamente.");
     }
   };
 
@@ -167,17 +156,10 @@ export default function Perfil() {
       setUsuario(res.data);
       setOriginalUsuario(res.data);
       setEditando(false);
-      setToast({
-        message: 'Perfil atualizado com sucesso!',
-        type: 'success'
-      });
+      alert("Perfil atualizado com sucesso!");
     } catch (err) {
       console.error("Erro ao atualizar perfil:", err);
-      const msg = err.response?.data?.message || err.response?.data || "Erro ao salvar alterações";
-      setToast({
-        message: msg,
-        type: 'error'
-      });
+      alert(err.response?.data?.message || err.response?.data || "Erro ao salvar alterações");
     }
   };
   
@@ -331,15 +313,6 @@ export default function Perfil() {
               projetos={usuario.aluno?.projetosParticipados || []} 
           />
         )}
-
-        {/* Toast Notification */}
-        {toast && (
-          <Toast
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast(null)}
-          />
-        )}
       </div>
     </div>
   );
@@ -479,6 +452,6 @@ function ProjetosParticipados({ projetos }) {
                     <p className="no-projects">Ainda não há projetos registrados.</p>
                 )}
             </div>
-    </div>
-  );
+        </div>
+    );
 }
