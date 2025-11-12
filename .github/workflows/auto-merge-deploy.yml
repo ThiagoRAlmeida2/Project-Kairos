@@ -7,7 +7,6 @@ on:
 jobs:
   auto_merge:
     runs-on: ubuntu-latest
-    # ALERTA: Substitua 'nome-do-usuario' pelo login exato do GitHub
     if: github.event.pull_request.user.login == 'MattheusRSG'
     steps:
       - name: ✅ Auto-Merge do PR
