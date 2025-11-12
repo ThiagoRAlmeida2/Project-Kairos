@@ -1,3 +1,5 @@
+# Arquivo: .github/workflows/vercel-deploy.yml (CORREÇÃO DE INSTALAÇÃO)
+
 name: Deploy de Produção no Vercel
 
 on:
@@ -12,17 +14,19 @@ jobs:
     permissions:
       contents: read
       deployments: write
+
     steps:
       - name: Checkout do Código
         uses: actions/checkout@v4
         
-      - name: 🚀 Deploy no Vercel
+      - name: Instalar Vercel CLI
+        run: npm install -g vercel
+        
+      - name: Deploy no Vercel
         uses: BetaHuhn/deploy-to-vercel-action@v1
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # <--- ADICIONE ESTA LINHA!
-
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          # ---------------------------------------------------------
           PRODUCTION: true
