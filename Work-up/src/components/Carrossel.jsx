@@ -1,13 +1,21 @@
-import React, { useRef, useEffect } from 'react' 
+import React, { useState, useEffect } from 'react'
 import '../css/Carrossel.css'
 
 export default function Carousel({ title = 'Projetos em Destaque', items = [] }) {
-   const [currentIndex, setCurrentIndex] = React.useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [fadeClass, setFadeClass] = useState('fade-in')
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex(prev => (prev + 1) % items.length)
-    }, 3000)
+      // Inicia o fade out
+      setFadeClass('fade-out')
+
+      // Após a transição, atualiza o índice e inicia o fade in
+      setTimeout(() => {
+        setCurrentIndex(prev => (prev + 1) % items.length)
+        setFadeClass('fade-in')
+      }, 500) // Tempo da transição de fade out
+    }, 4000) // Tempo total de exibição de cada slide
 
     return () => clearInterval(interval)
   }, [items.length])
@@ -17,14 +25,18 @@ export default function Carousel({ title = 'Projetos em Destaque', items = [] })
         <div className="carousel__header" style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
           <h2 className="carousel__title">{title}</h2>
         </div>
-        
+
         <div className="carousel__viewport" style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
         {items.length > 0 && (
-            <article className="card" style={{ 
-              opacity: 1,
-              transition: 'opacity 0.5s ease-in-out',
-              animation: 'fadeIn 0.5s ease-in-out'
-            }} key={currentIndex}>
+            <article 
+              className={`card ${fadeClass}`}
+              style={{
+                width: '100%',
+                maxWidth: '620px',
+                transition: 'opacity 0.5s ease-in-out, transform 0.5s ease-in-out',
+              }}
+              key={currentIndex}
+            >
               <div className="card__media">
                 <img src={items[currentIndex].image} alt={items[currentIndex].alt} className="card__image" />
                  {items[currentIndex].badge && <div className="card__badge">{items[currentIndex].badge}</div>}
@@ -36,13 +48,6 @@ export default function Carousel({ title = 'Projetos em Destaque', items = [] })
             </article>
           )}
         </div>
-        
-        <style jsx>{`
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
-          }
-        `}</style>
     </section>
   )
 }
