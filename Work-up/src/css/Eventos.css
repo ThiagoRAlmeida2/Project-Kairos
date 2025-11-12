@@ -411,3 +411,214 @@
     padding: 0 45px;
   }
 }
+
+
+/* --- Estilos Gerais de Modal --- */
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Fundo escuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s;
+}
+
+.modal-close-btn:hover {
+    color: #ff0000;
+}
+
+/* --- Estilos Específicos para o Novo Login Modal --- */
+
+.login-modal {
+    width: 400px; /* Largura menor para um modal de login */
+    text-align: center;
+}
+
+.login-modal h2 {
+    color: #007bff; /* Cor principal, ajuste conforme seu tema */
+    margin-bottom: 20px;
+}
+
+.login-modal p {
+    margin-bottom: 25px;
+    color: #555;
+}
+
+.login-modal .btn-principal {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    transition: background-color 0.2s;
+}
+
+.login-modal .btn-principal:hover {
+    background-color: #0056b3;
+}
+
+.login-modal .btn-secundario {
+    background-color: #ccc;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    transition: background-color 0.2s;
+}
+
+.login-modal .btn-secundario:hover {
+    background-color: #bbb;
+}
+
+/* --- Estilos para Event Details Modal (se precisar de ajustes) --- */
+
+.event-details-modal {
+    max-width: 700px;
+    padding: 0; /* Remove padding padrão para controlar o layout interno */
+    display: flex;
+    flex-direction: row;
+}
+
+.event-modal-image {
+    position: relative;
+    width: 40%;
+    min-width: 250px;
+    overflow: hidden;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.event-modal-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.event-category-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: #ffc107;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.event-modal-info {
+    width: 60%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.modal-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.modal-details-grid p {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.modal-details-grid span {
+    font-weight: bold;
+    color: #333;
+    margin-left: 5px;
+}
+
+.modal-actions {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.btn-inscrever, .btn-login {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-inscrever:hover, .btn-login:hover {
+    background-color: #1e7e34;
+}
+
+.empresa-info {
+    color: #dc3545;
+    font-weight: bold;
+    padding: 10px;
+    border: 1px solid #dc3545;
+    border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+    .event-details-modal {
+        flex-direction: column;
+        max-width: 95%;
+    }
+    .event-modal-image, .event-modal-info {
+        width: 100%;
+    }
+    .event-modal-image {
+        height: 200px;
+        border-radius: 10px 10px 0 0;
+    }
+    .event-modal-info {
+        padding: 20px;
+    }
+}
