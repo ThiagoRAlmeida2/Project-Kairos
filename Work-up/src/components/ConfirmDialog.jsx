@@ -1,31 +1,40 @@
-import React from 'react';
-import '../css/Toast.css';
+import React, { useState } from "react";
+import ConfirmDialog from "../components/ConfirmDialog";
 
-const ConfirmDialog = ({ 
-  isOpen, 
-  onConfirm, 
-  onCancel, 
-  message = "Tem certeza que deseja cancelar sua inscrição neste projeto?",
-  title = "Confirmar Cancelamento"
-}) => {
-  if (!isOpen) return null;
+function Projetos() {
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleCancelClick = () => {
+    setOpenDialog(true);
+  };
+
+  const handleConfirmCancel = () => {
+    setOpenDialog(false);
+    // Aqui vai a lógica real de cancelar a inscrição
+    console.log("Inscrição cancelada!");
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <h2>{title}</h2>
-        <p>{message}</p>
-        <div className="modal-buttons">
-          <button className="cancelar-btn" onClick={onCancel}>
-            Não, manter inscrição
-          </button>
-          <button className="salvar-btn" onClick={onConfirm}>
-            Sim, cancelar inscrição
-          </button>
-        </div>
-      </div>
+    <div>
+      <h2>Meus Projetos</h2>
+
+      <button className="cancel-btn" onClick={handleCancelClick}>
+        Cancelar inscrição
+      </button>
+
+      {openDialog && (
+        <ConfirmDialog
+          message="Tem certeza que deseja cancelar sua inscrição?"
+          onConfirm={handleConfirmCancel}
+          onCancel={handleCloseDialog}
+        />
+      )}
     </div>
   );
-};
+}
 
-export default ConfirmDialog;
+export default Projetos;
