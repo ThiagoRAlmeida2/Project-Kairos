@@ -310,8 +310,6 @@ export default function ProjetosList() {
 
     // 🔹 Confirmar cancelamento de inscrição
     const confirmCancelRegistration = async () => {
-        setShowConfirmDialog(false);
-        
         try {
             await api.delete(
                 `${baseURL}/${projetoToCancel}/cancelar-inscricao`,
@@ -326,6 +324,7 @@ export default function ProjetosList() {
             setProjetos(projetos.filter(p => p.id !== projetoToCancel));
             setProjetosInscritosIds(prevIds => prevIds.filter(id => id !== projetoToCancel));
             setProjetoToCancel(null);
+            setShowConfirmDialog(false);
 
         } catch (err) {
             const msg = err.response?.data || "Erro ao cancelar inscrição. Tente novamente.";
@@ -335,6 +334,7 @@ export default function ProjetosList() {
                 type: 'error'
             });
             setProjetoToCancel(null);
+            setShowConfirmDialog(false);
         }
     };
 
