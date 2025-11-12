@@ -303,32 +303,9 @@ export default function ProjetosList() {
     };
 
     // 🔹 Cancelar inscrição em projeto 
-    const handleCancelRegistration = async (projetoId) => {
+    const handleCancelRegistration = (projetoId) => {
         setProjetoToCancel(projetoId);
         setShowConfirmDialog(true);
-
-        try {
-            await api.delete(
-                `${baseURL}/${projetoId}/cancelar-inscricao`,
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-
-            setToast({
-                message: 'Inscrição cancelada com sucesso!',
-                type: 'success'
-            });
-            
-            setProjetos(projetos.filter(p => p.id !== projetoId));
-            setProjetosInscritosIds(prevIds => prevIds.filter(id => id !== projetoId));
-
-        } catch (err) {
-            const msg = err.response?.data || "Erro ao cancelar inscrição. Tente novamente.";
-            console.error("Erro ao cancelar inscrição:", err.response?.data || err.message);
-            setToast({
-                message: msg,
-                type: 'error'
-            });
-        }
     };
 
     // 🔹 Confirmar cancelamento de inscrição
