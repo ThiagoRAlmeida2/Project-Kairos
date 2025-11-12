@@ -757,7 +757,7 @@ export default function ProjetosList() {
         {/* Confirm Dialog */}
         {showConfirmDialog && (
             <ConfirmDialog
-                message="Tem certeza que deseja cancelar sua inscrição neste projeto?"
+                message="Tem certeza que deseja cancelar sua inscrição? Esta ação não pode ser desfeita."
                 onConfirm={confirmCancelRegistration}
                 onCancel={cancelDialog}
             />
