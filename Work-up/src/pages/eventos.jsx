@@ -289,7 +289,8 @@ export default function Eventos() {
       <div 
         key={event.id} 
         className="event-card"
-        onClick={() => handleViewDetails(event)} // Abre o modal ao clicar no card
+        // ❌ REMOVIDO: onClick={() => handleViewDetails(event)} 
+        // A lógica de clique agora fica no botão para evitar duplo-clique
       >
         <div className="event-image">
           <img src={event.image} alt={event.title} />
@@ -300,10 +301,14 @@ export default function Eventos() {
           <p className="event-date"><FaCalendarAlt /> {event.date}</p>
           <p className="event-location"><FaMapMarkerAlt /> {event.location}</p>
         </div>
-        <button className="btn-ver-detalhes">Ver Detalhes</button>
+        <button 
+            className="btn-ver-detalhes"
+            onClick={() => handleViewDetails(event)}
+        >
+            Ver Detalhes
+        </button>
       </div>
   );
-
 
   return (
     <>
