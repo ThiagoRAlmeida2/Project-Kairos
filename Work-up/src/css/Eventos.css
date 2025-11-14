@@ -77,20 +77,19 @@
 
 .hero-search button {
   padding: 16px 32px;
-  background: var(--dark-blue);
-  color: var(--white);
-  border: none;
+  background-color: linear-gradient(135deg, #312e81 0%, #1e1b4b 50%, #111827 100%);  color: var(--white);
+  border: 18px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(180, 13, 13, 0.1);
 }
 
 .hero-search button:hover {
-   background: #1e1b4b;
+   background: #1b10b9;
    transform: translateY(-2px);
-   box-shadow: 0 4px 20px rgba(49, 46, 129, 0.4);
+   box-shadow: 0 4px 20px #1b10b9;
 }
 
 /* Event Categories */
@@ -692,24 +691,43 @@
     text-align: center;
 }
 
+@keyframes pulseBtn {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 8px 25px rgba(50, 152, 239, 0.5); /* Sutil brilho azul */
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+}
+
 .btn-inscrever, .btn-login {
-    background-color: #28a745;
+    background: var(--dark-blue); 
     color: white;
-    padding: 12px 25px;
+    padding: 12px 25px; 
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 10px;
 }
 
-.btn-inscrever:hover, .btn-login:hover {
-    background-color: #1e7e34;
+.btn-inscrever:hover,
+.btn-login:hover {
+    transform: translateY(-2px); /* Eleva sutilmente ao pairar */
+    box-shadow: 0 8px 20px rgba(50, 152, 239, 0.3);
+    animation: pulseBtn 0.8s ease-in-out infinite alternate; /* Aplica a animação */
 }
 
 .empresa-info {
