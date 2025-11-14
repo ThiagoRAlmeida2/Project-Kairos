@@ -31,7 +31,7 @@
 /* Hero Section */
 .eventos-hero {
   background: linear-gradient(135deg, var(--dark-blue) 0%, var(--darker-blue) 50%, var(--darkest) 100%);
-  padding: 90px 24px;
+  padding: 80px 24px;
   text-align: center;
   position: relative;
 }
@@ -95,7 +95,7 @@
 
 /* Event Categories */
 .event-category {
-  padding: 40px 100px;
+  padding: 40px 24px;
   background: var(--background-light);
 }
 
@@ -109,7 +109,7 @@
   align-items: center;
   margin-bottom: 20px;
   max-width: 1400px;
-  margin-left: 60px;
+  margin-left: auto;
   margin-right: auto;
 }
 
@@ -138,7 +138,7 @@
 /* Events Container with Arrows */
 .events-container-with-arrows {
   position: relative;
-  max-width: 2000px;
+  max-width: 1400px;
   margin: 0 auto;
   overflow: hidden;
 }
@@ -170,11 +170,11 @@
 }
 
 .nav-arrow-left {
-  left: 3px;
+  left: 10px;
 }
 
 .nav-arrow-right {
-  right: 5px;
+  right: 10px;
 }
 
 /* Events Row */
@@ -184,17 +184,6 @@
   overflow: hidden;
   padding: 0 60px;
   scroll-behavior: smooth;
-}
-
-/* Lista fixa de eventos (componentes reutilizáveis fora do carrossel) */
-.eventos-list {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 24px 40px 24px;
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  justify-content: flex-start;
 }
 
 /* Events Row Expanded */
@@ -267,8 +256,8 @@
   right: 8px;
   background: var(--primary-blue);
   color: var(--white);
-  padding: 4px 20px;
-  border-radius: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 600;
 }
@@ -465,11 +454,6 @@
 @keyframes fadeInBackdrop {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-
-@keyframes scaleIn {
-  from { transform: translateY(8px) scale(.98); opacity: 0; }
-  to { transform: translateY(0) scale(1); opacity: 1; }
 }
 
 /* Ajustes visuais do conteúdo do modal de evento */
