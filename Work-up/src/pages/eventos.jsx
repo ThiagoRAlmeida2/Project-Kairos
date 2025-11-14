@@ -73,7 +73,7 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
         }
 
         try {
-            const response = await fetch(`http://localhost:8081/api/eventos/${event.id}`, {
+            const response = await fetch(`/api/eventos/${event.id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}` 
@@ -195,7 +195,7 @@ function CreateEventModal({ onClose, onEventCreated }) {
             return;
         }
         
-        const API_URL = 'http://localhost:8081/api/eventos/criar';
+        const API_URL = '/api/eventos/criar';
 
         try {
             const response = await fetch(API_URL, {
