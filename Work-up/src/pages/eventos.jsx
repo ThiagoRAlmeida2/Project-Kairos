@@ -45,6 +45,13 @@ const initialNewEvent = {
 function EventDetailsModal({ event, userRole, onClose, onOpenLogin }) {
     if (!event) return null;
 
+  // Bloqueia scroll do body enquanto o modal estiver aberto
+  useEffect(() => {
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previous; };
+  }, []);
+
     const isAluno = userRole === 'ROLE_ALUNO';
     const isDeslogado = !userRole;
 
@@ -300,7 +307,15 @@ export default function Eventos() {
           <p className="event-date"><FaCalendarAlt /> {event.date}</p>
           <p className="event-location"><FaMapMarkerAlt /> {event.location}</p>
         </div>
-        <button className="btn-ver-detalhes">Ver Detalhes</button>
+        <button
+          className="btn-ver-detalhes"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleViewDetails(event);
+          }}
+        >
+          Ver Detalhes
+        </button>
       </div>
   );
 

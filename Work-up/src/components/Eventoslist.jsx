@@ -2,7 +2,7 @@ import React from "react";
 import CardEvento from "./CardEvento";
 import "../css/Eventos.css";
 
-export default function EventosList() {
+export default function EventosList({ onViewDetails }) {
   const eventos = [
     {
       imagem: "",
@@ -39,7 +39,11 @@ export default function EventosList() {
   return (
     <section className="eventos-list">
       {eventos.map((evento, index) => (
-        <CardEvento key={index} {...evento} />
+        <CardEvento
+          key={index}
+          {...evento}
+          onViewDetails={typeof onViewDetails === 'function' ? () => onViewDetails(evento) : undefined}
+        />
       ))}
     </section>
   );
