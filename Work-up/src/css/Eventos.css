@@ -522,10 +522,7 @@
   to { opacity: 1; }
 }
 
-@keyframes scaleIn {
-  from { transform: translateY(8px) scale(.98); opacity: 0; }
-  to { transform: translateY(0) scale(1); opacity: 1; }
-}
+
 
 /* Ajustes visuais do conteúdo do modal de evento */
 .event-modal-image img {
