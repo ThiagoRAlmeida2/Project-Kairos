@@ -195,7 +195,7 @@ function CreateEventModal({ onClose, onEventCreated }) {
             return;
         }
         
-        const API_URL = '/api/eventos/criar';
+        const API_URL = 'https://project-api-1-bw7k.onrender.com/api/eventos/criar';
 
         try {
             const response = await fetch(API_URL, {
