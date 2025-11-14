@@ -31,7 +31,7 @@
 /* Hero Section */
 .eventos-hero {
   background: linear-gradient(135deg, var(--dark-blue) 0%, var(--darker-blue) 50%, var(--darkest) 100%);
-  padding: 80px 24px;
+  padding: 90px 24px;
   text-align: center;
   position: relative;
 }
@@ -52,11 +52,24 @@
   margin-right: auto;
 }
 
+/* Container para Busca e Botão de Criação - ALINHAMENTO CORRIGIDO */
+.hero-actions-row {
+    display: flex;
+    justify-content: center; /* Centraliza o grupo */
+    align-items: center;
+    gap: 20px; /* Distância entre os elementos */
+    margin-top: 2rem;
+    max-width: 800px; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .hero-search {
   display: flex;
   max-width: 500px;
-  margin: 0 auto;
+  margin: 0; /* Removido margin auto */
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .hero-search input {
@@ -77,24 +90,48 @@
 
 .hero-search button {
   padding: 16px 32px;
-  background-color: linear-gradient(135deg, #312e81 0%, #1e1b4b 50%, #111827 100%);  color: var(--white);
-  border: 18px;
+  background: var(--dark-blue);
+  color: var(--white);
+  border: none;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(180, 13, 13, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .hero-search button:hover {
-   background: #1b10b9;
+   background: #1e1b4b;
    transform: translateY(-2px);
-   box-shadow: 0 4px 20px #1b10b9;
+   box-shadow: 0 4px 20px rgba(49, 46, 129, 0.4);
+}
+
+/* Estilo do Botão Criar Evento */
+.btn-create-event {
+    background: var(--primary-blue);
+    color: var(--white);
+    border: none;
+    padding: 16px 25px; 
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(50, 152, 239, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn-create-event:hover {
+    background: var(--secondary-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(50, 152, 239, 0.6);
 }
 
 /* Event Categories */
 .event-category {
-  padding: 40px 24px;
+  padding: 40px 100px;
   background: var(--background-light);
 }
 
@@ -108,7 +145,7 @@
   align-items: center;
   margin-bottom: 20px;
   max-width: 1400px;
-  margin-left: auto;
+  margin-left: 60px;
   margin-right: auto;
 }
 
@@ -137,7 +174,7 @@
 /* Events Container with Arrows */
 .events-container-with-arrows {
   position: relative;
-  max-width: 1400px;
+  max-width: 2000px;
   margin: 0 auto;
   overflow: hidden;
 }
@@ -169,11 +206,11 @@
 }
 
 .nav-arrow-left {
-  left: 10px;
+  left: 3px;
 }
 
 .nav-arrow-right {
-  right: 10px;
+  right: 5px;
 }
 
 /* Events Row */
@@ -183,6 +220,17 @@
   overflow: hidden;
   padding: 0 60px;
   scroll-behavior: smooth;
+}
+
+/* Lista fixa de eventos (componentes reutilizáveis fora do carrossel) */
+.eventos-list {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px 40px 24px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
 /* Events Row Expanded */
@@ -255,8 +303,8 @@
   right: 8px;
   background: var(--primary-blue);
   color: var(--white);
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 4px 20px;
+  border-radius: 8px;
   font-size: 0.75rem;
   font-weight: 600;
 }
@@ -311,10 +359,18 @@
     font-size: 1rem;
   }
   
-  .hero-search {
-    flex-direction: column;
+  /* Ajuste do Container de Ações no Mobile */
+  .hero-actions-row {
+      flex-direction: column; /* Empilha a busca e o botão */
+      gap: 12px;
   }
   
+  .hero-search,
+  .btn-create-event {
+    width: 100%;
+    max-width: none;
+  }
+
   .hero-search input,
   .hero-search button {
     width: 100%;
@@ -360,6 +416,18 @@
   
   .events-row {
     padding: 0 50px;
+  }
+  
+  /* Responsividade do Modal de Criação */
+  .modal-content.create-event-modal {
+      max-width: 95%;
+      padding: 25px;
+  }
+  
+  /* Quebra a linha de inputs do modal de criação */
+  .event-form .input-group-row {
+        flex-direction: column;
+        gap: 0;
   }
 }
 
@@ -433,11 +501,10 @@
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     position: relative;
-  width: min(1100px, 95%);
-  max-width: 1100px;
-  max-height: calc(100vh - 80px);
-  overflow-y: auto;
-  box-sizing: border-box;
+    /* REMOVIDO: as dimensões globais para evitar conflito */
+    max-height: calc(100vh - 80px); 
+    overflow-y: auto;
+    box-sizing: border-box;
 }
 
 /* animações de abertura do modal */
@@ -453,6 +520,11 @@
 @keyframes fadeInBackdrop {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: translateY(8px) scale(.98); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
 }
 
 /* Ajustes visuais do conteúdo do modal de evento */
@@ -506,22 +578,6 @@
   font-size: 1.6rem;
 }
 
-.modal-actions .btn-inscrever,
-.modal-actions {
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.modal-actions .btn-inscrever:hover,
-.modal-actions {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-}
-
 /* Botão 'Ver Detalhes' dentro do card */
 .btn-ver-detalhes {
   margin: 12px 16px 18px 16px;
@@ -572,124 +628,181 @@
 
 .login-modal {
     width: 400px; /* Largura menor para um modal de login */
+    max-width: 90%; /* Adicionado para responsividade */
     text-align: center;
 }
 
-.login-modal h2 {
-    color: #007bff; /* Cor principal, ajuste conforme seu tema */
-    margin-bottom: 20px;
-}
-
-.login-modal p {
-    margin-bottom: 25px;
-    color: #555;
-}
-
-.login-modal .btn-principal {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-    transition: background-color 0.2s;
-}
-
-.login-modal .btn-principal:hover {
-    background-color: #0056b3;
-}
-
-.login-modal .btn-secundario {
-    background-color: #ccc;
-    color: #333;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    display: block;
-    width: 100%;
-    transition: background-color 0.2s;
-}
-
-.login-modal .btn-secundario:hover {
-    background-color: #bbb;
-}
-
-/* --- Estilos para Event Details Modal (se precisar de ajustes) --- */
-
+/* --- Estilos para Event Details Modal (garantindo o tamanho grande) --- */
 .event-details-modal {
     max-width: 700px;
-    padding: 0; /* Remove padding padrão para controlar o layout interno */
+    padding: 0; 
     display: flex;
     flex-direction: row;
 }
 
-.event-modal-image {
-    position: relative;
-    width: 40%;
-    min-width: 500px;
-    overflow: hidden;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
+/* Especificidade para garantir modal maior no contexto de detalhes (sobrepõe outras regras globais) */
+.modal-content.event-details-modal {
+  width: min(1100px, 95%) !important;
+  max-width: 1100px !important;
+  max-height: calc(100vh - 80px) !important;
+  padding: 28px !important;
+  box-sizing: border-box !important;
 }
 
-.event-modal-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+/* --- MODAL DE CRIAÇÃO DE EVENTO (BASEADO NO MODAL DE PROJETOS) --- */
+.modal-content.create-event-modal {
+    width: 90%;
+    max-width: 700px; /* Igual ao large-modal de projetos */
+    padding: 35px 40px; 
+    border-radius: 16px; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
+    overflow-y: auto;
 }
 
-.event-category-badge-modal {
-  position: absolute;
-  top: 50px;
-  right: 8px;
-  background: var(--primary-blue);
-  color: var(--white);
-  padding: 4px 40px;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.event-modal-info {
-    width: 60%;
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.modal-details-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
-}
-
-.modal-details-grid p {
+.create-event-modal h2 {
+    margin-bottom: 25px;
+    text-align: center;
+    color: var(--primary-blue);
+    font-size: 1.8rem;
+    font-weight: 700;
     display: flex;
     align-items: center;
-    font-size: 0.9rem;
-    color: #555;
+    justify-content: center;
+    gap: 10px;
 }
 
-.modal-details-grid span {
-    font-weight: bold;
-    color: #333;
-    margin-left: 5px;
+.event-form {
+    display: grid;
+    gap: 15px; 
 }
 
-.modal-actions {
+/* Estilo para agrupar Data e Local lado a lado (2 colunas) */
+.event-form .input-group-row {
+    display: flex;
+    gap: 20px;
+}
+
+.event-form .input-group-row > * {
+    flex-basis: 50%;
+}
+
+/* Estilo dos Labels (APROXIMANDO O RÓTULO DO CAMPO) */
+.event-form label {
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2px; /* <-- REDUZIDO PARA APROXIMAR DO CAMPO */
+    display: block;
+    font-size: 0.95rem;
+}
+
+/* Estilo dos Inputs */
+.event-form input,
+.event-form textarea,
+.event-form select {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px; /* Espaçamento entre os grupos */
+    border: 1px solid #dcdcdc;
+    border-radius: 10px; 
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    background: var(--background-light);
+}
+
+.event-form input:focus,
+.event-form textarea:focus,
+.event-form select:focus {
+    border-color: var(--primary-blue);
+    outline: none;
+    box-shadow: 0 0 5px rgba(50, 152, 239, 0.4);
+}
+
+.event-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* --- Estilos para Campo de Upload Customizado --- */
+.form-group-image label {
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 5px; /* Espaço entre o RÓTULO principal e o botão */
+    display: block;
+    font-size: 0.95rem;
+}
+
+.file-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px; /* Adiciona espaço após o upload */
+}
+
+.file-input-wrapper input[type="file"] {
+    /* Esconde o input padrão */
+    display: none;
+}
+
+.btn-upload-custom {
+  background: linear-gradient(90deg, #3298EF, #0078D1);
+  color: #fff;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  box-shadow: 0 6px 15px rgba(50, 152, 239, 0.4);
+}
+
+.btn-upload-custom:hover {
+   transform: translateY(-2px);
+   background-color: #0078D1;
+   box-shadow: 0 8px 20px rgba(50, 152, 239, 0.6);
+}
+
+.file-name-display {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%; /* Limita para evitar que estoure */
+}
+
+
+/* Estilo do Botão de Submit (Criar Evento) */
+.btn-principal.btn-submit-event {
     margin-top: 25px;
-    text-align: center;
+    background: linear-gradient(90deg, var(--dark-blue), var(--primary-blue));
+    color: var(--white);
+    padding: 12px 22px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    box-shadow: 0 6px 15px rgba(50, 152, 239, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%; 
 }
+
+.btn-principal.btn-submit-event:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(50, 152, 239, 0.6);
+    opacity: 0.95;
+}
+
+
+/* --- ESTILOS DE BOTÕES DE INSCRIÇÃO COM ANIMAÇÃO --- */
 
 @keyframes pulseBtn {
     0% {
@@ -753,13 +866,4 @@
     .event-modal-info {
         padding: 20px;
     }
-}
-
-/* Especificidade para garantir modal maior no contexto de detalhes (sobrepõe outras regras globais) */
-.modal-content.event-details-modal {
-  width: min(1100px, 95%) !important;
-  max-width: 1100px !important;
-  max-height: calc(100vh - 80px) !important;
-  padding: 28px !important;
-  box-sizing: border-box !important;
 }

@@ -39,8 +39,6 @@ const initialNewEvent = {
     image: null,
 };
 
-// ❌ REMOVER LoginModal SIMULADO AQUI! (Já foi removido)
-
 // Componente do Modal de Detalhes do Evento (para Aluno/Deslogado)
 function EventDetailsModal({ event, userRole, onClose, onOpenLogin }) {
     if (!event) return null;
@@ -106,19 +104,54 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin }) {
     );
 }
 
-// Componente do Modal de Criação de Evento (para Empresa) - Inalterado
-function CreateEventModal({ onClose }) {
+// Componente do Modal de Criação de Evento (para Empresa) - CORRIGIDO O AGRUPAMENTO DO INPUT DE ARQUIVO
+function CreateEventModal({ onClose, onEventCreated }) { // <-- Recebe a nova função
     const [newEvent, setNewEvent] = useState(initialNewEvent);
+    const [fileName, setFileName] = useState('');
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, files } = e.target;
+        
+        // Lógica de manipulação para input type="file"
+        if (name === "image" && files && files.length > 0) {
+            const file = files[0];
+            setFileName(file.name);
+            
+            // CORREÇÃO: Cria uma URL temporária para o arquivo de imagem selecionado (Visualização local)
+            const objectUrl = URL.createObjectURL(file); 
+            
+            setNewEvent(prev => ({ 
+                ...prev, 
+                image: objectUrl, // <--- Agora usa a URL da imagem selecionada
+                fileData: file 
+            }));
+            
+            return;
+        }
+
+        // Lógica padrão para inputs de texto/select
         setNewEvent(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        alert(`Novo Evento Criado (Simulação): ${newEvent.title} na categoria ${newEvent.category}`);
-        // Lógica real de API para POST de novo evento
+
+        // 1. Simulação de Criação/Publicação
+        const novoEventoPublicado = {
+            id: Date.now(),
+            title: newEvent.title,
+            description: newEvent.description,
+            date: newEvent.date,
+            location: newEvent.location,
+            category: newEvent.category,
+            image: newEvent.image || techConferenceImg, 
+            featured: false, 
+        };
+
+        // 2. Adiciona o novo evento ao estado pai
+        onEventCreated(novoEventoPublicado);
+
+        alert(`Novo Evento Criado: ${novoEventoPublicado.title}`);
         onClose();
     };
 
@@ -156,26 +189,56 @@ function CreateEventModal({ onClose }) {
                             <option key={cat} value={cat}>{cat}</option>
                         ))}
                     </select>
-
-                    <label>Data (Ex: DD Mês):</label>
-                    <input 
-                        name="date" 
-                        value={newEvent.date} 
-                        onChange={handleChange} 
-                        required 
-                        placeholder="Ex: 10 Mar"
-                    />
-
-                    <label>Local:</label>
-                    <input 
-                        name="location" 
-                        value={newEvent.location} 
-                        onChange={handleChange} 
-                        required 
-                        placeholder="Ex: Online ou São Paulo"
-                    />
                     
-                    {/* Imagem é opcional na simulação */}
+                    {/* CAMPO DE UPLOAD DE IMAGEM AGRUPADO CORRETAMENTE */}
+                    <div className="form-group-image">
+                        {/* Rótulo Principal */}
+                        <label>Imagem de Capa do Evento:</label>
+                        
+                        <div className="file-input-wrapper">
+                            
+                            {/* Input REAL (escondido) */}
+                            <input 
+                                id="event-image-upload" // ID para associar ao rótulo
+                                name="image" 
+                                type="file" 
+                                onChange={handleChange} 
+                                accept="image/*" 
+                            />
+                            
+                            {/* RÓTULO CUSTOMIZADO (O BOTÃO VISÍVEL) */}
+                            <label htmlFor="event-image-upload" className="btn-upload-custom">
+                                <FaPlusCircle /> Inserir Imagem
+                            </label>
+                            
+                            {/* NOME DO ARQUIVO SELECIONADO */}
+                            <span className="file-name-display">
+                                {fileName || "Nenhum arquivo selecionado"}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* DIV ENVOLVENDO DATA E LOCAL para alinhar lado a lado */}
+                    <div className="input-group-row">
+                        <label>Data (Ex: DD Mês):</label>
+                        <input 
+                            name="date" 
+                            value={newEvent.date} 
+                            onChange={handleChange} 
+                            required 
+                            placeholder="Ex: 10 Mar"
+                        />
+
+                        <label>Local:</label>
+                        <input 
+                            name="location" 
+                            value={newEvent.location} 
+                            onChange={handleChange} 
+                            required 
+                            placeholder="Ex: Online ou São Paulo"
+                        />
+                    </div>
+                    
                     <button type="submit" className="btn-principal btn-submit-event">
                         <FaPlusCircle /> Publicar Evento
                     </button>
@@ -185,9 +248,11 @@ function CreateEventModal({ onClose }) {
     );
 }
 
-
 // Componente principal Eventos
 export default function Eventos() {
+  // ATUALIZADO: Inicializa com allEvents e permite alteração
+  const [events, setEvents] = useState(allEvents);
+  
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedCategories, setExpandedCategories] = useState({});
   const [selectedEvent, setSelectedEvent] = useState(null); 
@@ -195,6 +260,11 @@ export default function Eventos() {
   const [showLoginModal, setShowLoginModal] = useState(false); // ESTADO para o modal de Login
   const [userRole, setUserRole] = useState(null); 
   const scrollRefs = useRef({});
+  
+  // NOVA FUNÇÃO: Adiciona o novo evento ao array de eventos
+  const handleAddEvent = (newAvent) => {
+      setEvents(prevEvents => [newAvent, ...prevEvents]);
+  }
 
   // 1. Lógica para carregar o papel do usuário ao carregar a página
   useEffect(() => {
@@ -212,12 +282,8 @@ export default function Eventos() {
 
   // 🎁 FUNÇÃO PARA LIDAR COM O SUCESSO DO LOGIN
   const handleLoginSuccess = (userData) => {
-    // 1. Atualiza o estado do componente Eventos
     setUserRole(userData.role); 
-    // 2. Fecha o modal de login
     setShowLoginModal(false);
-    // 3. Opcional: Avisar o usuário (ou simplesmente a interface se atualiza)
-    // alert(`Login realizado com sucesso como ${userData.role}!`);
   };
 
 
@@ -259,16 +325,16 @@ export default function Eventos() {
     setShowLoginModal(true);
   };
 
-
+  // ATUALIZADO: Filtra e usa a lista de eventos do estado local
   const filteredEvents = useMemo(() => {
-    if (!searchTerm.trim()) return allEvents;
+    if (!searchTerm.trim()) return events; // Usa events do state
     
-    return allEvents.filter(event => 
+    return events.filter(event => 
       event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       event.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
       event.location.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [searchTerm]);
+  }, [searchTerm, events]); // Depende do events do state
 
   const eventCategories = useMemo(() => {
     const categories = [
@@ -291,14 +357,17 @@ export default function Eventos() {
     e.preventDefault();
   };
   
-  // Componente de Card de Evento reutilizável
-  const EventCard = ({ event }) => (
+  // Componente de Card de Evento reutilizável - COM FALLBACK DE IMAGEM
+  const EventCard = ({ event }) => {
+    const imageSrc = event.image || techConferenceImg; // Usa uma imagem de fallback se a URL for nula
+
+    return (
       <div 
         key={event.id} 
         className="event-card"
       >
         <div className="event-image">
-          <img src={event.image} alt={event.title} />
+          <img src={imageSrc} alt={event.title} />
           <div className="event-category-badge">{event.category}</div>
         </div>
         <div className="event-info">
@@ -316,12 +385,13 @@ export default function Eventos() {
           Ver Detalhes
         </button>
       </div>
-  );
+    );
+  };
 
   return (
     <>
       <div className="eventos-container">
-        {/* Hero Section (Inalterado) */}
+        {/* Hero Section */}
         <section className="eventos-hero">
           <div className="hero-content">
             <h1>Descubra Eventos Tech</h1>
@@ -438,14 +508,15 @@ export default function Eventos() {
         />
       )}
       
-      {/* Modal de Criação de Evento (Empresa) */}
+      {/* Modal de Criação de Evento (Empresa) - PASSANDO NOVA PROPRIEDADE */}
       {showCreateModal && (
         <CreateEventModal 
             onClose={() => setShowCreateModal(false)} 
+            onEventCreated={handleAddEvent} // <-- NOVO PROP
         />
       )}
       
-      {/* 🟢 SUBSTITUIÇÃO: Renderiza o LoginCard REAL quando showLoginModal é true */}
+      {/* 🟢 Renderiza o LoginCard REAL quando showLoginModal é true */}
       {showLoginModal && (
         <LoginCard 
             onClose={() => setShowLoginModal(false)} // Fecha o modal
