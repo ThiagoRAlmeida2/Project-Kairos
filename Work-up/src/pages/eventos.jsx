@@ -296,7 +296,8 @@ export default function Eventos() {
       <div 
         key={event.id} 
         className="event-card"
-        onClick={() => handleViewDetails(event)} // Abre o modal ao clicar no card
+        // ❌ REMOVIDO: onClick={() => handleViewDetails(event)} 
+        // A lógica de clique agora fica no botão para evitar duplo-clique
       >
         <div className="event-image">
           <img src={event.image} alt={event.title} />
@@ -318,7 +319,6 @@ export default function Eventos() {
         </button>
       </div>
   );
-
 
   return (
     <>
