@@ -73,7 +73,7 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin }) {
                 <button className="modal-close-btn" onClick={onClose}><FaTimes /></button>
                 <div className="event-modal-image">
                     <img src={event.image} alt={event.title} />
-                    <div className="event-category-badge">{event.category}</div>
+                    <div className="event-category-badge-modal">{event.category}</div>
                 </div>
                 
                 <div className="event-modal-info">
@@ -296,8 +296,6 @@ export default function Eventos() {
       <div 
         key={event.id} 
         className="event-card"
-        // ❌ REMOVIDO: onClick={() => handleViewDetails(event)} 
-        // A lógica de clique agora fica no botão para evitar duplo-clique
       >
         <div className="event-image">
           <img src={event.image} alt={event.title} />
@@ -352,7 +350,6 @@ export default function Eventos() {
           </div>
         </section>
 
-        {/* Search Results or Categories (Inalterado) */}
         {searchTerm.trim() ? (
           <section className="event-category">
             <div className="category-header">
@@ -432,7 +429,6 @@ export default function Eventos() {
         )}
       </div>
       
-      {/* Modal de Detalhes/Inscrição (Aluno/Deslogado) */}
       {selectedEvent && (
         <EventDetailsModal 
             event={selectedEvent} 
