@@ -129,6 +129,28 @@
     box-shadow: 0 6px 20px rgba(50, 152, 239, 0.6);
 }
 
+
+.btn-encerrar {
+  background: var(--primary-blue);
+    color: var(--white);
+    border: none;
+    padding: 16px 25px; 
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(50, 152, 239, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+.btn-encerrar:hover {
+    background: var(--secondary-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(25, 74, 117, 0.6);
+}
+
 /* Event Categories */
 .event-category {
   padding: 40px 100px;

@@ -17,33 +17,33 @@ import codeChallengeImg from '../assets/IMG/Code Challenge.jpg';
 import startupWeekendImg from '../assets/IMG/Startup weekend.jpg';
 
 const allEvents = [
-  { id: 1, title: "Tech Conference 2025", description: "Grande conferência anual sobre tendências e inovações em IA e Cloud Computing.", date: "15 Jan", location: "São Paulo", image: techConferenceImg, category: "Conferência", featured: true },
-  { id: 2, title: "React Workshop", description: "Imersão de 8 horas para construir uma SPA moderna com hooks avançados do React.", date: "20 Jan", location: "Online", image: reactImg, category: "Workshop", featured: true },
-  { id: 3, title: "Startup Pitch Day", description: "Oportunidade para startups apresentarem suas ideias para investidores.", date: "25 Jan", location: "Rio de Janeiro", image: pitchImg, category: "Networking", featured: true },
-  { id: 4, title: "Python para Iniciantes", description: "Aprenda a sintaxe básica e manipulação de dados com Python.", date: "18 Jan", location: "Online", image: pythonImg, category: "Workshop" },
-  { id: 5, title: "Design Thinking Aplicado", description: "Workshop prático para resolver problemas complexos com foco no usuário.", date: "22 Jan", location: "São Paulo", image: designThinkingImg, category: "Workshop" },
-  { id: 6, title: "DevOps Essentials", description: "Introdução às práticas de CI/CD, Docker e Kubernetes.", date: "28 Jan", location: "Online", image: devOpsImg, category: "Curso" },
-  { id: 7, title: "UX/UI Masterclass", description: "Design de interfaces intuitivas e testes de usabilidade.", date: "02 Fev", location: "Curitiba", image: uxUiImg, category: "Workshop" },
-  { id: 8, title: "Global Hackathon 2025", description: "48h de programação para construir soluções para desafios globais.", date: "05 Fev", location: "São Paulo", image: hackathonImg, category: "Hackathon" },
-  { id: 9, title: "Code Challenge", description: "Maratona de desafios de algoritmos e estrutura de dados.", date: "10 Fev", location: "Online", image: codeChallengeImg, category: "Competição" },
-  { id: 10, title: "Startup Weekend", description: "Tire sua ideia do papel e lance sua startup em um fim de semana.", date: "20 Fev", location: "Porto Alegre", image: startupWeekendImg, category: "Hackathon" },
+  // IDs alterados para evitar colisão com IDs gerados pelo banco de dados
+  { id: 100009, title: "Tech Conference 2025", description: "Grande conferência anual sobre tendências e inovações em IA e Cloud Computing.", date: "15 Jan", location: "São Paulo", image: techConferenceImg, category: "Conferência", featured: true },
+  { id: 200000, title: "React Workshop", description: "Imersão de 8 horas para construir uma SPA moderna com hooks avançados do React.", date: "20 Jan", location: "Online", image: reactImg, category: "Workshop", featured: true },
+  { id: 300000, title: "Startup Pitch Day", description: "Oportunidade para startups apresentarem suas ideias para investidores.", date: "25 Jan", location: "Rio de Janeiro", image: pitchImg, category: "Networking", featured: true },
+  { id: 400000, title: "Python para Iniciantes", description: "Aprenda a sintaxe básica e manipulação de dados com Python.", date: "18 Jan", location: "Online", image: pythonImg, category: "Workshop" },
+  { id: 500000, title: "Design Thinking Aplicado", description: "Workshop prático para resolver problemas complexos com foco no usuário.", date: "22 Jan", location: "São Paulo", image: designThinkingImg, category: "Workshop" },
+  { id: 600000, title: "DevOps Essentials", description: "Introdução às práticas de CI/CD, Docker e Kubernetes.", date: "28 Jan", location: "Online", image: devOpsImg, category: "Curso" },
+  { id: 700000, title: "UX/UI Masterclass", description: "Design de interfaces intuitivas e testes de usabilidade.", date: "02 Fev", location: "Curitiba", image: uxUiImg, category: "Workshop" },
+  { id: 800000, title: "Global Hackathon 2025", description: "48h de programação para construir soluções para desafios globais.", date: "05 Fev", location: "São Paulo", image: hackathonImg, category: "Hackathon" },
+  { id: 900000, title: "Code Challenge", description: "Maratona de desafios de algoritmos e estrutura de dados.", date: "10 Fev", location: "Online", image: codeChallengeImg, category: "Competição" },
+  { id: 100000, title: "Startup Weekend", description: "Tire sua ideia do papel e lance sua startup em um fim de semana.", date: "20 Fev", location: "Porto Alegre", image: startupWeekendImg, category: "Hackathon" },
 ];
 
-// Estado inicial do formulário de criação de evento
 const initialNewEvent = {
     title: '',
     description: '',
     date: '',
     location: '',
     category: 'Workshop',
-    image: null,
+    image: null, // Armazena a URL temporária para visualização local
+    fileData: null // Não é mais usado no envio, mas mantém a lógica de seleção de arquivo
 };
 
-// Componente do Modal de Detalhes do Evento (para Aluno/Deslogado)
-function EventDetailsModal({ event, userRole, onClose, onOpenLogin }) {
+// Componente do Modal de Detalhes do Evento (para Aluno/Deslogado/Empresa)
+function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClosed }) {
     if (!event) return null;
 
-  // Bloqueia scroll do body enquanto o modal estiver aberto
   useEffect(() => {
     const previous = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -51,19 +51,52 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin }) {
   }, []);
 
     const isAluno = userRole === 'ROLE_ALUNO';
+    const isEmpresa = userRole === 'ROLE_EMPRESA';
     const isDeslogado = !userRole;
+    // 🔑 Usando a chave 'token'
+    const token = localStorage.getItem('token'); 
 
     const handleInscricao = () => {
         if (isDeslogado) {
-            // Fecha o modal de detalhes e abre o modal de login
             onClose(); 
             onOpenLogin();
         } else if (isAluno) {
             alert(`Inscrição confirmada para o evento: ${event.title}!`);
             onClose();
-            // Lógica real de API para inscrição
         }
     };
+    
+    // Lógica: Encerrar Evento (Empresa)
+    const handleCloseEvent = async () => {
+        if (!window.confirm(`Tem certeza que deseja encerrar o evento: ${event.title}? Esta ação é irreversível.`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8081/api/eventos/${event.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}` 
+                },
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text(); 
+                alert(`Erro ao encerrar evento: ${errorText || response.statusText}`);
+                return;
+            }
+
+            alert(`Evento '${event.title}' encerrado com sucesso.`);
+            
+            onClose();
+            onEventClosed(event.id);
+
+        } catch (error) {
+            console.error("Falha na comunicação com a API:", error);
+            alert("Falha na comunicação com a API.");
+        }
+    };
+
 
     return (
         <div className="modal-backdrop" onClick={onClose}>
@@ -94,7 +127,15 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin }) {
                                 Fazer Login para Inscrever-se
                             </button>
                         )}
-                        {(userRole === 'ROLE_EMPRESA' || userRole === 'ROLE_ADMIN') && (
+                        {isEmpresa && (
+                            <button className="btn-encerrar" onClick={handleCloseEvent}>
+                                <FaTimes /> Encerrar Evento
+                            </button>
+                        )}
+                        {(isEmpresa || userRole === 'ROLE_ADMIN') && (
+                             <p className="empresa-info">Você pode gerenciar este evento.</p>
+                        )}
+                        {isAluno && (userRole === 'ROLE_EMPRESA' || userRole === 'ROLE_ADMIN') && (
                             <p className="empresa-info">Você é uma Empresa e não pode se inscrever em eventos.</p>
                         )}
                     </div>
@@ -104,55 +145,99 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin }) {
     );
 }
 
-// Componente do Modal de Criação de Evento (para Empresa) - CORRIGIDO O AGRUPAMENTO DO INPUT DE ARQUIVO
-function CreateEventModal({ onClose, onEventCreated }) { // <-- Recebe a nova função
+// Componente do Modal de Criação de Evento (para Empresa) - AJUSTADO PARA JSON
+function CreateEventModal({ onClose, onEventCreated }) {
     const [newEvent, setNewEvent] = useState(initialNewEvent);
     const [fileName, setFileName] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         
-        // Lógica de manipulação para input type="file"
         if (name === "image" && files && files.length > 0) {
             const file = files[0];
             setFileName(file.name);
-            
-            // CORREÇÃO: Cria uma URL temporária para o arquivo de imagem selecionado (Visualização local)
+            // Cria a URL temporária para visualização local (mantida)
             const objectUrl = URL.createObjectURL(file); 
             
             setNewEvent(prev => ({ 
                 ...prev, 
-                image: objectUrl, // <--- Agora usa a URL da imagem selecionada
+                image: objectUrl, // 👈 Esta URL será enviada como imageUrl
                 fileData: file 
             }));
             
             return;
         }
 
-        // Lógica padrão para inputs de texto/select
         setNewEvent(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
 
-        // 1. Simulação de Criação/Publicação
-        const novoEventoPublicado = {
-            id: Date.now(),
+        // 1. DADOS DE TEXTO PARA JSON (Incluindo a URL de imagem como string)
+        const eventData = {
             title: newEvent.title,
             description: newEvent.description,
             date: newEvent.date,
             location: newEvent.location,
             category: newEvent.category,
-            image: newEvent.image || techConferenceImg, 
-            featured: false, 
+            // 🟢 Enviando a URL temporária para o backend salvar como string
+            imageUrl: newEvent.image, 
         };
+        
+        const token = localStorage.getItem('token'); 
+        
+        if (!token) {
+            alert("Erro: Token de autenticação não encontrado. Faça login novamente.");
+            setIsLoading(false);
+            return;
+        }
+        
+        const API_URL = 'http://localhost:8081/api/eventos/criar';
 
-        // 2. Adiciona o novo evento ao estado pai
-        onEventCreated(novoEventoPublicado);
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                // 🟢 CORREÇÃO: Content-Type: application/json
+                headers: {
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${token}` 
+                },
+                body: JSON.stringify(eventData), // 🟢 Enviando JSON
+            });
 
-        alert(`Novo Evento Criado: ${novoEventoPublicado.title}`);
-        onClose();
+            if (!response.ok) {
+                const error = await response.json().catch(() => ({ message: `Erro HTTP: ${response.status}` }));
+                throw new Error(error.message || `Erro ao criar evento: ${response.status}`);
+            }
+
+            const eventoCriado = await response.json();
+            
+            const novoEventoPublicado = {
+                id: eventoCriado.id,
+                title: eventoCriado.title,
+                description: eventoCriado.description,
+                date: eventoCriado.date,
+                location: eventoCriado.location,
+                category: eventoCriado.category,
+                // 🟢 Usando a URL de volta do backend (que deve ser a URL enviada ou o fallback)
+                image: eventoCriado.imageUrl || techConferenceImg, 
+                featured: eventoCriado.featured, 
+            };
+
+            onEventCreated(novoEventoPublicado);
+            
+            alert(`Novo Evento Criado com sucesso: ${eventoCriado.title}`);
+            onClose();
+
+        } catch (error) {
+            console.error("Falha ao publicar evento:", error);
+            alert(`Falha ao publicar evento: ${error.message}`);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const categories = ["Workshop", "Curso", "Hackathon", "Competição", "Conferência", "Networking"];
@@ -171,6 +256,7 @@ function CreateEventModal({ onClose, onEventCreated }) { // <-- Recebe a nova fu
                         onChange={handleChange} 
                         required 
                         placeholder="Ex: Spring Boot Masterclass"
+                        disabled={isLoading}
                     />
 
                     <label>Descrição:</label>
@@ -181,44 +267,42 @@ function CreateEventModal({ onClose, onEventCreated }) { // <-- Recebe a nova fu
                         required
                         rows="3"
                         placeholder="Descreva o objetivo e o público-alvo do evento."
+                        disabled={isLoading}
                     />
 
                     <label>Categoria:</label>
-                    <select name="category" value={newEvent.category} onChange={handleChange}>
+                    <select name="category" value={newEvent.category} onChange={handleChange} disabled={isLoading}>
                         {categories.map(cat => (
                             <option key={cat} value={cat}>{cat}</option>
                         ))}
                     </select>
                     
-                    {/* CAMPO DE UPLOAD DE IMAGEM AGRUPADO CORRETAMENTE */}
+                    {/* O input de arquivo é mantido para que o usuário possa selecionar a imagem 
+                        e gerar a URL temporária (newEvent.image), mas o arquivo em si não é enviado. */}
                     <div className="form-group-image">
-                        {/* Rótulo Principal */}
                         <label>Imagem de Capa do Evento:</label>
                         
                         <div className="file-input-wrapper">
                             
-                            {/* Input REAL (escondido) */}
                             <input 
-                                id="event-image-upload" // ID para associar ao rótulo
+                                id="event-image-upload" 
                                 name="image" 
                                 type="file" 
                                 onChange={handleChange} 
                                 accept="image/*" 
+                                disabled={isLoading}
                             />
                             
-                            {/* RÓTULO CUSTOMIZADO (O BOTÃO VISÍVEL) */}
                             <label htmlFor="event-image-upload" className="btn-upload-custom">
                                 <FaPlusCircle /> Inserir Imagem
                             </label>
                             
-                            {/* NOME DO ARQUIVO SELECIONADO */}
                             <span className="file-name-display">
                                 {fileName || "Nenhum arquivo selecionado"}
                             </span>
                         </div>
                     </div>
 
-                    {/* DIV ENVOLVENDO DATA E LOCAL para alinhar lado a lado */}
                     <div className="input-group-row">
                         <label>Data (Ex: DD Mês):</label>
                         <input 
@@ -227,6 +311,7 @@ function CreateEventModal({ onClose, onEventCreated }) { // <-- Recebe a nova fu
                             onChange={handleChange} 
                             required 
                             placeholder="Ex: 10 Mar"
+                            disabled={isLoading}
                         />
 
                         <label>Local:</label>
@@ -236,11 +321,16 @@ function CreateEventModal({ onClose, onEventCreated }) { // <-- Recebe a nova fu
                             onChange={handleChange} 
                             required 
                             placeholder="Ex: Online ou São Paulo"
+                            disabled={isLoading}
                         />
                     </div>
                     
-                    <button type="submit" className="btn-principal btn-submit-event">
-                        <FaPlusCircle /> Publicar Evento
+                    <button 
+                        type="submit" 
+                        className="btn-principal btn-submit-event"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? 'Publicando...' : <><FaPlusCircle /> Publicar Evento</>}
                     </button>
                 </form>
             </div>
@@ -250,21 +340,26 @@ function CreateEventModal({ onClose, onEventCreated }) { // <-- Recebe a nova fu
 
 // Componente principal Eventos
 export default function Eventos() {
-  // ATUALIZADO: Inicializa com allEvents e permite alteração
   const [events, setEvents] = useState(allEvents);
   
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedCategories, setExpandedCategories] = useState({});
   const [selectedEvent, setSelectedEvent] = useState(null); 
   const [showCreateModal, setShowCreateModal] = useState(false); 
-  const [showLoginModal, setShowLoginModal] = useState(false); // ESTADO para o modal de Login
+  const [showLoginModal, setShowLoginModal] = useState(false); 
   const [userRole, setUserRole] = useState(null); 
   const scrollRefs = useRef({});
   
-  // NOVA FUNÇÃO: Adiciona o novo evento ao array de eventos
+  // FUNÇÃO: Adiciona o novo evento ao array de eventos
   const handleAddEvent = (newAvent) => {
       setEvents(prevEvents => [newAvent, ...prevEvents]);
   }
+  
+  // 🌟 NOVA FUNÇÃO: Remove o evento da lista após exclusão bem-sucedida
+  const handleCloseEventSuccess = (deletedEventId) => {
+      setEvents(prevEvents => prevEvents.filter(event => event.id !== deletedEventId));
+  }
+
 
   // 1. Lógica para carregar o papel do usuário ao carregar a página
   useEffect(() => {
@@ -280,7 +375,7 @@ export default function Eventos() {
     }
   }, []);
 
-  // 🎁 FUNÇÃO PARA LIDAR COM O SUCESSO DO LOGIN
+  // FUNÇÃO PARA LIDAR COM O SUCESSO DO LOGIN
   const handleLoginSuccess = (userData) => {
     setUserRole(userData.role); 
     setShowLoginModal(false);
@@ -325,16 +420,16 @@ export default function Eventos() {
     setShowLoginModal(true);
   };
 
-  // ATUALIZADO: Filtra e usa a lista de eventos do estado local
+  // Filtra e usa a lista de eventos do estado local
   const filteredEvents = useMemo(() => {
-    if (!searchTerm.trim()) return events; // Usa events do state
+    if (!searchTerm.trim()) return events; 
     
     return events.filter(event => 
       event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       event.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
       event.location.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [searchTerm, events]); // Depende do events do state
+  }, [searchTerm, events]); 
 
   const eventCategories = useMemo(() => {
     const categories = [
@@ -357,9 +452,9 @@ export default function Eventos() {
     e.preventDefault();
   };
   
-  // Componente de Card de Evento reutilizável - COM FALLBACK DE IMAGEM
+  // Componente de Card de Evento reutilizável
   const EventCard = ({ event }) => {
-    const imageSrc = event.image || techConferenceImg; // Usa uma imagem de fallback se a URL for nula
+    const imageSrc = event.image || techConferenceImg; 
 
     return (
       <div 
@@ -505,22 +600,23 @@ export default function Eventos() {
             userRole={userRole} 
             onClose={() => setSelectedEvent(null)} 
             onOpenLogin={handleOpenLoginModal}
+            onEventClosed={handleCloseEventSuccess} 
         />
       )}
       
-      {/* Modal de Criação de Evento (Empresa) - PASSANDO NOVA PROPRIEDADE */}
+      {/* Modal de Criação de Evento (Empresa) */}
       {showCreateModal && (
         <CreateEventModal 
             onClose={() => setShowCreateModal(false)} 
-            onEventCreated={handleAddEvent} // <-- NOVO PROP
+            onEventCreated={handleAddEvent} 
         />
       )}
       
-      {/* 🟢 Renderiza o LoginCard REAL quando showLoginModal é true */}
+      {/* Renderiza o LoginCard */}
       {showLoginModal && (
         <LoginCard 
-            onClose={() => setShowLoginModal(false)} // Fecha o modal
-            onLoginSuccess={handleLoginSuccess} // Atualiza o estado de Eventos após sucesso
+            onClose={() => setShowLoginModal(false)} 
+            onLoginSuccess={handleLoginSuccess} 
         />
       )}
       
