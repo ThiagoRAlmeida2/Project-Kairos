@@ -3,7 +3,7 @@ import "../css/CardLogin.css";
 import api from '../service/api';
 import { FaHandPaper, FaKey, FaSync } from "react-icons/fa";
 
-export default function LoginCard({ onLoginSuccess, onClose }) {
+export default function LoginCard({ onLoginSuccess, onClose, onShowToast }) {
   const [formData, setFormData] = useState({ email: "", senha: "" });
   const [resetData, setResetData] = useState({
     email: "",
@@ -36,7 +36,9 @@ export default function LoginCard({ onLoginSuccess, onClose }) {
 
       onLoginSuccess({ email, role });
     } catch (err) {
-      setAlert(err.response?.data || "Erro ao logar. Verifique suas credenciais.");
+      const msg = err.response?.data || "Erro ao logar. Verifique suas credenciais.";
+      if (onShowToast) onShowToast({ message: msg, type: 'error' });
+      else setAlert(msg);
     }
   };
 
@@ -45,7 +47,9 @@ export default function LoginCard({ onLoginSuccess, onClose }) {
     e.preventDefault();
 
     if (resetData.novaSenha !== resetData.confirmarSenha) {
-      setAlert("As senhas não coincidem.");
+      const msg = "As senhas não coincidem.";
+      if (onShowToast) onShowToast({ message: msg, type: 'error' });
+      else setAlert(msg);
       return;
     }
 
@@ -56,7 +60,9 @@ export default function LoginCard({ onLoginSuccess, onClose }) {
       });
 
       // ✅ Exibe mensagem de sucesso
-      setAlert(res.data || "Senha redefinida com sucesso!");
+      const successMsg = res.data || "Senha redefinida com sucesso!";
+      if (onShowToast) onShowToast({ message: successMsg, type: 'success' });
+      else setAlert(successMsg);
 
       // ✅ Volta ao modo login após 2 segundos
       setTimeout(() => {
@@ -64,7 +70,9 @@ export default function LoginCard({ onLoginSuccess, onClose }) {
         setAlert("");
       }, 2000);
     } catch (err) {
-      setAlert(err.response?.data || "Erro ao redefinir senha.");
+      const msg = err.response?.data || "Erro ao redefinir senha.";
+      if (onShowToast) onShowToast({ message: msg, type: 'error' });
+      else setAlert(msg);
     }
   };
 
