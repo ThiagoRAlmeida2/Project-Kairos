@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import "../css/Eventos.css";
 import Footer from "../components/Footer";
+import Toast from "../components/Toast";
 import LoginCard from "../components/LoginCard"; 
 import { FaChevronLeft, FaChevronRight, FaCalendarAlt, FaMapMarkerAlt, FaTag, FaCheckCircle, FaLaptopCode, FaTimes, FaPlusCircle } from "react-icons/fa";
 
@@ -41,8 +42,7 @@ const initialNewEvent = {
 };
 
 // Componente do Modal de Detalhes do Evento
-function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClosed }) {
-    if (!event) return null;
+function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClosed, setToast }) {    if (!event) return null;
 
     useEffect(() => {
         const previous = document.body.style.overflow;
@@ -59,7 +59,10 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
             onClose(); 
             onOpenLogin();
         } else if (isAluno) {
-            alert(`Inscrição confirmada para o evento: ${event.title}!`);
+            setToast({
+              message: `Inscrição confirmada para o evento: ${event.title}!`,
+              type: 'success'
+            });
             onClose();
         }
     };
@@ -74,14 +77,20 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
             // O token é adicionado automaticamente pelo interceptor
             await api.delete(`/api/eventos/${event.id}`);
 
-            alert(`Evento '${event.title}' encerrado com sucesso.`);
+           setToast({
+                message: `Evento '${event.title}' encerrado com sucesso.`,
+                type: 'success'
+            });
             onClose();
             onEventClosed(event.id);
 
         } catch (error) {
             console.error("Falha na comunicação com a API:", error);
             const errorMsg = error.response?.data?.message || error.response?.data || error.message;
-            alert(`Erro ao encerrar evento: ${errorMsg}`);
+           setToast({
+                message: `Erro ao encerrar evento: ${errorMsg}`,
+                type: 'error'
+            });
         }
     };
 
@@ -131,7 +140,7 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
 }
 
 // Componente do Modal de Criação de Evento
-function CreateEventModal({ onClose, onEventCreated }) {
+function CreateEventModal({ onClose, onEventCreated, setToast }) {
     const [newEvent, setNewEvent] = useState(initialNewEvent);
     const [fileName, setFileName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -160,7 +169,10 @@ function CreateEventModal({ onClose, onEventCreated }) {
         e.preventDefault();
         
         if (!newEvent.fileData) {
-            alert("Por favor, selecione uma imagem de capa para o evento.");
+            setToast({
+              message: "Por favor, selecione uma imagem de capa para o evento.",
+              type: 'warning' // ou 'error'
+            });
             return;
         }
         
@@ -181,9 +193,6 @@ function CreateEventModal({ onClose, onEventCreated }) {
         // O token é pego automaticamente pelo interceptor do 'api.js'
         
         try {
-            // USA 'api.post'
-            // O 'Content-Type' correto (multipart/form-data) é definido
-            // automaticamente pelo Axios (pois removemos o header padrão)
             const response = await api.post('/api/eventos/criar', formData);
 
             // A resposta do Axios já está em .data
@@ -196,23 +205,27 @@ function CreateEventModal({ onClose, onEventCreated }) {
                 date: eventoCriado.date,
                 location: eventoCriado.location,
                 category: eventoCriado.category,
-                // A URL do Cloudinary já é completa (https://...)
-                // Não precisamos adicionar 'http://localhost'
                 image: eventoCriado.imageUrl || techConferenceImg, 
                 featured: eventoCriado.featured, 
             };
             
             onEventCreated(novoEventoPublicado);
-            alert(`Novo Evento Criado com sucesso: ${eventoCriado.title}`);
+              setToast({
+                message: `Novo Evento Criado com sucesso: ${eventoCriado.title}`,
+                type: 'success'
+            });
             onClose();
 
         } catch (error) {
             console.error("Falha ao publicar evento:", error);
             const errorMsg = error.response?.data?.message || error.response?.data || error.message;
-            alert(`Falha ao publicar evento: ${errorMsg}`);
-        } finally {
+           setToast({
+                message: `Falha ao publicar evento: ${errorMsg}`,
+                type: 'error'
+            });
+          } finally {
             setIsLoading(false);
-        }
+      }
     };
     
     const categories = ["Workshop", "Curso", "Hackathon", "Competição", "Conferência", "Networking"];
@@ -321,6 +334,7 @@ export default function Eventos() {
     const [showCreateModal, setShowCreateModal] = useState(false); 
     const [showLoginModal, setShowLoginModal] = useState(false); 
     const [userRole, setUserRole] = useState(null); 
+    const [toast, setToast] = useState(null);
     const scrollRefs = useRef({});
 
     // Adiciona o novo evento criado no topo da lista
@@ -628,13 +642,14 @@ export default function Eventos() {
           </div>
           
           {/* Modais e Footer */}
-          {selectedEvent && (
+         {selectedEvent && (
             <EventDetailsModal 
                 event={selectedEvent} 
                 userRole={userRole} 
                 onClose={() => setSelectedEvent(null)} 
                 onOpenLogin={handleOpenLoginModal}
                 onEventClosed={handleCloseEventSuccess} 
+                setToast={setToast}
             />
           )}
           
@@ -642,6 +657,7 @@ export default function Eventos() {
             <CreateEventModal 
                 onClose={() => setShowCreateModal(false)} 
                 onEventCreated={handleAddEvent} 
+                setToast={setToast}
             />
           )}
           
@@ -649,10 +665,18 @@ export default function Eventos() {
             <LoginCard 
                 onClose={() => setShowLoginModal(false)} 
                 onLoginSuccess={handleLoginSuccess} 
+                onShowToast={setToast}
             />
           )}
           
           <Footer />
+          {toast && (
+              <Toast
+                  message={toast.message}
+                  type={toast.type}
+                  onClose={() => setToast(null)}
+              />
+          )}
         </>
     );
 }
