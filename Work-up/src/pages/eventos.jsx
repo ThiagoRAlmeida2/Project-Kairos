@@ -3,6 +3,7 @@ import "../css/Eventos.css";
 import Footer from "../components/Footer";
 import LoginCard from "../components/LoginCard"; 
 import Toast from "../components/Toast";
+import ConfirmDialog from "../components/ConfirmDialog";
 import { FaChevronLeft, FaChevronRight, FaCalendarAlt, FaMapMarkerAlt, FaTag, FaCheckCircle, FaLaptopCode, FaTimes, FaPlusCircle } from "react-icons/fa";
 
 // Simulação de Dados de Eventos
@@ -42,7 +43,7 @@ const initialNewEvent = {
 };
 
 // Componente do Modal de Detalhes do Evento (para Aluno/Deslogado/Empresa)
-function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClosed, onShowToast }) {
+function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClosed, onShowToast, onRequestConfirm }) {
     if (!event) return null;
 
   useEffect(() => {
@@ -67,34 +68,39 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
       }
     };
     
-    // Lógica: Encerrar Evento (Empresa)
-    const handleCloseEvent = async () => {
-      // substitui window.confirm por uma confirmação simples via toast+confirm dialog se precisar
-      if (!window.confirm(`Tem certeza que deseja encerrar o evento: ${event.title}? Esta ação é irreversível.`)) {
-        return;
-      }
+    // Lógica: Encerrar Evento (Empresa) com confirmação via onRequestConfirm
+    const handleCloseEvent = () => {
+      const message = `Tem certeza que deseja encerrar o evento: ${event.title}? Esta ação é irreversível.`;
+      const doClose = async () => {
+        try {
+          const response = await fetch(`/api/eventos/${event.id}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
 
-      try {
-        const response = await fetch(`/api/eventos/${event.id}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`
+          if (!response.ok) {
+            const errorText = await response.text(); 
+            onShowToast && onShowToast({ message: `Erro ao encerrar evento: ${errorText || response.statusText}`, type: 'error' });
+            return;
           }
-        });
 
-        if (!response.ok) {
-          const errorText = await response.text(); 
-          onShowToast && onShowToast({ message: `Erro ao encerrar evento: ${errorText || response.statusText}`, type: 'error' });
-          return;
+          onShowToast && onShowToast({ message: `Evento '${event.title}' encerrado com sucesso.`, type: 'success' });
+          onClose();
+          onEventClosed(event.id);
+
+        } catch (error) {
+          console.error("Falha na comunicação com a API:", error);
+          onShowToast && onShowToast({ message: "Falha na comunicação com a API.", type: 'error' });
         }
+      };
 
-        onShowToast && onShowToast({ message: `Evento '${event.title}' encerrado com sucesso.`, type: 'success' });
-        onClose();
-        onEventClosed(event.id);
-
-      } catch (error) {
-        console.error("Falha na comunicação com a API:", error);
-        onShowToast && onShowToast({ message: "Falha na comunicação com a API.", type: 'error' });
+      if (onRequestConfirm) {
+        onRequestConfirm(message, doClose);
+      } else {
+        // Fallback imediata
+        if (window.confirm(message)) doClose();
       }
     };
 
@@ -147,7 +153,7 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
 }
 
 // Componente do Modal de Criação de Evento (para Empresa) - AJUSTADO PARA JSON
-function CreateEventModal({ onClose, onEventCreated, onShowToast }) {
+function CreateEventModal({ onClose, onEventCreated, onShowToast, onRequestConfirm }) {
     const [newEvent, setNewEvent] = useState(initialNewEvent);
     const [fileName, setFileName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -243,10 +249,23 @@ function CreateEventModal({ onClose, onEventCreated, onShowToast }) {
 
     const categories = ["Workshop", "Curso", "Hackathon", "Competição", "Conferência", "Networking"];
 
+    const handleCloseAttempt = () => {
+      const isDirty = Boolean(newEvent.title || newEvent.description || newEvent.date || newEvent.location || fileName);
+      if (!isDirty) {
+        onClose();
+        return;
+      }
+
+      const message = 'Você tem certeza que deseja cancelar? As alterações não salvas serão perdidas.';
+      const doCancel = () => onClose();
+      if (onRequestConfirm) onRequestConfirm(message, doCancel);
+      else if (window.confirm(message)) doCancel();
+    };
+
     return (
-        <div className="modal-backdrop" onClick={onClose}>
-            <div className="modal-content create-event-modal" onClick={e => e.stopPropagation()}>
-                <button className="modal-close-btn" onClick={onClose}><FaTimes /></button>
+      <div className="modal-backdrop" onClick={handleCloseAttempt}>
+        <div className="modal-content create-event-modal" onClick={e => e.stopPropagation()}>
+          <button className="modal-close-btn" onClick={handleCloseAttempt}><FaTimes /></button>
                 <h2><FaLaptopCode /> Criar Novo Evento</h2>
                 
                 <form onSubmit={handleSubmit} className="event-form">
@@ -349,6 +368,7 @@ export default function Eventos() {
   const [showCreateModal, setShowCreateModal] = useState(false); 
   const [showLoginModal, setShowLoginModal] = useState(false); 
   const [toast, setToast] = useState(null);
+  const [confirmDialog, setConfirmDialog] = useState({ open: false, message: '', onConfirm: null });
   const [userRole, setUserRole] = useState(null); 
   const scrollRefs = useRef({});
   
@@ -421,6 +441,12 @@ export default function Eventos() {
   const handleOpenLoginModal = () => {
     setShowLoginModal(true);
   };
+
+  const requestConfirm = (message, onConfirm) => {
+    setConfirmDialog({ open: true, message, onConfirm });
+  };
+
+  const closeConfirm = () => setConfirmDialog({ open: false, message: '', onConfirm: null });
 
   // Filtra e usa a lista de eventos do estado local
   const filteredEvents = useMemo(() => {
@@ -604,6 +630,7 @@ export default function Eventos() {
             onOpenLogin={handleOpenLoginModal}
             onEventClosed={handleCloseEventSuccess}
             onShowToast={setToast}
+            onRequestConfirm={requestConfirm}
         />
       )}
       
@@ -613,6 +640,7 @@ export default function Eventos() {
             onClose={() => setShowCreateModal(false)} 
             onEventCreated={handleAddEvent} 
             onShowToast={setToast}
+            onRequestConfirm={requestConfirm}
         />
       )}
       {showCreateModal && toast && (
@@ -630,6 +658,14 @@ export default function Eventos() {
       )}
       {toast && (
         <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
+      )}
+
+      {confirmDialog.open && (
+        <ConfirmDialog
+          message={confirmDialog.message}
+          onConfirm={() => { closeConfirm(); confirmDialog.onConfirm && confirmDialog.onConfirm(); }}
+          onCancel={() => { closeConfirm(); }}
+        />
       )}
 
       <Footer />
