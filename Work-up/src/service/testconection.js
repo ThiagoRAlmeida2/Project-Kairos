@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const baseURL = "https://project-api-1-bw7k.onrender.com/api"; // sua API no Render
-
+const baseURL = "https://project-api-1-bw7k.onrender.com/api";
 async function testarConexao() {
   console.log("🔄 Testando conexão com a API...");
 

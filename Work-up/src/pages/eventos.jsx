@@ -2,11 +2,9 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import "../css/Eventos.css";
 import Footer from "../components/Footer";
 import LoginCard from "../components/LoginCard"; 
-import Toast from "../components/Toast";
-import ConfirmDialog from "../components/ConfirmDialog";
 import { FaChevronLeft, FaChevronRight, FaCalendarAlt, FaMapMarkerAlt, FaTag, FaCheckCircle, FaLaptopCode, FaTimes, FaPlusCircle } from "react-icons/fa";
 
-// Simulação de Dados de Eventos
+import api from '../service/api' 
 import techConferenceImg from '../assets/IMG/Conferencia de tecnologia.jpg';
 import reactImg from '../assets/IMG/React.png';
 import pitchImg from '../assets/IMG/Pitch.jpg';
@@ -18,8 +16,8 @@ import hackathonImg from '../assets/IMG/Hackathon.jpg';
 import codeChallengeImg from '../assets/IMG/Code Challenge.jpg';
 import startupWeekendImg from '../assets/IMG/Startup weekend.jpg';
 
+// 3. Seus cards estáticos (Mantidos)
 const allEvents = [
-  // IDs alterados para evitar colisão com IDs gerados pelo banco de dados
   { id: 100009, title: "Tech Conference 2025", description: "Grande conferência anual sobre tendências e inovações em IA e Cloud Computing.", date: "15 Jan", location: "São Paulo", image: techConferenceImg, category: "Conferência", featured: true },
   { id: 200000, title: "React Workshop", description: "Imersão de 8 horas para construir uma SPA moderna com hooks avançados do React.", date: "20 Jan", location: "Online", image: reactImg, category: "Workshop", featured: true },
   { id: 300000, title: "Startup Pitch Day", description: "Oportunidade para startups apresentarem suas ideias para investidores.", date: "25 Jan", location: "Rio de Janeiro", image: pitchImg, category: "Networking", featured: true },
@@ -38,70 +36,53 @@ const initialNewEvent = {
     date: '',
     location: '',
     category: 'Workshop',
-    image: null, // Armazena a URL temporária para visualização local
-    fileData: null // Não é mais usado no envio, mas mantém a lógica de seleção de arquivo
+    image: null, 
+    fileData: null 
 };
 
-// Componente do Modal de Detalhes do Evento (para Aluno/Deslogado/Empresa)
-function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClosed, onShowToast, onRequestConfirm }) {
+// Componente do Modal de Detalhes do Evento
+function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClosed }) {
     if (!event) return null;
 
-  useEffect(() => {
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = previous; };
-  }, []);
+    useEffect(() => {
+        const previous = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => { document.body.style.overflow = previous; };
+    }, []);
 
     const isAluno = userRole === 'ROLE_ALUNO';
     const isEmpresa = userRole === 'ROLE_EMPRESA';
     const isDeslogado = !userRole;
-    // 🔑 Usando a chave 'token'
-    const token = localStorage.getItem('token'); 
 
     const handleInscricao = () => {
-      if (isDeslogado) {
-        onClose(); 
-        onOpenLogin();
-      } else if (isAluno) {
-        onShowToast && onShowToast({ message: `Inscrição confirmada para o evento: ${event.title}!`, type: 'success' });
-        onClose();
-      }
+        if (isDeslogado) {
+            onClose(); 
+            onOpenLogin();
+        } else if (isAluno) {
+            alert(`Inscrição confirmada para o evento: ${event.title}!`);
+            onClose();
+        }
     };
     
-    // Lógica: Encerrar Evento (Empresa) com confirmação via onRequestConfirm
-    const handleCloseEvent = () => {
-      const message = `Tem certeza que deseja encerrar o evento: ${event.title}? Esta ação é irreversível.`;
-      const doClose = async () => {
-        try {
-          const response = await fetch(`/api/eventos/${event.id}`, {
-            method: 'DELETE',
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-
-          if (!response.ok) {
-            const errorText = await response.text(); 
-            onShowToast && onShowToast({ message: `Erro ao encerrar evento: ${errorText || response.statusText}`, type: 'error' });
+    const handleCloseEvent = async () => {
+        if (!window.confirm(`Tem certeza que deseja encerrar o evento: ${event.title}? Esta ação é irreversível.`)) {
             return;
-          }
+        }
 
-          onShowToast && onShowToast({ message: `Evento '${event.title}' encerrado com sucesso.`, type: 'success' });
-          onClose();
-          onEventClosed(event.id);
+        try {
+            // USA 'api.delete'
+            // O token é adicionado automaticamente pelo interceptor
+            await api.delete(`/api/eventos/${event.id}`);
+
+            alert(`Evento '${event.title}' encerrado com sucesso.`);
+            onClose();
+            onEventClosed(event.id);
 
         } catch (error) {
-          console.error("Falha na comunicação com a API:", error);
-          onShowToast && onShowToast({ message: "Falha na comunicação com a API.", type: 'error' });
+            console.error("Falha na comunicação com a API:", error);
+            const errorMsg = error.response?.data?.message || error.response?.data || error.message;
+            alert(`Erro ao encerrar evento: ${errorMsg}`);
         }
-      };
-
-      if (onRequestConfirm) {
-        onRequestConfirm(message, doClose);
-      } else {
-        // Fallback imediata
-        if (window.confirm(message)) doClose();
-      }
     };
 
 
@@ -110,7 +91,7 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
             <div className="modal-content event-details-modal" onClick={e => e.stopPropagation()}>
                 <button className="modal-close-btn" onClick={onClose}><FaTimes /></button>
                 <div className="event-modal-image">
-                    <img src={event.image} alt={event.title} />
+                    <img src={event.image || techConferenceImg} alt={event.title} />
                     <div className="event-category-badge-modal">{event.category}</div>
                 </div>
                 
@@ -142,9 +123,6 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
                         {(isEmpresa || userRole === 'ROLE_ADMIN') && (
                              <p className="empresa-info">Você pode gerenciar este evento.</p>
                         )}
-                        {isAluno && (userRole === 'ROLE_EMPRESA' || userRole === 'ROLE_ADMIN') && (
-                            <p className="empresa-info">Você é uma Empresa e não pode se inscrever em eventos.</p>
-                        )}
                     </div>
                 </div>
             </div>
@@ -152,8 +130,8 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
     );
 }
 
-// Componente do Modal de Criação de Evento (para Empresa) - AJUSTADO PARA JSON
-function CreateEventModal({ onClose, onEventCreated, onShowToast, onRequestConfirm }) {
+// Componente do Modal de Criação de Evento
+function CreateEventModal({ onClose, onEventCreated }) {
     const [newEvent, setNewEvent] = useState(initialNewEvent);
     const [fileName, setFileName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -164,13 +142,12 @@ function CreateEventModal({ onClose, onEventCreated, onShowToast, onRequestConfi
         if (name === "image" && files && files.length > 0) {
             const file = files[0];
             setFileName(file.name);
-            // Cria a URL temporária para visualização local (mantida)
             const objectUrl = URL.createObjectURL(file); 
             
             setNewEvent(prev => ({ 
                 ...prev, 
-                image: objectUrl, // 👈 Esta URL será enviada como imageUrl
-                fileData: file 
+                image: objectUrl, // Preview local
+                fileData: file    // O arquivo real
             }));
             
             return;
@@ -181,46 +158,36 @@ function CreateEventModal({ onClose, onEventCreated, onShowToast, onRequestConfi
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        if (!newEvent.fileData) {
+            alert("Por favor, selecione uma imagem de capa para o evento.");
+            return;
+        }
+        
         setIsLoading(true);
 
-        // 1. DADOS DE TEXTO PARA JSON (Incluindo a URL de imagem como string)
         const eventData = {
             title: newEvent.title,
             description: newEvent.description,
             date: newEvent.date,
             location: newEvent.location,
-            category: newEvent.category,
-            // 🟢 Enviando a URL temporária para o backend salvar como string
-            imageUrl: newEvent.image, 
+            category: newEvent.category
         };
         
-        const token = localStorage.getItem('token'); 
+        const formData = new FormData();
+        formData.append("file", newEvent.fileData); 
+        formData.append("eventData", JSON.stringify(eventData));
         
-        if (!token) {
-          onShowToast && onShowToast({ message: "Erro: Token de autenticação não encontrado. Faça login novamente.", type: 'error' });
-          setIsLoading(false);
-          return;
-        }
+        // O token é pego automaticamente pelo interceptor do 'api.js'
         
-        const API_URL = 'https://project-api-1-bw7k.onrender.com/api/eventos/criar';
-
         try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                // 🟢 CORREÇÃO: Content-Type: application/json
-                headers: {
-                    'Content-Type': 'application/json', 
-                    'Authorization': `Bearer ${token}` 
-                },
-                body: JSON.stringify(eventData), // 🟢 Enviando JSON
-            });
+            // USA 'api.post'
+            // O 'Content-Type' correto (multipart/form-data) é definido
+            // automaticamente pelo Axios (pois removemos o header padrão)
+            const response = await api.post('/api/eventos/criar', formData);
 
-            if (!response.ok) {
-                const error = await response.json().catch(() => ({ message: `Erro HTTP: ${response.status}` }));
-                throw new Error(error.message || `Erro ao criar evento: ${response.status}`);
-            }
-
-            const eventoCriado = await response.json();
+            // A resposta do Axios já está em .data
+            const eventoCriado = response.data;
             
             const novoEventoPublicado = {
                 id: eventoCriado.id,
@@ -229,43 +196,31 @@ function CreateEventModal({ onClose, onEventCreated, onShowToast, onRequestConfi
                 date: eventoCriado.date,
                 location: eventoCriado.location,
                 category: eventoCriado.category,
-                // 🟢 Usando a URL de volta do backend (que deve ser a URL enviada ou o fallback)
+                // A URL do Cloudinary já é completa (https://...)
+                // Não precisamos adicionar 'http://localhost'
                 image: eventoCriado.imageUrl || techConferenceImg, 
                 featured: eventoCriado.featured, 
             };
-
-            onEventCreated(novoEventoPublicado);
             
-            onShowToast && onShowToast({ message: `Novo Evento Criado com sucesso: ${eventoCriado.title}`, type: 'success' });
+            onEventCreated(novoEventoPublicado);
+            alert(`Novo Evento Criado com sucesso: ${eventoCriado.title}`);
             onClose();
 
         } catch (error) {
-          console.error("Falha ao publicar evento:", error);
-          onShowToast && onShowToast({ message: `Falha ao publicar evento: ${error.message}`, type: 'error' });
+            console.error("Falha ao publicar evento:", error);
+            const errorMsg = error.response?.data?.message || error.response?.data || error.message;
+            alert(`Falha ao publicar evento: ${errorMsg}`);
         } finally {
             setIsLoading(false);
         }
     };
-
+    
     const categories = ["Workshop", "Curso", "Hackathon", "Competição", "Conferência", "Networking"];
-
-    const handleCloseAttempt = () => {
-      const isDirty = Boolean(newEvent.title || newEvent.description || newEvent.date || newEvent.location || fileName);
-      if (!isDirty) {
-        onClose();
-        return;
-      }
-
-      const message = 'Você tem certeza que deseja cancelar? As alterações não salvas serão perdidas.';
-      const doCancel = () => onClose();
-      if (onRequestConfirm) onRequestConfirm(message, doCancel);
-      else if (window.confirm(message)) doCancel();
-    };
-
+    
     return (
-      <div className="modal-backdrop" onClick={handleCloseAttempt}>
-        <div className="modal-content create-event-modal" onClick={e => e.stopPropagation()}>
-          <button className="modal-close-btn" onClick={handleCloseAttempt}><FaTimes /></button>
+        <div className="modal-backdrop" onClick={onClose}>
+            <div className="modal-content create-event-modal" onClick={e => e.stopPropagation()}>
+                <button className="modal-close-btn" onClick={onClose}><FaTimes /></button>
                 <h2><FaLaptopCode /> Criar Novo Evento</h2>
                 
                 <form onSubmit={handleSubmit} className="event-form">
@@ -278,7 +233,6 @@ function CreateEventModal({ onClose, onEventCreated, onShowToast, onRequestConfi
                         placeholder="Ex: Spring Boot Masterclass"
                         disabled={isLoading}
                     />
-
                     <label>Descrição:</label>
                     <textarea
                         name="description"
@@ -297,13 +251,9 @@ function CreateEventModal({ onClose, onEventCreated, onShowToast, onRequestConfi
                         ))}
                     </select>
                     
-                    {/* O input de arquivo é mantido para que o usuário possa selecionar a imagem 
-                        e gerar a URL temporária (newEvent.image), mas o arquivo em si não é enviado. */}
                     <div className="form-group-image">
                         <label>Imagem de Capa do Evento:</label>
-                        
                         <div className="file-input-wrapper">
-                            
                             <input 
                                 id="event-image-upload" 
                                 name="image" 
@@ -311,12 +261,11 @@ function CreateEventModal({ onClose, onEventCreated, onShowToast, onRequestConfi
                                 onChange={handleChange} 
                                 accept="image/*" 
                                 disabled={isLoading}
+                                required
                             />
-                            
                             <label htmlFor="event-image-upload" className="btn-upload-custom">
                                 <FaPlusCircle /> Inserir Imagem
                             </label>
-                            
                             <span className="file-name-display">
                                 {fileName || "Nenhum arquivo selecionado"}
                             </span>
@@ -333,7 +282,6 @@ function CreateEventModal({ onClose, onEventCreated, onShowToast, onRequestConfi
                             placeholder="Ex: 10 Mar"
                             disabled={isLoading}
                         />
-
                         <label>Local:</label>
                         <input 
                             name="location" 
@@ -360,315 +308,344 @@ function CreateEventModal({ onClose, onEventCreated, onShowToast, onRequestConfi
 
 // Componente principal Eventos
 export default function Eventos() {
-  const [events, setEvents] = useState(allEvents);
-  
-  const [searchTerm, setSearchTerm] = useState("");
-  const [expandedCategories, setExpandedCategories] = useState({});
-  const [selectedEvent, setSelectedEvent] = useState(null); 
-  const [showCreateModal, setShowCreateModal] = useState(false); 
-  const [showLoginModal, setShowLoginModal] = useState(false); 
-  const [toast, setToast] = useState(null);
-  const [confirmDialog, setConfirmDialog] = useState({ open: false, message: '', onConfirm: null });
-  const [userRole, setUserRole] = useState(null); 
-  const scrollRefs = useRef({});
-  
-  // FUNÇÃO: Adiciona o novo evento ao array de eventos
-  const handleAddEvent = (newAvent) => {
-      setEvents(prevEvents => [newAvent, ...prevEvents]);
-  }
-  
-  // 🌟 NOVA FUNÇÃO: Remove o evento da lista após exclusão bem-sucedida
-  const handleCloseEventSuccess = (deletedEventId) => {
-      setEvents(prevEvents => prevEvents.filter(event => event.id !== deletedEventId));
-  }
-
-
-  // 1. Lógica para carregar o papel do usuário ao carregar a página
-  useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        const user = JSON.parse(storedUser);
-        setUserRole(user.role); 
-      }
-    } catch (e) {
-      console.error("Erro ao ler role do localStorage:", e);
-      setUserRole(null);
-    }
-  }, []);
-
-  // FUNÇÃO PARA LIDAR COM O SUCESSO DO LOGIN
-  const handleLoginSuccess = (userData) => {
-    setUserRole(userData.role); 
-    setShowLoginModal(false);
-  };
-
-
-  const scrollLeft = (categoryIndex) => {
-    const container = scrollRefs.current[categoryIndex];
-    if (container) {
-      container.scrollBy({ left: -300, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = (categoryIndex) => {
-    const container = scrollRefs.current[categoryIndex];
-    if (container) {
-      container.scrollBy({ left: 300, behavior: 'smooth' });
-    }
-  };
-
-  const toggleCategory = (categoryIndex) => {
-    setExpandedCategories(prev => ({
-      ...prev,
-      [categoryIndex]: !prev[categoryIndex]
-    }));
-  };
-  
-  // Função para abrir o modal de detalhes
-  const handleViewDetails = (event) => {
-    setSelectedEvent(event);
-  };
-  
-  // Função para abrir o modal de criação (apenas Empresa)
-  const handleOpenCreateModal = () => {
-    if (userRole === 'ROLE_EMPRESA') {
-        setShowCreateModal(true);
-    }
-  };
-  
-  // Função para abrir o modal de login (chamada pelo EventDetailsModal)
-  const handleOpenLoginModal = () => {
-    setShowLoginModal(true);
-  };
-
-  const requestConfirm = (message, onConfirm) => {
-    setConfirmDialog({ open: true, message, onConfirm });
-  };
-
-  const closeConfirm = () => setConfirmDialog({ open: false, message: '', onConfirm: null });
-
-  // Filtra e usa a lista de eventos do estado local
-  const filteredEvents = useMemo(() => {
-    if (!searchTerm.trim()) return events; 
+    // Começa o estado com seus 10 cards estáticos
+    const [events, setEvents] = useState(allEvents);
     
-    return events.filter(event => 
-      event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.location.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [searchTerm, events]); 
-
-  const eventCategories = useMemo(() => {
-    const categories = [
-      { title: "Eventos em Destaque", filter: (event) => event.featured === true },
-      { title: "Workshops e Cursos", filter: (event) => ["Workshop", "Curso"].includes(event.category) && !event.featured },
-      { title: "Hackathons e Competições", filter: (event) => ["Hackathon", "Competição"].includes(event.category) }
-    ];
-
-    return categories.map((cat, index) => {
-      const categoryEvents = filteredEvents.filter(cat.filter);
-      return {
-        ...cat,
-        events: expandedCategories[index] ? categoryEvents : categoryEvents.slice(0, 8),
-        totalEvents: categoryEvents.length
-      };
-    }).filter(cat => cat.totalEvents > 0);
-  }, [filteredEvents, expandedCategories]);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-  };
+    // Começa false, pois já temos cards para mostrar
+    const [isLoading, setIsLoading] = useState(false); 
+    const [error, setError] = useState(null);
   
-  // Componente de Card de Evento reutilizável
-  const EventCard = ({ event }) => {
-    const imageSrc = event.image || techConferenceImg; 
+    const [searchTerm, setSearchTerm] = useState("");
+    const [expandedCategories, setExpandedCategories] = useState({});
+    const [selectedEvent, setSelectedEvent] = useState(null); 
+    const [showCreateModal, setShowCreateModal] = useState(false); 
+    const [showLoginModal, setShowLoginModal] = useState(false); 
+    const [userRole, setUserRole] = useState(null); 
+    const scrollRefs = useRef({});
 
-    return (
-      <div 
-        key={event.id} 
-        className="event-card"
-      >
-        <div className="event-image">
-          <img src={imageSrc} alt={event.title} />
-          <div className="event-category-badge">{event.category}</div>
-        </div>
-        <div className="event-info">
-          <h3>{event.title}</h3>
-          <p className="event-date"><FaCalendarAlt /> {event.date}</p>
-          <p className="event-location"><FaMapMarkerAlt /> {event.location}</p>
-        </div>
-        <button
-          className="btn-ver-detalhes"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleViewDetails(event);
-          }}
-        >
-          Ver Detalhes
-        </button>
-      </div>
-    );
-  };
+    // Adiciona o novo evento criado no topo da lista
+    const handleAddEvent = (newAvent) => {
+      setEvents(prevEvents => [newAvent, ...prevEvents]);
+    }
+  
+    // Remove o evento da lista (estática ou dinâmica)
+    const handleCloseEventSuccess = (deletedEventId) => {
+        setEvents(prevEvents => prevEvents.filter(event => event.id !== deletedEventId));
+    }
 
-  return (
-    <>
-      <div className="eventos-container">
-        {/* Hero Section */}
-        <section className="eventos-hero">
-          <div className="hero-content">
-            <h1>Descubra Eventos Tech</h1>
-            <p>Conecte-se com a comunidade tech através de eventos, workshops e conferências</p>
-            <div className="hero-actions-row">
-                <form className="hero-search" onSubmit={handleSearch}>
-                  <input 
-                    type="text" 
-                    placeholder="Buscar eventos..." 
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                  <button type="submit">Buscar</button>
-                </form>
+    // Carrega o 'userRole' do localStorage
+    useEffect(() => {
+        try {
+          const storedUser = localStorage.getItem("user");
+          if (storedUser) {
+            const user = JSON.parse(storedUser);
+            setUserRole(user.role); 
+          }
+        } catch (e) {
+          console.error("Erro ao ler role do localStorage:", e);
+          setUserRole(null);
+        }
+    }, []);
+
+    // Busca os eventos da API e junta com os estáticos
+    useEffect(() => {
+        const fetchEvents = async () => {
+            setIsLoading(true); // Mostra o loading só durante a busca
+            setError(null);
+            
+            try {
+                // USA 'api.get'
+                const response = await api.get('/api/eventos');
+
+                // A resposta do Axios já está em .data
+                const data = response.data;
                 
-                {/* Botão de Criar Evento (Apenas para Empresa) */}
-                {userRole === 'ROLE_EMPRESA' && (
-                    <button 
-                        className="btn-create-event" 
-                        onClick={handleOpenCreateModal}
-                    >
-                        <FaPlusCircle /> Criar Evento
-                    </button>
-                )}
-            </div>
-          </div>
-        </section>
+                const formattedEvents = data.map(event => ({
+                    ...event,
+                    // A URL do Cloudinary já é completa
+                    image: event.imageUrl || techConferenceImg 
+                }));
+                
+                // Junta os 10 cards estáticos com os cards vindos da API
+                setEvents([...allEvents, ...formattedEvents]);
 
-        {searchTerm.trim() ? (
-          <section className="event-category">
-            <div className="category-header">
-              <h2>Resultados da busca "{searchTerm}" ({filteredEvents.length})</h2>
+            } catch (err) {
+                console.error(err);
+                setError(err.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchEvents();
+    }, []); // Executa apenas uma vez
+
+    // Função de Sucesso do Login
+    const handleLoginSuccess = (userData) => {
+        setUserRole(userData.role); 
+        setShowLoginModal(false);
+    };
+
+    // Funções de Scroll
+    const scrollLeft = (categoryIndex) => {
+        const container = scrollRefs.current[categoryIndex];
+        if (container) {
+          container.scrollBy({ left: -300, behavior: 'smooth' });
+        }
+    };
+
+    const scrollRight = (categoryIndex) => {
+        const container = scrollRefs.current[categoryIndex];
+        if (container) {
+          container.scrollBy({ left: 300, behavior: 'smooth' });
+        }
+    };
+    
+    // Funções de UI (Modais, etc)
+    const toggleCategory = (categoryIndex) => {
+        setExpandedCategories(prev => ({
+          ...prev,
+          [categoryIndex]: !prev[categoryIndex]
+        }));
+    };
+  
+    const handleViewDetails = (event) => {
+        setSelectedEvent(event);
+    };
+  
+    const handleOpenCreateModal = () => {
+        if (userRole === 'ROLE_EMPRESA') {
+            setShowCreateModal(true);
+        }
+    };
+  
+    const handleOpenLoginModal = () => {
+        setShowLoginModal(true);
+    };
+
+    // Filtros e Categorias (useMemo)
+    const filteredEvents = useMemo(() => {
+        if (!searchTerm.trim()) return events; 
+        
+        return events.filter(event => 
+          event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          event.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          event.location.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [searchTerm, events]); 
+
+    const eventCategories = useMemo(() => {
+        const categories = [
+          { title: "Eventos em Destaque", filter: (event) => event.featured === true },
+          { title: "Workshops e Cursos", filter: (event) => ["Workshop", "Curso"].includes(event.category) && !event.featured },
+          { title: "Hackathons e Competições", filter: (event) => ["Hackathon", "Competição"].includes(event.category) }
+        ];
+
+        return categories.map((cat, index) => {
+          const categoryEvents = filteredEvents.filter(cat.filter);
+          return {
+            ...cat,
+            events: expandedCategories[index] ? categoryEvents : categoryEvents.slice(0, 8),
+            totalEvents: categoryEvents.length
+          };
+        }).filter(cat => cat.totalEvents > 0);
+    }, [filteredEvents, expandedCategories]);
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+    };
+    
+    // Componente do Card de Evento (Reutilizável)
+    const EventCard = ({ event }) => {
+        // Funciona para URLs locais (import) e remotas (Cloudinary)
+        const imageSrc = event.image || techConferenceImg; 
+
+        return (
+          <div 
+            key={event.id} 
+            className="event-card"
+          >
+            <div className="event-image">
+              <img src={imageSrc} alt={event.title} />
+              <div className="event-category-badge">{event.category}</div>
             </div>
-            <div className="events-container-with-arrows">
-              <button 
-                className="nav-arrow nav-arrow-left"
-                onClick={() => scrollLeft('search')}
-              >
-                <FaChevronLeft />
-              </button>
-              <div 
-                className="events-row"
-                ref={(el) => scrollRefs.current['search'] = el}
-              >
-                {filteredEvents.map((event) => (
-                    <EventCard key={event.id} event={event} />
-                ))}
-              </div>
-              <button 
-                className="nav-arrow nav-arrow-right"
-                onClick={() => scrollRight('search')}
-              >
-                <FaChevronRight />
-              </button>
+            <div className="event-info">
+              <h3>{event.title}</h3>
+              <p className="event-date"><FaCalendarAlt /> {event.date}</p>
+              <p className="event-location"><FaMapMarkerAlt /> {event.location}</p>
             </div>
-            {filteredEvents.length === 0 && (
-              <div className="no-results">
-                <p>Nenhum evento encontrado para "{searchTerm}"</p>
+            <button
+              className="btn-ver-detalhes"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleViewDetails(event);
+              }}
+            >
+              Ver Detalhes
+            </button>
+          </div>
+        );
+    };
+
+    // Renderização principal do componente
+    return (
+        <>
+          <div className="eventos-container">
+            {/* Hero Section */}
+            <section className="eventos-hero">
+              <div className="hero-content">
+                <h1>Descubra Eventos Tech</h1>
+                <p>Conecte-se com a comunidade tech através de eventos, workshops e conferências</p>
+                <div className="hero-actions-row">
+                    <form className="hero-search" onSubmit={handleSearch}>
+                      <input 
+                        type="text" 
+                        placeholder="Buscar eventos..." 
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                      <button type="submit">Buscar</button>
+                    </form>
+                    
+                    {userRole === 'ROLE_EMPRESA' && (
+                        <button 
+                            className="btn-create-event" 
+                            onClick={handleOpenCreateModal}
+                        >
+                            <FaPlusCircle /> Criar Evento
+                        </button>
+                    )}
+                </div>
               </div>
+            </section>
+
+            {/* Loading (só durante o fetch) */}
+            {isLoading && (
+                <div className="loading-message">
+                    <p>Buscando novos eventos...</p>
+                </div>
             )}
-          </section>
-        ) : (
-          /* Event Categories */
-          eventCategories.map((category, index) => (
-            <section key={index} className="event-category">
-              <div className="category-header">
-                <h2>{category.title}</h2>
-                {category.totalEvents > category.events.length && (
-                  <button 
-                    className="see-all"
-                    onClick={() => toggleCategory(index)}
-                  >
-                    {expandedCategories[index] ? 'Ver menos' : `Ver todos (${category.totalEvents})`}
-                  </button>
-                )}
-              </div>
-              <div className="events-container-with-arrows">
-                {!expandedCategories[index] && (
+            
+            {/* Erro (só se o fetch falhar) */}
+            {error && (
+                <div className="error-message">
+                    <p>Erro ao buscar eventos: {error}</p>
+                </div>
+            )}
+
+            {/* Renderização condicional da Busca ou Categorias */}
+            {searchTerm.trim() ? (
+              <section className="event-category">
+                <div className="category-header">
+                  <h2>Resultados da busca "{searchTerm}" ({filteredEvents.length})</h2>
+                </div>
+                <div className="events-container-with-arrows">
                   <button 
                     className="nav-arrow nav-arrow-left"
-                    onClick={() => scrollLeft(index)}
+                    onClick={() => scrollLeft('search')}
                   >
                     <FaChevronLeft />
                   </button>
-                )}
-                <div 
-                  className={`events-row ${expandedCategories[index] ? 'expanded' : ''}`}
-                  ref={(el) => scrollRefs.current[index] = el}
-                >
-                  {category.events.map((event) => (
-                    <EventCard key={event.id} event={event} />
-                  ))}
-                </div>
-                {!expandedCategories[index] && (
+                  <div 
+                    className="events-row"
+                    ref={(el) => scrollRefs.current['search'] = el}
+                  >
+                    {filteredEvents.map((event) => (
+                        <EventCard key={event.id} event={event} />
+                    ))}
+                  </div>
                   <button 
                     className="nav-arrow nav-arrow-right"
-                    onClick={() => scrollRight(index)}
+                    onClick={() => scrollRight('search')}
                   >
                     <FaChevronRight />
                   </button>
+                </div>
+                {filteredEvents.length === 0 && (
+                  <div className="no-results">
+                    <p>Nenhum evento encontrado para "{searchTerm}"</p>
+                  </div>
                 )}
+              </section>
+            ) : (
+              /* Event Categories */
+              eventCategories.map((category, index) => (
+                <section key={index} className="event-category">
+                  <div className="category-header">
+                    <h2>{category.title}</h2>
+                    {category.totalEvents > category.events.length && (
+                      <button 
+                        className="see-all"
+                        onClick={() => toggleCategory(index)}
+                      >
+                        {expandedCategories[index] ? 'Ver menos' : `Ver todos (${category.totalEvents})`}
+                      </button>
+                    )}
+                  </div>
+                  <div className="events-container-with-arrows">
+                    {!expandedCategories[index] && (
+                      <button 
+                        className="nav-arrow nav-arrow-left"
+                        onClick={() => scrollLeft(index)}
+                      >
+                        <FaChevronLeft />
+                      </button>
+                    )}
+                    <div 
+                      className={`events-row ${expandedCategories[index] ? 'expanded' : ''}`}
+                      ref={(el) => scrollRefs.current[index] = el}
+                    >
+                      {category.events.map((event) => (
+                        <EventCard key={event.id} event={event} />
+                      ))}
+                    </div>
+                    {!expandedCategories[index] && (
+                      <button 
+                        className="nav-arrow nav-arrow-right"
+                        onClick={() => scrollRight(index)}
+                      >
+                        <FaChevronRight />
+                      </button>
+                    )}
+                  </div>
+                </section>
+              ))
+            )}
+            
+            {/* Mensagem de "nenhum evento" */}
+            {events.length === 0 && !isLoading && (
+              <div className="no-results">
+                <p>Nenhum evento encontrado no momento.</p>
               </div>
-            </section>
-          ))
-        )}
-      </div>
-      
-      {selectedEvent && (
-        <EventDetailsModal 
-            event={selectedEvent} 
-            userRole={userRole} 
-            onClose={() => setSelectedEvent(null)} 
-            onOpenLogin={handleOpenLoginModal}
-            onEventClosed={handleCloseEventSuccess}
-            onShowToast={setToast}
-            onRequestConfirm={requestConfirm}
-        />
-      )}
-      
-      {/* Modal de Criação de Evento (Empresa) */}
-      {showCreateModal && (
-        <CreateEventModal 
-            onClose={() => setShowCreateModal(false)} 
-            onEventCreated={handleAddEvent} 
-            onShowToast={setToast}
-            onRequestConfirm={requestConfirm}
-        />
-      )}
-      {showCreateModal && toast && (
-        /* noop: placeholder to keep linter quiet about multiple render blocks */
-        null
-      )}
-      
-      {/* Renderiza o LoginCard */}
-      {showLoginModal && (
-        <LoginCard 
-            onClose={() => setShowLoginModal(false)} 
-            onLoginSuccess={handleLoginSuccess} 
-            onShowToast={setToast}
-        />
-      )}
-      {toast && (
-        <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
-      )}
-
-      {confirmDialog.open && (
-        <ConfirmDialog
-          message={confirmDialog.message}
-          onConfirm={() => { closeConfirm(); confirmDialog.onConfirm && confirmDialog.onConfirm(); }}
-          onCancel={() => { closeConfirm(); }}
-        />
-      )}
-
-      <Footer />
-    </>
-  );
+            )}
+          </div>
+          
+          {/* Modais e Footer */}
+          {selectedEvent && (
+            <EventDetailsModal 
+                event={selectedEvent} 
+                userRole={userRole} 
+                onClose={() => setSelectedEvent(null)} 
+                onOpenLogin={handleOpenLoginModal}
+                onEventClosed={handleCloseEventSuccess} 
+            />
+          )}
+          
+          {showCreateModal && (
+            <CreateEventModal 
+                onClose={() => setShowCreateModal(false)} 
+                onEventCreated={handleAddEvent} 
+            />
+          )}
+          
+          {showLoginModal && (
+            <LoginCard 
+                onClose={() => setShowLoginModal(false)} 
+                onLoginSuccess={handleLoginSuccess} 
+            />
+          )}
+          
+          <Footer />
+        </>
+    );
 }
