@@ -2,6 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import "../css/Eventos.css";
 import Footer from "../components/Footer";
 import Toast from "../components/Toast";
+import ConfirmDialog from "../components/ConfirmDialog"; // Importado
 import LoginCard from "../components/LoginCard"; 
 import { FaChevronLeft, FaChevronRight, FaCalendarAlt, FaMapMarkerAlt, FaTag, FaCheckCircle, FaLaptopCode, FaTimes, FaPlusCircle } from "react-icons/fa";
 
@@ -42,8 +43,8 @@ const initialNewEvent = {
 };
 
 // Componente do Modal de Detalhes do Evento
-function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClosed, setToast }) {    if (!event) return null;
-
+function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClosed, setToast, onOpenConfirm }) {
+    
     useEffect(() => {
         const previous = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
@@ -67,33 +68,13 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
         }
     };
     
-    const handleCloseEvent = async () => {
-        if (!window.confirm(`Tem certeza que deseja encerrar o evento: ${event.title}? Esta ação é irreversível.`)) {
-            return;
-        }
-
-        try {
-            // USA 'api.delete'
-            // O token é adicionado automaticamente pelo interceptor
-            await api.delete(`/api/eventos/${event.id}`);
-
-           setToast({
-                message: `Evento '${event.title}' encerrado com sucesso.`,
-                type: 'success'
-            });
-            onClose();
-            onEventClosed(event.id);
-
-        } catch (error) {
-            console.error("Falha na comunicação com a API:", error);
-            const errorMsg = error.response?.data?.message || error.response?.data || error.message;
-           setToast({
-                message: `Erro ao encerrar evento: ${errorMsg}`,
-                type: 'error'
-            });
-        }
+    // CORRIGIDO: Esta função agora apenas abre o diálogo de confirmação
+    const handleOpenConfirmDialog = () => {
+        onOpenConfirm(event); // 1. Avisa o "Pai" para abrir o diálogo
+        onClose(); // 2. Fecha este modal de detalhes
     };
-
+    
+    // O bloco 'try...catch' de exclusão foi REMOVIDO daqui
 
     return (
         <div className="modal-backdrop" onClick={onClose}>
@@ -124,11 +105,11 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
                                 Fazer Login para Inscrever-se
                             </button>
                         )}
-                        {isEmpresa && (
-                            <button className="btn-encerrar" onClick={handleCloseEvent}>
-                                <FaTimes /> Encerrar Evento
-                            </button>
-                        )}
+                       {isEmpresa && (
+                        <button className="btn-encerrar" onClick={handleOpenConfirmDialog}>
+                            <FaTimes /> Encerrar Evento
+                        </button>
+                    )}
                         {(isEmpresa || userRole === 'ROLE_ADMIN') && (
                              <p className="empresa-info">Você pode gerenciar este evento.</p>
                         )}
@@ -190,12 +171,9 @@ function CreateEventModal({ onClose, onEventCreated, setToast }) {
         formData.append("file", newEvent.fileData); 
         formData.append("eventData", JSON.stringify(eventData));
         
-        // O token é pego automaticamente pelo interceptor do 'api.js'
-        
         try {
             const response = await api.post('/api/eventos/criar', formData);
 
-            // A resposta do Axios já está em .data
             const eventoCriado = response.data;
             
             const novoEventoPublicado = {
@@ -321,10 +299,9 @@ function CreateEventModal({ onClose, onEventCreated, setToast }) {
 
 // Componente principal Eventos
 export default function Eventos() {
-    // Começa o estado com seus 10 cards estáticos
-    const [events, setEvents] = useState(allEvents);
+    // CORRIGIDO: Começa com array vazio
+    const [events, setEvents] = useState([]);
     
-    // Começa false, pois já temos cards para mostrar
     const [isLoading, setIsLoading] = useState(false); 
     const [error, setError] = useState(null);
   
@@ -335,6 +312,11 @@ export default function Eventos() {
     const [showLoginModal, setShowLoginModal] = useState(false); 
     const [userRole, setUserRole] = useState(null); 
     const [toast, setToast] = useState(null);
+    
+    // ADICIONADO: Estados para o ConfirmDialog
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [eventToClose, setEventToClose] = useState(null);
+    
     const scrollRefs = useRef({});
 
     // Adiciona o novo evento criado no topo da lista
@@ -362,13 +344,12 @@ export default function Eventos() {
     }, []);
 
     // Busca os eventos da API e junta com os estáticos
-  useEffect(() => {
+    useEffect(() => {
         const fetchEvents = async () => {
             setIsLoading(true); 
             setError(null);
             
           try {
-                // 1. Busca os eventos do banco (como antes)
                 const response = await api.get('/api/eventos');
                 const data = response.data;
                 
@@ -380,13 +361,9 @@ export default function Eventos() {
                 const isAlunoOuDeslogado = (userRole === 'ROLE_ALUNO' || !userRole);
 
                 if (isAlunoOuDeslogado) {
-                    
                     const combinedEvents = [...allEvents, ...formattedEvents];
-                    
                     const uniqueEvents = Array.from(new Map(combinedEvents.map(e => [e.id, e])).values());
-                    
                     setEvents(uniqueEvents);
-                    
                 } else {
                     setEvents(formattedEvents);
                 }
@@ -400,12 +377,46 @@ export default function Eventos() {
         };
 
         fetchEvents();
-    }, []); 
+    }, [userRole]); // CORRIGIDO: Depende do userRole
 
     const handleLoginSuccess = (userData) => {
         setUserRole(userData.role); 
         setShowLoginModal(false);
     };
+
+    // ADICIONADO: Funções para o ConfirmDialog
+    const handleOpenConfirmClose = (event) => {
+        setEventToClose(event);
+        setShowConfirmDialog(true);
+    };
+
+    const handleCancelClose = () => {
+        setEventToClose(null);
+        setShowConfirmDialog(false);
+    };
+
+    const handleConfirmClose = async () => {
+        if (!eventToClose) return;
+        try {
+            await api.delete(`/api/eventos/${eventToClose.id}`);
+            setToast({
+                message: `Evento '${eventToClose.title}' encerrado com sucesso.`,
+                type: 'success'
+            });
+            handleCloseEventSuccess(eventToClose.id); 
+        } catch (error) {
+            console.error("Falha na comunicação com a API:", error);
+            const errorMsg = error.response?.data?.message || error.response?.data || error.message;
+            setToast({
+                message: `Erro ao encerrar evento: ${errorMsg}`,
+                type: 'error'
+            });
+        } finally {
+            setEventToClose(null);
+            setShowConfirmDialog(false);
+        }
+    };
+
 
     // Funções de Scroll
     const scrollLeft = (categoryIndex) => {
@@ -478,7 +489,6 @@ export default function Eventos() {
     
     // Componente do Card de Evento (Reutilizável)
     const EventCard = ({ event }) => {
-        // Funciona para URLs locais (import) e remotas (Cloudinary)
         const imageSrc = event.image || techConferenceImg; 
 
         return (
@@ -650,6 +660,7 @@ export default function Eventos() {
                 onOpenLogin={handleOpenLoginModal}
                 onEventClosed={handleCloseEventSuccess} 
                 setToast={setToast}
+                onOpenConfirm={handleOpenConfirmClose} // CORRIGIDO: Passa a prop
             />
           )}
           
@@ -670,12 +681,23 @@ export default function Eventos() {
           )}
           
           <Footer />
+
+          {/* CORRIGIDO: Renderiza o Toast */}
           {toast && (
               <Toast
                   message={toast.message}
                   type={toast.type}
                   onClose={() => setToast(null)}
               />
+          )}
+
+          {/* CORRIGIDO: Renderiza o ConfirmDialog */}
+          {showConfirmDialog && (
+            <ConfirmDialog
+                message={`Tem certeza que deseja encerrar o evento: ${eventToClose?.title}? Esta ação é irreversível.`}
+                onConfirm={handleConfirmClose}
+                onCancel={handleCancelClose}
+            />
           )}
         </>
     );
