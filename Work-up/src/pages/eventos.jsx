@@ -61,14 +61,14 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
             onClose(); 
             onOpenLogin();
         } else if (isAluno) {
-          alert(`Inscrição confirmada para o evento "${event.title}".`);
-          onClose();
+            alert(`Inscrição confirmada para o evento: ${event.title}!`);
+            onClose();
         }
     };
     
     // Lógica: Encerrar Evento (Empresa)
     const handleCloseEvent = async () => {
-        if (!window.confirm(`Tem certeza que deseja encerrar o evento "${event.title}"? Esta ação é irreversível.`)) {
+        if (!window.confirm(`Tem certeza que deseja encerrar o evento: ${event.title}? Esta ação é irreversível.`)) {
             return;
         }
 
@@ -81,12 +81,12 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
             });
 
             if (!response.ok) {
-              const errorText = await response.text(); 
-              alert(`Erro ao encerrar evento: ${errorText || response.statusText}.`);
-              return;
+                const errorText = await response.text(); 
+                alert(`Erro ao encerrar evento: ${errorText || response.statusText}`);
+                return;
             }
 
-            alert(`Evento "${event.title}" encerrado com sucesso.`);
+            alert(`Evento '${event.title}' encerrado com sucesso.`);
             
             onClose();
             onEventClosed(event.id);
@@ -229,7 +229,7 @@ function CreateEventModal({ onClose, onEventCreated }) {
 
             onEventCreated(novoEventoPublicado);
             
-            alert(`Novo evento criado com sucesso: "${eventoCriado.title}".`);
+            alert(`Novo Evento Criado com sucesso: ${eventoCriado.title}`);
             onClose();
 
         } catch (error) {
