@@ -353,7 +353,8 @@ export default function Eventos() {
             setIsLoading(true); 
             setError(null);
             
-            try {
+          try {
+                // 1. Busca os eventos do banco (como antes)
                 const response = await api.get('/api/eventos');
                 const data = response.data;
                 
@@ -361,10 +362,20 @@ export default function Eventos() {
                     ...event,
                     image: event.imageUrl || techConferenceImg 
                 }));
-                
-                // --- 👇 A CORREÇÃO ESTÁ AQUI 👇 ---
-                // Antes era: setEvents([...allEvents, ...formattedEvents]);
-                setEvents(formattedEvents); // Agora usa SÓ os eventos do banco
+
+                const isAlunoOuDeslogado = (userRole === 'ROLE_ALUNO' || !userRole);
+
+                if (isAlunoOuDeslogado) {
+                    
+                    const combinedEvents = [...allEvents, ...formattedEvents];
+                    
+                    const uniqueEvents = Array.from(new Map(combinedEvents.map(e => [e.id, e])).values());
+                    
+                    setEvents(uniqueEvents);
+                    
+                } else {
+                    setEvents(formattedEvents);
+                }
 
             } catch (err) {
                 console.error(err);
@@ -375,9 +386,8 @@ export default function Eventos() {
         };
 
         fetchEvents();
-    }, []); // Executa apenas uma vez
-    
-    // Função de Sucesso do Login
+    }, []); 
+
     const handleLoginSuccess = (userData) => {
         setUserRole(userData.role); 
         setShowLoginModal(false);
