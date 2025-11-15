@@ -2,6 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import "../css/Eventos.css";
 import Footer from "../components/Footer";
 import LoginCard from "../components/LoginCard"; 
+import Toast from "../components/Toast";
 import { FaChevronLeft, FaChevronRight, FaCalendarAlt, FaMapMarkerAlt, FaTag, FaCheckCircle, FaLaptopCode, FaTimes, FaPlusCircle } from "react-icons/fa";
 
 // Simulação de Dados de Eventos
@@ -41,7 +42,7 @@ const initialNewEvent = {
 };
 
 // Componente do Modal de Detalhes do Evento (para Aluno/Deslogado/Empresa)
-function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClosed }) {
+function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClosed, onShowToast }) {
     if (!event) return null;
 
   useEffect(() => {
@@ -57,44 +58,44 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
     const token = localStorage.getItem('token'); 
 
     const handleInscricao = () => {
-        if (isDeslogado) {
-            onClose(); 
-            onOpenLogin();
-        } else if (isAluno) {
-            alert(`Inscrição confirmada para o evento: ${event.title}!`);
-            onClose();
-        }
+      if (isDeslogado) {
+        onClose(); 
+        onOpenLogin();
+      } else if (isAluno) {
+        onShowToast && onShowToast({ message: `Inscrição confirmada para o evento: ${event.title}!`, type: 'success' });
+        onClose();
+      }
     };
     
     // Lógica: Encerrar Evento (Empresa)
     const handleCloseEvent = async () => {
-        if (!window.confirm(`Tem certeza que deseja encerrar o evento: ${event.title}? Esta ação é irreversível.`)) {
-            return;
+      // substitui window.confirm por uma confirmação simples via toast+confirm dialog se precisar
+      if (!window.confirm(`Tem certeza que deseja encerrar o evento: ${event.title}? Esta ação é irreversível.`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/eventos/${event.id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text(); 
+          onShowToast && onShowToast({ message: `Erro ao encerrar evento: ${errorText || response.statusText}`, type: 'error' });
+          return;
         }
 
-        try {
-            const response = await fetch(`/api/eventos/${event.id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}` 
-                },
-            });
+        onShowToast && onShowToast({ message: `Evento '${event.title}' encerrado com sucesso.`, type: 'success' });
+        onClose();
+        onEventClosed(event.id);
 
-            if (!response.ok) {
-                const errorText = await response.text(); 
-                alert(`Erro ao encerrar evento: ${errorText || response.statusText}`);
-                return;
-            }
-
-            alert(`Evento '${event.title}' encerrado com sucesso.`);
-            
-            onClose();
-            onEventClosed(event.id);
-
-        } catch (error) {
-            console.error("Falha na comunicação com a API:", error);
-            alert("Falha na comunicação com a API.");
-        }
+      } catch (error) {
+        console.error("Falha na comunicação com a API:", error);
+        onShowToast && onShowToast({ message: "Falha na comunicação com a API.", type: 'error' });
+      }
     };
 
 
@@ -146,7 +147,7 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
 }
 
 // Componente do Modal de Criação de Evento (para Empresa) - AJUSTADO PARA JSON
-function CreateEventModal({ onClose, onEventCreated }) {
+function CreateEventModal({ onClose, onEventCreated, onShowToast }) {
     const [newEvent, setNewEvent] = useState(initialNewEvent);
     const [fileName, setFileName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -190,9 +191,9 @@ function CreateEventModal({ onClose, onEventCreated }) {
         const token = localStorage.getItem('token'); 
         
         if (!token) {
-            alert("Erro: Token de autenticação não encontrado. Faça login novamente.");
-            setIsLoading(false);
-            return;
+          onShowToast && onShowToast({ message: "Erro: Token de autenticação não encontrado. Faça login novamente.", type: 'error' });
+          setIsLoading(false);
+          return;
         }
         
         const API_URL = 'https://project-api-1-bw7k.onrender.com/api/eventos/criar';
@@ -229,12 +230,12 @@ function CreateEventModal({ onClose, onEventCreated }) {
 
             onEventCreated(novoEventoPublicado);
             
-            alert(`Novo Evento Criado com sucesso: ${eventoCriado.title}`);
+            onShowToast && onShowToast({ message: `Novo Evento Criado com sucesso: ${eventoCriado.title}`, type: 'success' });
             onClose();
 
         } catch (error) {
-            console.error("Falha ao publicar evento:", error);
-            alert(`Falha ao publicar evento: ${error.message}`);
+          console.error("Falha ao publicar evento:", error);
+          onShowToast && onShowToast({ message: `Falha ao publicar evento: ${error.message}`, type: 'error' });
         } finally {
             setIsLoading(false);
         }
@@ -347,6 +348,7 @@ export default function Eventos() {
   const [selectedEvent, setSelectedEvent] = useState(null); 
   const [showCreateModal, setShowCreateModal] = useState(false); 
   const [showLoginModal, setShowLoginModal] = useState(false); 
+  const [toast, setToast] = useState(null);
   const [userRole, setUserRole] = useState(null); 
   const scrollRefs = useRef({});
   
@@ -600,7 +602,8 @@ export default function Eventos() {
             userRole={userRole} 
             onClose={() => setSelectedEvent(null)} 
             onOpenLogin={handleOpenLoginModal}
-            onEventClosed={handleCloseEventSuccess} 
+            onEventClosed={handleCloseEventSuccess}
+            onShowToast={setToast}
         />
       )}
       
@@ -609,7 +612,12 @@ export default function Eventos() {
         <CreateEventModal 
             onClose={() => setShowCreateModal(false)} 
             onEventCreated={handleAddEvent} 
+            onShowToast={setToast}
         />
+      )}
+      {showCreateModal && toast && (
+        /* noop: placeholder to keep linter quiet about multiple render blocks */
+        null
       )}
       
       {/* Renderiza o LoginCard */}
@@ -617,9 +625,13 @@ export default function Eventos() {
         <LoginCard 
             onClose={() => setShowLoginModal(false)} 
             onLoginSuccess={handleLoginSuccess} 
+            onShowToast={setToast}
         />
       )}
-      
+      {toast && (
+        <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
+      )}
+
       <Footer />
     </>
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import CadastroCard from "./CadastroCard.jsx";
 import LoginCard from "./LoginCard.jsx";
+import Toast from "../components/Toast";
 import logo from "../assets/IMG/Work-UP_logo-Principal.png";
 import { Menu, X } from "lucide-react";
 
@@ -13,6 +14,7 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [toast, setToast] = useState(null);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -189,9 +191,13 @@ export default function Navbar() {
             <LoginCard
               onLoginSuccess={handleLoginSuccess}
               onClose={() => setShowLogin(false)}
+              onShowToast={setToast}
             />
           </div>
         </div>
+      )}
+      {toast && (
+        <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
       )}
     </>
   );

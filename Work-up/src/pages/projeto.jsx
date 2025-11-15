@@ -194,7 +194,8 @@ export default function ProjetosList() {
     const handleCreateProject = async (e) => {
         e.preventDefault();
         if (!nome || !descricao || !dataInicio || !dataFim || tags.length === 0) {
-            return alert("Preencha todos os campos obrigatórios (Nome, Descrição, Datas e Tags).");
+            setToast && setToast({ message: "Preencha todos os campos obrigatórios (Nome, Descrição, Datas e Tags).", type: 'error' });
+            return;
         }
 
         try {
@@ -233,7 +234,7 @@ export default function ProjetosList() {
             resetForm();
         } catch (err) {
             console.error("Erro ao criar projeto:", err.response?.data || err.message);
-            alert("Erro ao criar projeto. Verifique se está logado como empresa.");
+            setToast && setToast({ message: "Erro ao criar projeto. Verifique se está logado como empresa.", type: 'error' });
         }
     };
     
@@ -268,7 +269,7 @@ export default function ProjetosList() {
             );
         } catch (err) {
             console.error("Erro ao encerrar projeto:", err.response?.data || err.message);
-            alert("Você não tem permissão para encerrar este projeto.");
+            setToast && setToast({ message: "Você não tem permissão para encerrar este projeto.", type: 'error' });
         }
     };
 
@@ -571,6 +572,7 @@ export default function ProjetosList() {
                             window.location.reload();
                         }}
                         onClose={() => setShowLogin(false)}
+                        onShowToast={setToast}
                         />
                     </div>
                     </div>

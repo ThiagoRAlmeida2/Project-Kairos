@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import api from "../service/api";
 // Importei FaCheckCircle e FaTimesCircle para um visual melhor no status concluído
 import { FaUser, FaCheck, FaTimes, FaSync, FaProjectDiagram, FaArrowLeft, FaCheckCircle, FaTimesCircle } from "react-icons/fa"; 
+import Toast from "../components/Toast";
 import { useNavigate } from 'react-router-dom'; 
 import "../css/deashboardEmpresa.css"; 
 
@@ -122,6 +123,7 @@ export default function EmpresaDashboard() {
     const [candidatos, setCandidatos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [alunoSelecionadoId, setAlunoSelecionadoId] = useState(null);
+    const [toast, setToast] = useState(null);
     const token = localStorage.getItem("token");
     const baseURL = "/api/usuario";
 
@@ -135,7 +137,7 @@ export default function EmpresaDashboard() {
         } catch (error) {
             console.error("Erro ao carregar candidatos:", error.response || error);
             if (error.response?.status === 403) {
-                alert("Acesso negado. Você não é uma empresa ou está deslogado.");
+                setToast && setToast({ message: "Acesso negado. Você não é uma empresa ou está deslogado.", type: 'error' });
                 navigate("/projetos"); 
             }
         } finally {
@@ -173,7 +175,7 @@ export default function EmpresaDashboard() {
             ));
             
         } catch (error) {
-            alert(`Erro ao ${action}: ${error.response?.data || error.message}`);
+            setToast && setToast({ message: `Erro ao ${action}: ${error.response?.data || error.message}`, type: 'error' });
         }
     };
 
@@ -280,6 +282,9 @@ export default function EmpresaDashboard() {
                     alunoId={alunoSelecionadoId} 
                     onClose={() => setAlunoSelecionadoId(null)} 
                 />
+            )}
+            {toast && (
+                <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
             )}
         </div>
     );
