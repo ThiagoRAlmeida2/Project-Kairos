@@ -348,26 +348,23 @@ export default function Eventos() {
     }, []);
 
     // Busca os eventos da API e junta com os estáticos
-    useEffect(() => {
+  useEffect(() => {
         const fetchEvents = async () => {
-            setIsLoading(true); // Mostra o loading só durante a busca
+            setIsLoading(true); 
             setError(null);
             
             try {
-                // USA 'api.get'
                 const response = await api.get('/api/eventos');
-
-                // A resposta do Axios já está em .data
                 const data = response.data;
                 
                 const formattedEvents = data.map(event => ({
                     ...event,
-                    // A URL do Cloudinary já é completa
                     image: event.imageUrl || techConferenceImg 
                 }));
                 
-                // Junta os 10 cards estáticos com os cards vindos da API
-                setEvents([...allEvents, ...formattedEvents]);
+                // --- 👇 A CORREÇÃO ESTÁ AQUI 👇 ---
+                // Antes era: setEvents([...allEvents, ...formattedEvents]);
+                setEvents(formattedEvents); // Agora usa SÓ os eventos do banco
 
             } catch (err) {
                 console.error(err);
@@ -379,7 +376,7 @@ export default function Eventos() {
 
         fetchEvents();
     }, []); // Executa apenas uma vez
-
+    
     // Função de Sucesso do Login
     const handleLoginSuccess = (userData) => {
         setUserRole(userData.role); 
