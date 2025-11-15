@@ -230,6 +230,7 @@ export default function ProjetosList() {
             };
 
             setProjetos([...projetos, novoProjeto]);
+            setToast && setToast({ message: `Projeto criado com sucesso: ${novoProjeto.nome}`, type: 'success' });
             setShowModal(false);
             resetForm();
         } catch (err) {
