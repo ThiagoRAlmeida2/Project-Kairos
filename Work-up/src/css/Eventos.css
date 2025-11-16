@@ -564,10 +564,11 @@
 }
 
 /* Garante que o conteúdo do modal role internamente sem estourar */
-.event-modal-info .modal-details-grid,
-.event-modal-info .modal-actions {
+.event-modal-info .modal-details-grid {
   overflow: visible;
 }
+/* REMOVIDO: .event-modal-info .modal-actions { overflow: visible; } */
+
 
 .event-modal-info .modal-description {
   max-height: 200px;  /* Define a altura máxima (ajuste se precisar) */
@@ -728,6 +729,34 @@
     resize: vertical;
 }
 
+/* --- Wrapper para o Textarea (Contador de Caracteres) --- */
+.event-form .textarea-wrapper textarea {
+    margin-bottom: 0;
+}
+.textarea-wrapper {
+    position: relative;
+    margin-bottom: 15px; 
+}
+.char-counter {
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    background: var(--background-light);
+    padding: 2px 6px;
+    border-radius: 4px;
+    opacity: 0.8;
+}
+.textarea-wrapper .char-counter {
+    display: none;
+}
+.textarea-wrapper textarea:focus + .char-counter,
+.textarea-wrapper textarea:not(:placeholder-shown) + .char-counter {
+    display: block;
+}
+
+
 /* --- Estilos para Campo de Upload Customizado --- */
 .form-group-image label {
     font-weight: 700;
@@ -824,7 +853,8 @@
     }
 }
 
-.btn-inscrever, .btn-login {
+/* CORRIGIDO: Botões de ação do Modal de Detalhes */
+.btn-inscrever, .btn-login, .btn-encerrar {
     background: var(--dark-blue); 
     color: white;
     padding: 12px 25px; 
@@ -834,19 +864,28 @@
     font-weight: bold;
     cursor: pointer;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
-    width: 100%;
+    width: 100%; 
     display: flex;
     justify-content: center;
-    margin-top: 160px;
+    margin-top: 0;
     align-items: center;
     gap: 10px;
 }
-
 .btn-inscrever:hover,
-.btn-login:hover {
+.btn-login:hover,
+.btn-encerrar:hover {
     transform: translateY(-2px); /* Eleva sutilmente ao pairar */
     box-shadow: 0 8px 20px rgba(50, 152, 239, 0.3);
     animation: pulseBtn 0.8s ease-in-out infinite alternate; /* Aplica a animação */
+}
+
+/* Cor específica para o botão Encerrar */
+.btn-encerrar {
+    background: #dc3545; /* Vermelho */
+}
+.btn-encerrar:hover {
+    background: #c82333; /* Vermelho escuro */
+    box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
 }
 
 .empresa-info {
@@ -855,6 +894,8 @@
     padding: 10px;
     border: 1px solid #dc3545;
     border-radius: 5px;
+    /* Alinha o texto à direita junto com os botões */
+    text-align: right; 
 }
 
 
@@ -888,6 +929,16 @@
     display: none;
 }
 
+/* ADICIONADO: Container de Ações (para empurrar para baixo) */
+.modal-actions {
+  margin-top: auto;   /* <-- A MÁGICA: Empurra para o fundo */
+  padding-top: 20px;  /* Espaço acima dos botões */
+  display: flex;
+  flex-direction: column; 
+  align-items: flex-end;  /* Alinha os botões à direita */
+  gap: 10px; 
+}
+
 
 /* 4. Padroniza a altura da imagem no modal (Desktop) */
 @media (min-width: 900px) {
@@ -911,8 +962,12 @@
      object-fit: cover; /* Garante que a imagem cubra a área */
   }
   
+  /* CORRIGIDO: Força a coluna de info a ter a mesma altura da imagem */
   .event-modal-info {
     padding-top: 0;
+    height: 400px; /* <-- Altura correspondente à imagem */
+    display: flex;
+    flex-direction: column; /* Organiza o conteúdo verticalmente */
   }
 }
 
@@ -932,5 +987,15 @@
     }
     .event-modal-info {
         padding: 20px;
+    }
+    
+    /* Garante que o alinhamento dos botões funcione no mobile também */
+    .modal-actions {
+        margin-top: 20px;
+        align-items: stretch; /* Ocupa 100% da largura no mobile */
+    }
+    
+    .btn-inscrever, .btn-login, .btn-encerrar {
+        width: 100%; 
     }
 }
