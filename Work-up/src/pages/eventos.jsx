@@ -124,7 +124,7 @@ function CreateEventModal({ onClose, onEventCreated, setToast }) {
     const [fileName, setFileName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const DESCRIPTION_MAX_LENGTH = 500;
+    const DESCRIPTION_MAX_LENGTH = 300;
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
