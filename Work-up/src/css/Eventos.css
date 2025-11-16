@@ -17,6 +17,12 @@
    --border-color: #e2e8f0;
    --shadow-main: 0 4px 20px rgba(0, 0, 0, 0.1);
    --shadow-blue-glow: 0 4px 20px rgba(50, 152, 239, 0.4);
+   
+   /* Cores do Dashboard (para a tabela) */
+   --success-color: #2ecc71;
+   --danger-color: #e74c3c;
+   --warning-color: #f1c40f;
+   --gradient-blue: linear-gradient(135deg, #312e81 0%, #1e1b4b 50%, #111827 100%);
 }
 
 /* Events container */
@@ -129,7 +135,7 @@
     box-shadow: 0 6px 20px rgba(50, 152, 239, 0.6);
 }
 
-/* Botão Encerrar no Modal de Detalhes */
+
 .btn-encerrar {
   background: var(--primary-blue);
     color: var(--white);
@@ -381,9 +387,8 @@
     font-size: 1rem;
   }
   
-  /* Ajuste do Container de Ações no Mobile */
   .hero-actions-row {
-      flex-direction: column; /* Empilha a busca e o botão */
+      flex-direction: column;
       gap: 12px;
   }
   
@@ -439,14 +444,12 @@
   .events-row {
     padding: 0 50px;
   }
-  
-  /* Responsividade do Modal de Criação */
+
   .modal-content.create-event-modal {
       max-width: 95%;
       padding: 25px;
   }
   
-  /* Quebra a linha de inputs do modal de criação */
   .event-form .input-group-row {
         flex-direction: column;
         gap: 0;
@@ -510,7 +513,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7); /* Fundo escuro */
+    background: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -528,7 +531,6 @@
     box-sizing: border-box;
 }
 
-/* animações de abertura do modal */
 .modal-backdrop {
   animation: fadeInBackdrop 200ms ease forwards;
 }
@@ -557,12 +559,10 @@
   padding-top: 16px;
 }
 
-/* Layout side-by-side para telas maiores */
 .event-details-modal {
   display: block;
 }
 
-/* Garante que o conteúdo do modal role internamente sem estourar */
 .event-modal-info .modal-details-grid {
   overflow: visible;
 }
@@ -580,7 +580,6 @@
   font-size: 1.6rem;
 }
 
-/* Botão 'Ver Detalhes' dentro do card */
 .btn-ver-detalhes {
   margin: 12px 16px 18px 16px;
   padding: 10px 12px;
@@ -620,22 +619,19 @@
     cursor: pointer;
     color: #333;
     transition: color 0.2s;
-    z-index: 10; /* Garante que fique acima do badge */
+    z-index: 10;
 }
 
 .modal-close-btn:hover {
     color: #ff0000;
 }
 
-/* --- Estilos Específicos para o Novo Login Modal --- */
-
 .login-modal {
-    width: 400px; /* Largura menor para um modal de login */
-    max-width: 90%; /* Adicionado para responsividade */
+    width: 400px;
+    max-width: 90%;
     text-align: center;
 }
 
-/* --- Estilos para Event Details Modal (garantindo o tamanho grande) --- */
 .event-details-modal {
     max-width: 700px;
     padding: 0; 
@@ -643,7 +639,6 @@
     flex-direction: row;
 }
 
-/* Especificidade para garantir modal maior no contexto de detalhes (sobrepõe outras regras globais) */
 .modal-content.event-details-modal {
   width: min(1100px, 95%) !important;
   max-width: 1100px !important;
@@ -652,10 +647,9 @@
   box-sizing: border-box !important;
 }
 
-/* --- MODAL DE CRIAÇÃO DE EVENTO (BASEADO NO MODAL DE PROJETOS) --- */
 .modal-content.create-event-modal {
     width: 90%;
-    max-width: 700px; /* Igual ao large-modal de projetos */
+    max-width: 700px;
     padding: 35px 40px; 
     border-radius: 16px; 
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
@@ -679,7 +673,6 @@
     gap: 15px; 
 }
 
-/* Estilo para agrupar Data e Local lado a lado (2 colunas) */
 .event-form .input-group-row {
     display: flex;
     gap: 20px;
@@ -689,22 +682,20 @@
     flex-basis: 50%;
 }
 
-/* Estilo dos Labels (APROXIMANDO O RÓTULO DO CAMPO) */
 .event-form label {
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: 2px; /* <-- REDUZIDO PARA APROXIMAR DO CAMPO */
+    margin-bottom: 2px;
     display: block;
     font-size: 0.95rem;
 }
 
-/* Estilo dos Inputs */
 .event-form input,
 .event-form textarea,
 .event-form select {
     width: 100%;
     padding: 12px 15px;
-    margin-bottom: 15px; /* Espaçamento entre os grupos */
+    margin-bottom: 15px;
     border: 1px solid #dcdcdc;
     border-radius: 10px; 
     font-size: 1rem;
@@ -726,7 +717,6 @@
     resize: vertical;
 }
 
-/* --- Wrapper para o Textarea (Contador de Caracteres) --- */
 .event-form .textarea-wrapper textarea {
     margin-bottom: 0;
 }
@@ -753,12 +743,10 @@
     display: block;
 }
 
-
-/* --- Estilos para Campo de Upload Customizado --- */
 .form-group-image label {
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: 5px; /* Espaço entre o RÓTULO principal e o botão */
+    margin-bottom: 5px;
     display: block;
     font-size: 0.95rem;
 }
@@ -767,11 +755,10 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-bottom: 20px; /* Adiciona espaço após o upload */
+    margin-bottom: 20px;
 }
 
 .file-input-wrapper input[type="file"] {
-    /* Esconde o input padrão */
     display: none;
 }
 
@@ -801,11 +788,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 100%; /* Limita para evitar que estoure */
+    max-width: 100%;
 }
 
-
-/* Estilo do Botão de Submit (Criar Evento) */
 .btn-principal.btn-submit-event {
     margin-top: 25px;
     background: linear-gradient(90deg, var(--dark-blue), var(--primary-blue));
@@ -832,25 +817,12 @@
     opacity: 0.95;
 }
 
-
-/* --- ESTILOS DE BOTÕES DE INSCRIÇÃO COM ANIMAÇÃO --- */
-
 @keyframes pulseBtn {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-    50% {
-        transform: scale(1.02);
-        box-shadow: 0 8px 25px rgba(50, 152, 239, 0.5); /* Sutil brilho azul */
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
+    0% { transform: scale(1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+    50% { transform: scale(1.02); box-shadow: 0 8px 25px rgba(50, 152, 239, 0.5); }
+    100% { transform: scale(1); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
 }
 
-/* CORRIGIDO: Botões de ação do Modal de Detalhes */
 .btn-inscrever, .btn-login, .btn-encerrar {
     background: var(--dark-blue); 
     color: white;
@@ -861,27 +833,26 @@
     font-weight: bold;
     cursor: pointer;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
-    width: auto; /* <-- CORRIGIDO */
+    width: auto;
     display: flex;
     justify-content: center;
-    margin-top: 0; /* <-- CORRIGIDO */
+    margin-top: 0;
     align-items: center;
     gap: 10px;
 }
 .btn-inscrever:hover,
 .btn-login:hover,
 .btn-encerrar:hover {
-    transform: translateY(-2px); /* Eleva sutilmente ao pairar */
+    transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(50, 152, 239, 0.3);
-    animation: pulseBtn 0.8s ease-in-out infinite alternate; /* Aplica a animação */
+    animation: pulseBtn 0.8s ease-in-out infinite alternate;
 }
 
-/* Cor específica para o botão Encerrar */
 .btn-encerrar {
-    background: #dc3545; /* Vermelho */
+    background: #dc3545;
 }
 .btn-encerrar:hover {
-    background: #c82333; /* Vermelho escuro */
+    background: #c82333;
     box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
 }
 
@@ -891,7 +862,6 @@
     padding: 10px;
     border: 1px solid #dc3545;
     border-radius: 5px;
-    /* Alinha o texto à direita junto com os botões */
     text-align: right; 
 }
 
@@ -901,18 +871,17 @@
 /* ======================================= */
 
 .event-modal-image {
-  position: relative; /* Necessário para o 'badge' flutuar */
-  overflow: hidden;   /* Garante que a imagem obedeça o 'border-radius' */
+  position: relative;
+  overflow: hidden;
 }
 
-/* 2. Estilo do 'badge' da categoria (para ficar sobre a imagem) */
 .event-category-badge-modal {
   position: absolute;
-  top: 15px;       /* Posição dentro do modal */
-  right: 15px;      /* Posição dentro do modal */
+  top: 15px;
+  right: 15px;
   background: var(--primary-blue);
   color: var(--white);
-  padding: 6px 22px; /* Um pouco maior que o do card */
+  padding: 6px 22px;
   border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 600;
@@ -920,24 +889,20 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* 3. Remove a 'categoria' da área de texto (já que ela agora está na imagem) */
 .event-modal-info .modal-details-grid p:nth-child(3) {
-    /* Oculta o <p><FaTag /> Categoria: ...</p> */
     display: none;
 }
 
-/* ADICIONADO: Container de Ações (para empurrar para baixo) */
 .modal-actions {
-  margin-top: auto;   /* <-- A MÁGICA: Empurra para o fundo */
-  padding-top: 20px;  /* Espaço acima dos botões */
+  margin-top: auto;
+  padding-top: 20px;
   display: flex;
   flex-direction: column; 
-  align-items: flex-end;  /* Alinha os botões à direita */
+  align-items: flex-end;
   gap: 10px; 
 }
 
 
-/* 4. Padroniza a altura da imagem no modal (Desktop) */
 @media (min-width: 900px) {
   .event-details-modal {
     display: grid;
@@ -947,28 +912,26 @@
   }
 
   .event-modal-image {
-    height: 400px; /* <-- Define uma altura fixa */
-    max-height: 400px; /* Garante que não ultrapasse */
-    border-radius: 8px; /* Arredonda a borda */
+    height: 400px;
+    max-height: 400px;
+    border-radius: 8px;
   }
   
   .event-modal-image img {
-     margin-top: 0; /* <-- Remove a margem '40px' que estava antes */
+     margin-top: 0;
      width: 100%;
      height: 100%;
-     object-fit: cover; /* Garante que a imagem cubra a área */
+     object-fit: cover;
   }
   
-  /* CORRIGIDO: Força a coluna de info a ter a mesma altura da imagem */
   .event-modal-info {
     padding-top: 0;
-    height: 400px; /* <-- Altura correspondente à imagem */
+    height: 400px;
     display: flex;
-    flex-direction: column; /* Organiza o conteúdo verticalmente */
+    flex-direction: column;
   }
 }
 
-/* 5. Garante que o 'badge' funcione no mobile também */
 @media (max-width: 768px) {
     .event-details-modal {
         flex-direction: column;
@@ -980,20 +943,19 @@
     .event-modal-image {
         height: 200px;
         border-radius: 10px 10px 0 0;
-        position: relative; /* Adiciona para o badge funcionar no mobile */
+        position: relative;
     }
     .event-modal-info {
         padding: 20px;
     }
     
-    /* Garante que o alinhamento dos botões funcione no mobile também */
     .modal-actions {
         margin-top: 20px;
-        align-items: stretch; /* Ocupa 100% da largura no mobile */
+        align-items: stretch;
     }
     
     .btn-inscrever, .btn-login, .btn-encerrar {
-        width: 100%; /* Botões ocupam largura total no mobile */
+        width: 100%;
     }
 }
 
@@ -1001,13 +963,10 @@
 /* MELHORIA 1: "MEUS EVENTOS" (ALUNO)      */
 /* ======================================= */
 
-/* 1. Botão "Meus Eventos" no Hero - ESTILO REMOVIDO */
-/* .btn-my-events { ... } */
-
-/* 2. Estilo do Modal "Meus Eventos" - TAMANHO AUMENTADO */
+/* 1. Estilo do Modal "Meus Eventos" - TAMANHO AUMENTADO */
 .my-events-modal {
     width: 90%;
-    max-width: 100%; /* <-- AUMENTADO DE 600px para 800px */
+    max-width: 800px; /* <-- AUMENTADO */
     padding: 35px 40px; 
     border-radius: 16px;
     max-height: 80vh;
@@ -1021,16 +980,6 @@
     font-weight: 700;
 }
 
-/* 3. Lista de Eventos dentro do Modal */
-.my-events-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    max-height: 50vh; /* Altura máxima da lista */
-    overflow-y: auto; /* Adiciona rolagem se a lista for longa */
-    padding: 5px;
-}
-
 .no-results-modal {
     text-align: center;
     padding: 40px 0;
@@ -1038,68 +987,95 @@
     font-style: italic;
 }
 
-/* 4. Card Simples para o Evento na Lista - ATUALIZADO COM PADDING */
-.my-event-card {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    background: var(--background-light);
-    border-radius: 8px;
-    padding: 15px;
-    border: 1px solid var(--border-color);
-    position: relative; /* Para o botão de cancelar */
-    /* Adiciona espaço à direita para o botão */
-    padding-right: 140px; 
+
+/* 2. Wrapper da Tabela (para overflow) */
+.my-events-modal .dashboard-table-wrapper {
+    overflow: hidden; 
+    overflow-x: auto;
+    background: var(--card-dark); 
+    border-radius: 15px; 
+    box-shadow: var(--shadow-main);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    max-height: 50vh; /* Altura máxima da lista */
+    overflow-y: auto; /* Adiciona rolagem se a lista for longa */
 }
 
-.my-event-card-img {
-    width: 100px;
-    height: 70px;
-    object-fit: cover;
-    border-radius: 6px;
-    flex-shrink: 0;
+/* 3. Tabela */
+.my-events-modal .candidatos-table {
+    width: 100%;
+    border-collapse: collapse; 
+    min-width: 600px; /* Largura mínima para evitar quebra */
 }
 
-.my-event-card-info {
-    flex-grow: 1;
-}
-
-.my-event-card-info h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 0 0 8px 0;
-}
-
-.my-event-card-info p {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin: 4px 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* 5. NOVO: Botão de Cancelar Inscrição */
-.btn-cancelar-inscricao {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #dc3545; /* Vermelho */
+.my-events-modal .candidatos-table thead { 
+    background: var(--gradient-blue);
     color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
+}
+
+.my-events-modal .candidatos-table th, 
+.my-events-modal .candidatos-table td {
+    padding: 16px 20px; 
+    text-align: left;
+    border: none; 
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.my-events-modal .candidatos-table thead tr:first-child th:first-child { 
+    border-top-left-radius: 15px; 
+}
+.my-events-modal .candidatos-table thead tr:first-child th:last-child { 
+    border-top-right-radius: 15px; 
+}
+
+.my-events-modal .candidatos-table tr:hover td {
+    background-color: #f7f7fc; 
+}
+.my-events-modal .candidatos-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* 4. Célula de Ações */
+.my-events-modal .action-buttons {
     display: flex;
+    align-items: center; 
+    gap: 10px;
+}
+
+/* 5. Botão de Cancelar (estilo 'declinar' do dashboard) */
+.my-events-modal .btn-declinar {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 700;
+    display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-size: 0.9rem;
+    transition: all 0.2s;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    background-color: var(--danger-color);
+    color: white;
+}
+.my-events-modal .btn-declinar:hover {
+    background-color: #c0392b;
 }
 
-.btn-cancelar-inscricao:hover {
-    background: #c82333;
-    transform: translateY(-50%) scale(1.05);
+/* 6. Tag de Status */
+.my-events-modal .status-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.my-events-modal .status-tag.status-aprovado {
+    background-color: var(--success-color);
+    color: white;
 }
