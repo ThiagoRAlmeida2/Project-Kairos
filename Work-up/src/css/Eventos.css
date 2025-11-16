@@ -523,7 +523,6 @@
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     position: relative;
-    /* REMOVIDO: as dimensões globais para evitar conflito */
     max-height: calc(100vh - 80px); 
     overflow-y: auto;
     box-sizing: border-box;
@@ -548,7 +547,7 @@
 .event-modal-image img {
   width: 100%;
   height: 100%;
-  margin-top: 40px;
+  /* margin-top: 40px; */ /* REMOVIDO */
   max-height: none;
   object-fit: cover;
   border-radius: 8px;
@@ -564,32 +563,20 @@
   display: block;
 }
 
-@media (min-width: 900px) {
-  .event-details-modal {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    align-items: start;
-  }
-
-  .event-modal-image {
-    height: 100%;
-    max-height: calc(100vh - 160px);
-    overflow: hidden;
-  }
-
-  .event-modal-info {
-    padding-top: 0;
-  }
-}
-
 /* Garante que o conteúdo do modal role internamente sem estourar */
-.event-modal-info > .modal-description,
 .event-modal-info .modal-details-grid,
 .event-modal-info .modal-actions {
   overflow: visible;
 }
 
+.event-modal-info .modal-description {
+  max-height: 200px;  /* Define a altura máxima (ajuste se precisar) */
+  overflow-y: auto;   /* Adiciona a barra de rolagem SÓ se o texto for longo */
+  padding-right: 15px; /* Cria um espaço para a barra de rolagem não colar no texto */
+  line-height: 1.6;     /* Melhora a legibilidade do texto */
+  color: var(--text-secondary);
+  margin-bottom: 20px; /* Adiciona um espaço antes dos ícones de data/local */
+}
 .event-modal-info h2 {
   margin-top: 0;
   font-size: 1.6rem;
@@ -635,6 +622,7 @@
     cursor: pointer;
     color: #333;
     transition: color 0.2s;
+    z-index: 10; /* Garante que fique acima do badge */
 }
 
 .modal-close-btn:hover {
@@ -849,6 +837,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    margin-top: 160px;
     align-items: center;
     gap: 10px;
 }
@@ -868,6 +857,66 @@
     border-radius: 5px;
 }
 
+
+/* ======================================= */
+/* AJUSTES DO MODAL DE DETALHES            */
+/* ======================================= */
+
+.event-modal-image {
+  position: relative; /* Necessário para o 'badge' flutuar */
+  overflow: hidden;   /* Garante que a imagem obedeça o 'border-radius' */
+}
+
+/* 2. Estilo do 'badge' da categoria (para ficar sobre a imagem) */
+.event-category-badge-modal {
+  position: absolute;
+  top: 15px;       /* Posição dentro do modal */
+  right: 15px;      /* Posição dentro do modal */
+  background: var(--primary-blue);
+  color: var(--white);
+  padding: 6px 22px; /* Um pouco maior que o do card */
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 3. Remove a 'categoria' da área de texto (já que ela agora está na imagem) */
+.event-modal-info .modal-details-grid p:nth-child(3) {
+    /* Oculta o <p><FaTag /> Categoria: ...</p> */
+    display: none;
+}
+
+
+/* 4. Padroniza a altura da imagem no modal (Desktop) */
+@media (min-width: 900px) {
+  .event-details-modal {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .event-modal-image {
+    height: 400px; /* <-- Define uma altura fixa */
+    max-height: 400px; /* Garante que não ultrapasse */
+    border-radius: 8px; /* Arredonda a borda */
+  }
+  
+  .event-modal-image img {
+     margin-top: 0; /* <-- Remove a margem '40px' que estava antes */
+     width: 100%;
+     height: 100%;
+     object-fit: cover; /* Garante que a imagem cubra a área */
+  }
+  
+  .event-modal-info {
+    padding-top: 0;
+  }
+}
+
+/* 5. Garante que o 'badge' funcione no mobile também */
 @media (max-width: 768px) {
     .event-details-modal {
         flex-direction: column;
@@ -879,6 +928,7 @@
     .event-modal-image {
         height: 200px;
         border-radius: 10px 10px 0 0;
+        position: relative; /* Adiciona para o badge funcionar no mobile */
     }
     .event-modal-info {
         padding: 20px;
