@@ -1007,7 +1007,7 @@
 /* 2. Estilo do Modal "Meus Eventos" - TAMANHO AUMENTADO */
 .my-events-modal {
     width: 90%;
-    max-width: 800px; /* <-- AUMENTADO DE 600px para 800px */
+    max-width: 100%; /* <-- AUMENTADO DE 600px para 800px */
     padding: 35px 40px; 
     border-radius: 16px;
     max-height: 80vh;
