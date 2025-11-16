@@ -999,3 +999,102 @@
         width: 100%; 
     }
 }
+
+/* ======================================= */
+/* MELHORIA 1: "MEUS EVENTOS" (ALUNO)      */
+/* ======================================= */
+
+/* 1. Botão "Meus Eventos" no Hero */
+.btn-my-events {
+    background: #f1f5f9; /* Cor clara, diferente do "Criar Evento" */
+    color: var(--dark-blue);
+    border: none;
+    padding: 16px 25px; 
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn-my-events:hover {
+    background: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+}
+
+/* 2. Estilo do Modal "Meus Eventos" */
+.my-events-modal {
+    width: 90%;
+    max-width: 600px; /* Modal de tamanho médio */
+    padding: 35px 40px; 
+    border-radius: 16px;
+    max-height: 80vh;
+}
+
+.my-events-modal h2 {
+    margin-bottom: 25px;
+    text-align: center;
+    color: var(--primary-blue);
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+/* 3. Lista de Eventos dentro do Modal */
+.my-events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 50vh; /* Altura máxima da lista */
+    overflow-y: auto; /* Adiciona rolagem se a lista for longa */
+    padding: 5px;
+}
+
+.no-results-modal {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* 4. Card Simples para o Evento na Lista */
+.my-event-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: var(--background-light);
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.my-event-card-img {
+    width: 100px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.my-event-card-info {
+    flex-grow: 1;
+}
+
+.my-event-card-info h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.my-event-card-info p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

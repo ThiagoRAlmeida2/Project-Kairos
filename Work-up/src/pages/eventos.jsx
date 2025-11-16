@@ -55,20 +55,39 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
     const isEmpresa = userRole === 'ROLE_EMPRESA';
     const isDeslogado = !userRole;
 
-    const handleInscricao = () => {
+    // ATUALIZADO: Agora chama a API
+    const handleInscricao = async () => {
         if (isDeslogado) {
             onClose(); 
             onOpenLogin();
-        } else if (isAluno) {
-            setToast({
-              message: `Inscrição confirmada para o evento: ${event.title}!`,
-              type: 'success'
-            });
-            onClose();
+            return;
+        } 
+        
+        if (isAluno) {
+            try {
+                // 1. CHAMA A NOVA API DE INSCRIÇÃO
+                await api.post(`/api/eventos/${event.id}/inscrever`);
+                
+                // 2. MOSTRA O TOAST DE SUCESSO
+                setToast({
+                  message: `Inscrição confirmada para o evento: ${event.title}!`,
+                  type: 'success'
+                });
+                onClose();
+
+            } catch (error) {
+                // 3. MOSTRA O TOAST DE ERRO
+                console.error("Falha ao se inscrever:", error);
+                const errorMsg = error.response?.data?.message || error.response?.data || "Erro ao se inscrever.";
+                setToast({
+                    message: errorMsg,
+                    type: 'error'
+                });
+            }
         }
     };
     
-    // CORRIGIDO: Esta função agora apenas abre o diálogo de confirmação
+    // ATUALIZADO: Apenas abre o ConfirmDialog
     const handleOpenConfirmDialog = () => {
         onOpenConfirm(event); // 1. Avisa o "Pai" para abrir o diálogo
         onClose(); // 2. Fecha este modal de detalhes
@@ -123,8 +142,9 @@ function CreateEventModal({ onClose, onEventCreated, setToast }) {
     const [newEvent, setNewEvent] = useState(initialNewEvent);
     const [fileName, setFileName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
-    const DESCRIPTION_MAX_LENGTH = 300;
+    
+    // ATUALIZADO: Limite de caracteres
+    const DESCRIPTION_MAX_LENGTH = 300; 
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
@@ -152,7 +172,7 @@ function CreateEventModal({ onClose, onEventCreated, setToast }) {
         if (!newEvent.fileData) {
             setToast({
               message: "Por favor, selecione uma imagem de capa para o evento.",
-              type: 'warning' // ou 'error'
+              type: 'warning'
             });
             return;
         }
@@ -224,8 +244,10 @@ function CreateEventModal({ onClose, onEventCreated, setToast }) {
                         placeholder="Ex: Spring Boot Masterclass"
                         disabled={isLoading}
                     />
-                  <label>Descrição:</label>
-                    <div className="textarea-wrapper"> {/* Adiciona este wrapper */}
+
+                    {/* ATUALIZADO: Com wrapper e contador */}
+                    <label>Descrição:</label>
+                    <div className="textarea-wrapper">
                         <textarea
                             name="description"
                             value={newEvent.description}
@@ -234,9 +256,8 @@ function CreateEventModal({ onClose, onEventCreated, setToast }) {
                             rows="3"
                             placeholder="Descreva o objetivo e o público-alvo do evento."
                             disabled={isLoading}
-                            maxLength={DESCRIPTION_MAX_LENGTH} // 👈 Adiciona o limite
+                            maxLength={DESCRIPTION_MAX_LENGTH}
                         />
-                        {/* 3. Adiciona o contador visual */}
                         <div className="char-counter">
                             {newEvent.description.length} / {DESCRIPTION_MAX_LENGTH}
                         </div>
@@ -304,6 +325,75 @@ function CreateEventModal({ onClose, onEventCreated, setToast }) {
     );
 }
 
+
+// =================================================================
+// NOVO COMPONENTE: MODAL "MEUS EVENTOS"
+// =================================================================
+function MyEventsModal({ onClose }) {
+    const [myEvents, setMyEvents] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchMyEvents = async () => {
+            setIsLoading(true);
+            setError(null);
+            try {
+                // 1. Busca no novo endpoint
+                const response = await api.get('/api/eventos/minhas-inscricoes');
+                
+                // 2. Formata os dados
+                const formatted = response.data.map(event => ({
+                    ...event,
+                    image: event.imageUrl || techConferenceImg 
+                }));
+                setMyEvents(formatted);
+            } catch (err) {
+                console.error("Erro ao buscar minhas inscrições:", err);
+                setError("Não foi possível carregar seus eventos.");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchMyEvents();
+    }, []); // Roda apenas uma vez quando o modal abre
+
+    return (
+        <div className="modal-backdrop" onClick={onClose}>
+            <div className="modal-content my-events-modal" onClick={e => e.stopPropagation()}>
+                <button className="modal-close-btn" onClick={onClose}><FaTimes /></button>
+                <h2>Meus Eventos Inscritos</h2>
+                
+                <div className="my-events-list">
+                    {isLoading && <p>Carregando...</p>}
+                    
+                    {error && <p className="error-message">{error}</p>}
+                    
+                    {!isLoading && !error && myEvents.length === 0 && (
+                        <p className="no-results-modal">Você ainda não se inscreveu em nenhum evento.</p>
+                    )}
+
+                    {!isLoading && !error && myEvents.map(event => (
+                        <div key={event.id} className="my-event-card">
+                            <img src={event.image} alt={event.title} className="my-event-card-img" />
+                            <div className="my-event-card-info">
+                                <h3>{event.title}</h3>
+                                <p><FaCalendarAlt /> {event.date}</p>
+                                <p><FaMapMarkerAlt /> {event.location}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+}
+// =================================================================
+// FIM DO NOVO COMPONENTE
+// =================================================================
+
+
 // Componente principal Eventos
 export default function Eventos() {
     // CORRIGIDO: Começa com array vazio
@@ -320,9 +410,11 @@ export default function Eventos() {
     const [userRole, setUserRole] = useState(null); 
     const [toast, setToast] = useState(null);
     
-    // ADICIONADO: Estados para o ConfirmDialog
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [eventToClose, setEventToClose] = useState(null);
+    
+    // ADICIONADO: Estado para o novo modal
+    const [showMyEventsModal, setShowMyEventsModal] = useState(false);
     
     const scrollRefs = useRef({});
 
@@ -391,7 +483,7 @@ export default function Eventos() {
         setShowLoginModal(false);
     };
 
-    // ADICIONADO: Funções para o ConfirmDialog
+    // Funções para o ConfirmDialog
     const handleOpenConfirmClose = (event) => {
         setEventToClose(event);
         setShowConfirmDialog(true);
@@ -473,9 +565,7 @@ export default function Eventos() {
         );
     }, [searchTerm, events]); 
 
-    // =================================================================
-    // 👇 MELHORIA 2 APLICADA AQUI 👇
-    // =================================================================
+    // MELHORIA 2: Categorias Dinâmicas
     const eventCategories = useMemo(() => {
         // 1. Separa os eventos em Destaque
         const featuredEvents = filteredEvents.filter(event => event.featured === true);
@@ -487,24 +577,22 @@ export default function Eventos() {
         const groupedEvents = nonFeaturedEvents.reduce((acc, event) => {
             const category = event.category || "Outros"; // Usa 'Outros' se a categoria for nula
             
-            // Se o acumulador (acc) ainda não tem a chave, cria um array para ela
             if (!acc[category]) {
                 acc[category] = [];
             }
             
-            // Adiciona o evento ao seu grupo de categoria
             acc[category].push(event);
             return acc;
         }, {}); // O 'acc' começa como um objeto vazio
 
         // 4. Transforma o objeto { "Workshop": [...], "Conferência": [...] } em um array
         const dynamicCategories = Object.keys(groupedEvents).map(categoryName => ({
-            title: categoryName, // O título da seção (ex: "Conferência")
-            events: groupedEvents[categoryName], // O array de eventos
+            title: categoryName,
+            events: groupedEvents[categoryName],
             totalEvents: groupedEvents[categoryName].length
         }));
 
-        // 5. Cria a seção "Destaque" (se houver eventos)
+        // 5. Cria a seção "Destaque"
         const featuredCategory = {
             title: "Eventos em Destaque",
             events: featuredEvents,
@@ -518,15 +606,11 @@ export default function Eventos() {
         return allCategoryRows.map((cat, index) => {
           return {
             ...cat,
-            // Lógica original para mostrar apenas 8 cards se não estiver expandido
             events: expandedCategories[index] ? cat.events : cat.events.slice(0, 8),
           };
         }).filter(cat => cat.totalEvents > 0); // Remove seções sem eventos
 
     }, [filteredEvents, expandedCategories]);
-    // =================================================================
-    // FIM DA MELHORIA 2
-    // =================================================================
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -589,6 +673,16 @@ export default function Eventos() {
                             onClick={handleOpenCreateModal}
                         >
                             <FaPlusCircle /> Criar Evento
+                        </button>
+                    )}
+
+                    {/* ADICIONADO: Botão "Meus Eventos" */}
+                    {userRole === 'ROLE_ALUNO' && (
+                        <button 
+                            className="btn-my-events" 
+                            onClick={() => setShowMyEventsModal(true)}
+                        >
+                            Meus Eventos
                         </button>
                     )}
                 </div>
@@ -705,7 +799,7 @@ export default function Eventos() {
                 onOpenLogin={handleOpenLoginModal}
                 onEventClosed={handleCloseEventSuccess} 
                 setToast={setToast}
-                onOpenConfirm={handleOpenConfirmClose} // CORRIGIDO: Passa a prop
+                onOpenConfirm={handleOpenConfirmClose}
             />
           )}
           
@@ -724,10 +818,15 @@ export default function Eventos() {
                 onShowToast={setToast}
             />
           )}
+
+          {/* ADICIONADO: Renderização do novo modal */}
+          {showMyEventsModal && (
+            <MyEventsModal onClose={() => setShowMyEventsModal(false)} />
+          )}
           
           <Footer />
 
-          {/* CORRIGIDO: Renderiza o Toast */}
+          {/* Renderiza o Toast */}
           {toast && (
               <Toast
                   message={toast.message}
@@ -736,7 +835,7 @@ export default function Eventos() {
               />
           )}
 
-          {/* CORRIGIDO: Renderiza o ConfirmDialog */}
+          {/* Renderiza o ConfirmDialog */}
           {showConfirmDialog && (
             <ConfirmDialog
                 message={`Tem certeza que deseja encerrar o evento: ${eventToClose?.title}? Esta ação é irreversível.`}
