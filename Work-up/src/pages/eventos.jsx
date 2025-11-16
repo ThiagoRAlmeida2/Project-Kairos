@@ -4,7 +4,8 @@ import Footer from "../components/Footer";
 import Toast from "../components/Toast";
 import ConfirmDialog from "../components/ConfirmDialog";
 import LoginCard from "../components/LoginCard"; 
-import { FaChevronLeft, FaChevronRight, FaCalendarAlt, FaMapMarkerAlt, FaTag, FaCheckCircle, FaLaptopCode, FaTimes, FaPlusCircle } from "react-icons/fa";
+// ADICIONADO FaClipboardList
+import { FaChevronLeft, FaChevronRight, FaCalendarAlt, FaMapMarkerAlt, FaTag, FaCheckCircle, FaLaptopCode, FaTimes, FaPlusCircle, FaClipboardList } from "react-icons/fa";
 
 import api from '../service/api' 
 import techConferenceImg from '../assets/IMG/Conferencia de tecnologia.jpg';
@@ -18,7 +19,7 @@ import hackathonImg from '../assets/IMG/Hackathon.jpg';
 import codeChallengeImg from '../assets/IMG/Code Challenge.jpg';
 import startupWeekendImg from '../assets/IMG/Startup weekend.jpg';
 
-// 3. Seus cards estáticos (Mantidos)
+// ... (const allEvents)
 const allEvents = [
   { id: 100009, title: "Tech Conference 2025", description: "Grande conferência anual sobre tendências e inovações em IA e Cloud Computing.", date: "15 Jan", location: "São Paulo", image: techConferenceImg, category: "Conferência", featured: true },
   { id: 200000, title: "React Workshop", description: "Imersão de 8 horas para construir uma SPA moderna com hooks avançados do React.", date: "20 Jan", location: "Online", image: reactImg, category: "Workshop", featured: true },
@@ -32,6 +33,7 @@ const allEvents = [
   { id: 100000, title: "Startup Weekend", description: "Tire sua ideia do papel e lance sua startup em um fim de semana.", date: "20 Fev", location: "Porto Alegre", image: startupWeekendImg, category: "Hackathon" },
 ];
 
+// ... (const initialNewEvent)
 const initialNewEvent = {
     title: '',
     description: '',
@@ -42,7 +44,7 @@ const initialNewEvent = {
     fileData: null 
 };
 
-// Componente do Modal de Detalhes do Evento
+// ... (Componente EventDetailsModal - permanece igual)
 function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClosed, setToast, onOpenConfirm }) {
     
     useEffect(() => {
@@ -137,7 +139,7 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
     );
 }
 
-// Componente do Modal de Criação de Evento
+// ... (Componente CreateEventModal - permanece igual)
 function CreateEventModal({ onClose, onEventCreated, setToast }) {
     const [newEvent, setNewEvent] = useState(initialNewEvent);
     const [fileName, setFileName] = useState('');
@@ -325,11 +327,10 @@ function CreateEventModal({ onClose, onEventCreated, setToast }) {
     );
 }
 
-
 // =================================================================
-// NOVO COMPONENTE: MODAL "MEUS EVENTOS"
+// ATUALIZADO: MODAL "MEUS EVENTOS"
 // =================================================================
-function MyEventsModal({ onClose }) {
+function MyEventsModal({ onClose, onCancelInscricao }) {
     const [myEvents, setMyEvents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -339,10 +340,7 @@ function MyEventsModal({ onClose }) {
             setIsLoading(true);
             setError(null);
             try {
-                // 1. Busca no novo endpoint
                 const response = await api.get('/api/eventos/minhas-inscricoes');
-                
-                // 2. Formata os dados
                 const formatted = response.data.map(event => ({
                     ...event,
                     image: event.imageUrl || techConferenceImg 
@@ -357,7 +355,7 @@ function MyEventsModal({ onClose }) {
         };
 
         fetchMyEvents();
-    }, []); // Roda apenas uma vez quando o modal abre
+    }, []);
 
     return (
         <div className="modal-backdrop" onClick={onClose}>
@@ -367,9 +365,7 @@ function MyEventsModal({ onClose }) {
                 
                 <div className="my-events-list">
                     {isLoading && <p>Carregando...</p>}
-                    
                     {error && <p className="error-message">{error}</p>}
-                    
                     {!isLoading && !error && myEvents.length === 0 && (
                         <p className="no-results-modal">Você ainda não se inscreveu em nenhum evento.</p>
                     )}
@@ -382,6 +378,13 @@ function MyEventsModal({ onClose }) {
                                 <p><FaCalendarAlt /> {event.date}</p>
                                 <p><FaMapMarkerAlt /> {event.location}</p>
                             </div>
+                            {/* ATUALIZADO: Botão de Cancelar Adicionado */}
+                            <button 
+                                className="btn-cancelar-inscricao" 
+                                onClick={() => onCancelInscricao(event.id, event.title)}
+                            >
+                                <FaTimes /> Cancelar
+                            </button>
                         </div>
                     ))}
                 </div>
@@ -390,18 +393,15 @@ function MyEventsModal({ onClose }) {
     );
 }
 // =================================================================
-// FIM DO NOVO COMPONENTE
+// FIM DA ATUALIZAÇÃO
 // =================================================================
 
 
 // Componente principal Eventos
 export default function Eventos() {
-    // CORRIGIDO: Começa com array vazio
     const [events, setEvents] = useState([]);
-    
     const [isLoading, setIsLoading] = useState(false); 
     const [error, setError] = useState(null);
-  
     const [searchTerm, setSearchTerm] = useState("");
     const [expandedCategories, setExpandedCategories] = useState({});
     const [selectedEvent, setSelectedEvent] = useState(null); 
@@ -409,26 +409,27 @@ export default function Eventos() {
     const [showLoginModal, setShowLoginModal] = useState(false); 
     const [userRole, setUserRole] = useState(null); 
     const [toast, setToast] = useState(null);
-    
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [eventToClose, setEventToClose] = useState(null);
     
     // ADICIONADO: Estado para o novo modal
     const [showMyEventsModal, setShowMyEventsModal] = useState(false);
     
+    // ADICIONADO: Estados para o diálogo de CANCELAR inscrição
+    const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+    const [eventToCancel, setEventToCancel] = useState(null); // {id, title}
+    
     const scrollRefs = useRef({});
 
-    // Adiciona o novo evento criado no topo da lista
     const handleAddEvent = (newAvent) => {
       setEvents(prevEvents => [newAvent, ...prevEvents]);
     }
   
-    // Remove o evento da lista (estática ou dinâmica)
     const handleCloseEventSuccess = (deletedEventId) => {
         setEvents(prevEvents => prevEvents.filter(event => event.id !== deletedEventId));
     }
 
-    // Carrega o 'userRole' do localStorage
+    // ... (useEffect de userRole)
     useEffect(() => {
         try {
           const storedUser = localStorage.getItem("user");
@@ -442,7 +443,7 @@ export default function Eventos() {
         }
     }, []);
 
-    // Busca os eventos da API e junta com os estáticos
+    // ... (useEffect de fetchEvents)
     useEffect(() => {
         const fetchEvents = async () => {
             setIsLoading(true); 
@@ -476,24 +477,22 @@ export default function Eventos() {
         };
 
         fetchEvents();
-    }, [userRole]); // CORRIGIDO: Depende do userRole
+    }, [userRole]);
 
     const handleLoginSuccess = (userData) => {
         setUserRole(userData.role); 
         setShowLoginModal(false);
     };
 
-    // Funções para o ConfirmDialog
+    // Funções para o ConfirmDialog (Encerrar Evento)
     const handleOpenConfirmClose = (event) => {
         setEventToClose(event);
         setShowConfirmDialog(true);
     };
-
     const handleCancelClose = () => {
         setEventToClose(null);
         setShowConfirmDialog(false);
     };
-
     const handleConfirmClose = async () => {
         if (!eventToClose) return;
         try {
@@ -515,16 +514,46 @@ export default function Eventos() {
             setShowConfirmDialog(false);
         }
     };
+    
+    // ADICIONADO: Funções para o ConfirmDialog (Cancelar Inscrição)
+    const handleOpenCancelConfirm = (eventId, eventTitle) => {
+        setEventToCancel({ id: eventId, title: eventTitle });
+        setShowCancelConfirm(true);
+        setShowMyEventsModal(false); // Fecha o modal "Meus Eventos"
+    };
+
+    const handleCloseCancelConfirm = () => {
+        setEventToCancel(null);
+        setShowCancelConfirm(false);
+    };
+
+    const handleConfirmCancelInscricao = async () => {
+        if (!eventToCancel) return;
+        try {
+            // Chama a nova API de DELETE
+            await api.delete(`/api/eventos/${eventToCancel.id}/cancelar`);
+            setToast({ message: "Inscrição cancelada com sucesso.", type: 'success' });
+            
+            setShowMyEventsModal(false); // Garante que o modal de eventos feche
+
+        } catch (error) {
+            console.error("Falha ao cancelar inscrição:", error);
+            const errorMsg = error.response?.data?.message || "Erro ao cancelar inscrição.";
+            setToast({ message: errorMsg, type: 'error' });
+        } finally {
+            setEventToCancel(null);
+            setShowCancelConfirm(false);
+        }
+    };
 
 
-    // Funções de Scroll
+    // ... (Funções de Scroll)
     const scrollLeft = (categoryIndex) => {
         const container = scrollRefs.current[categoryIndex];
         if (container) {
           container.scrollBy({ left: -300, behavior: 'smooth' });
         }
     };
-
     const scrollRight = (categoryIndex) => {
         const container = scrollRefs.current[categoryIndex];
         if (container) {
@@ -532,29 +561,26 @@ export default function Eventos() {
         }
     };
     
-    // Funções de UI (Modais, etc)
+    // ... (Funções de UI)
     const toggleCategory = (categoryIndex) => {
         setExpandedCategories(prev => ({
           ...prev,
           [categoryIndex]: !prev[categoryIndex]
         }));
     };
-  
     const handleViewDetails = (event) => {
         setSelectedEvent(event);
     };
-  
     const handleOpenCreateModal = () => {
         if (userRole === 'ROLE_EMPRESA') {
             setShowCreateModal(true);
         }
     };
-  
     const handleOpenLoginModal = () => {
         setShowLoginModal(true);
     };
 
-    // Filtros e Categorias (useMemo)
+    // ... (useMemo filteredEvents)
     const filteredEvents = useMemo(() => {
         if (!searchTerm.trim()) return events; 
         
@@ -565,58 +591,42 @@ export default function Eventos() {
         );
     }, [searchTerm, events]); 
 
-    // MELHORIA 2: Categorias Dinâmicas
+    // ... (useMemo eventCategories - Dinâmico)
     const eventCategories = useMemo(() => {
-        // 1. Separa os eventos em Destaque
         const featuredEvents = filteredEvents.filter(event => event.featured === true);
-        
-        // 2. Pega todos os outros eventos (não-Destaque)
         const nonFeaturedEvents = filteredEvents.filter(event => event.featured !== true);
-
-        // 3. Agrupa os eventos 'não-Destaque' por sua categoria
         const groupedEvents = nonFeaturedEvents.reduce((acc, event) => {
-            const category = event.category || "Outros"; // Usa 'Outros' se a categoria for nula
-            
+            const category = event.category || "Outros";
             if (!acc[category]) {
                 acc[category] = [];
             }
-            
             acc[category].push(event);
             return acc;
-        }, {}); // O 'acc' começa como um objeto vazio
-
-        // 4. Transforma o objeto { "Workshop": [...], "Conferência": [...] } em um array
+        }, {});
         const dynamicCategories = Object.keys(groupedEvents).map(categoryName => ({
             title: categoryName,
             events: groupedEvents[categoryName],
             totalEvents: groupedEvents[categoryName].length
         }));
-
-        // 5. Cria a seção "Destaque"
         const featuredCategory = {
             title: "Eventos em Destaque",
             events: featuredEvents,
             totalEvents: featuredEvents.length
         };
-
-        // 6. Junta Destaque + as categorias dinâmicas
         const allCategoryRows = [featuredCategory, ...dynamicCategories];
-
-        // 7. Aplica a lógica de "Ver todos" (expanded) e remove seções vazias
         return allCategoryRows.map((cat, index) => {
           return {
             ...cat,
             events: expandedCategories[index] ? cat.events : cat.events.slice(0, 8),
           };
-        }).filter(cat => cat.totalEvents > 0); // Remove seções sem eventos
-
+        }).filter(cat => cat.totalEvents > 0);
     }, [filteredEvents, expandedCategories]);
 
     const handleSearch = (e) => {
         e.preventDefault();
     };
     
-    // Componente do Card de Evento (Reutilizável)
+    // ... (Componente EventCard)
     const EventCard = ({ event }) => {
         const imageSrc = event.image || techConferenceImg; 
 
@@ -651,7 +661,6 @@ export default function Eventos() {
     return (
         <>
           <div className="eventos-container">
-            {/* Hero Section */}
             <section className="eventos-hero">
               <div className="hero-content">
                 <h1>Descubra Eventos Tech</h1>
@@ -676,34 +685,32 @@ export default function Eventos() {
                         </button>
                     )}
 
-                    {/* ADICIONADO: Botão "Meus Eventos" */}
+                    {/* ATUALIZADO: Botão "Meus Eventos" com novo estilo e ícone */}
                     {userRole === 'ROLE_ALUNO' && (
                         <button 
-                            className="btn-my-events" 
+                            className="btn-create-event" 
                             onClick={() => setShowMyEventsModal(true)}
                         >
-                            Meus Eventos
+                            <FaClipboardList /> Meus Eventos
                         </button>
                     )}
                 </div>
               </div>
             </section>
 
-            {/* Loading (só durante o fetch) */}
+            {/* ... (Resto do JSX da página) ... */}
             {isLoading && (
                 <div className="loading-message">
                     <p>Buscando novos eventos...</p>
                 </div>
             )}
             
-            {/* Erro (só se o fetch falhar) */}
             {error && (
                 <div className="error-message">
                     <p>Erro ao buscar eventos: {error}</p>
                 </div>
             )}
 
-            {/* Renderização condicional da Busca ou Categorias */}
             {searchTerm.trim() ? (
               <section className="event-category">
                 <div className="category-header">
@@ -738,7 +745,6 @@ export default function Eventos() {
                 )}
               </section>
             ) : (
-              /* Event Categories */
               eventCategories.map((category, index) => (
                 <section key={index} className="event-category">
                   <div className="category-header">
@@ -782,7 +788,6 @@ export default function Eventos() {
               ))
             )}
             
-            {/* Mensagem de "nenhum evento" */}
             {events.length === 0 && !isLoading && (
               <div className="no-results">
                 <p>Nenhum evento encontrado no momento.</p>
@@ -819,14 +824,16 @@ export default function Eventos() {
             />
           )}
 
-          {/* ADICIONADO: Renderização do novo modal */}
+          {/* ATUALIZADO: Renderização do modal "Meus Eventos" */}
           {showMyEventsModal && (
-            <MyEventsModal onClose={() => setShowMyEventsModal(false)} />
+            <MyEventsModal 
+                onClose={() => setShowMyEventsModal(false)} 
+                onCancelInscricao={handleOpenCancelConfirm} // Passa a prop
+            />
           )}
           
           <Footer />
 
-          {/* Renderiza o Toast */}
           {toast && (
               <Toast
                   message={toast.message}
@@ -835,12 +842,20 @@ export default function Eventos() {
               />
           )}
 
-          {/* Renderiza o ConfirmDialog */}
           {showConfirmDialog && (
             <ConfirmDialog
                 message={`Tem certeza que deseja encerrar o evento: ${eventToClose?.title}? Esta ação é irreversível.`}
                 onConfirm={handleConfirmClose}
                 onCancel={handleCancelClose}
+            />
+          )}
+
+          {/* ATUALIZADO: Renderização do novo ConfirmDialog de Cancelar */}
+          {showCancelConfirm && (
+            <ConfirmDialog
+                message={`Tem certeza que deseja cancelar sua inscrição em: ${eventToCancel?.title}?`}
+                onConfirm={handleConfirmCancelInscricao}
+                onCancel={handleCloseCancelConfirm}
             />
           )}
         </>

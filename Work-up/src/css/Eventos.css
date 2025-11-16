@@ -106,7 +106,7 @@
    box-shadow: 0 4px 20px rgba(49, 46, 129, 0.4);
 }
 
-/* Estilo do Botão Criar Evento */
+/* Estilo do Botão Criar Evento (E "Meus Eventos") */
 .btn-create-event {
     background: var(--primary-blue);
     color: var(--white);
@@ -129,7 +129,7 @@
     box-shadow: 0 6px 20px rgba(50, 152, 239, 0.6);
 }
 
-
+/* Botão Encerrar no Modal de Detalhes */
 .btn-encerrar {
   background: var(--primary-blue);
     color: var(--white);
@@ -547,7 +547,6 @@
 .event-modal-image img {
   width: 100%;
   height: 100%;
-  /* margin-top: 40px; */ /* REMOVIDO */
   max-height: none;
   object-fit: cover;
   border-radius: 8px;
@@ -567,16 +566,14 @@
 .event-modal-info .modal-details-grid {
   overflow: visible;
 }
-/* REMOVIDO: .event-modal-info .modal-actions { overflow: visible; } */
-
 
 .event-modal-info .modal-description {
-  max-height: 200px;  /* Define a altura máxima (ajuste se precisar) */
-  overflow-y: auto;   /* Adiciona a barra de rolagem SÓ se o texto for longo */
-  padding-right: 15px; /* Cria um espaço para a barra de rolagem não colar no texto */
-  line-height: 1.6;     /* Melhora a legibilidade do texto */
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 15px;
+  line-height: 1.6;
   color: var(--text-secondary);
-  margin-bottom: 20px; /* Adiciona um espaço antes dos ícones de data/local */
+  margin-bottom: 20px;
 }
 .event-modal-info h2 {
   margin-top: 0;
@@ -864,10 +861,10 @@
     font-weight: bold;
     cursor: pointer;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
-    width: 100%; 
+    width: auto; /* <-- CORRIGIDO */
     display: flex;
     justify-content: center;
-    margin-top: 0;
+    margin-top: 0; /* <-- CORRIGIDO */
     align-items: center;
     gap: 10px;
 }
@@ -996,7 +993,7 @@
     }
     
     .btn-inscrever, .btn-login, .btn-encerrar {
-        width: 100%; 
+        width: 100%; /* Botões ocupam largura total no mobile */
     }
 }
 
@@ -1004,33 +1001,13 @@
 /* MELHORIA 1: "MEUS EVENTOS" (ALUNO)      */
 /* ======================================= */
 
-/* 1. Botão "Meus Eventos" no Hero */
-.btn-my-events {
-    background: #f1f5f9; /* Cor clara, diferente do "Criar Evento" */
-    color: var(--dark-blue);
-    border: none;
-    padding: 16px 25px; 
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-}
+/* 1. Botão "Meus Eventos" no Hero - ESTILO REMOVIDO */
+/* .btn-my-events { ... } */
 
-.btn-my-events:hover {
-    background: var(--white);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
-}
-
-/* 2. Estilo do Modal "Meus Eventos" */
+/* 2. Estilo do Modal "Meus Eventos" - TAMANHO AUMENTADO */
 .my-events-modal {
     width: 90%;
-    max-width: 600px; /* Modal de tamanho médio */
+    max-width: 800px; /* <-- AUMENTADO DE 600px para 800px */
     padding: 35px 40px; 
     border-radius: 16px;
     max-height: 80vh;
@@ -1061,7 +1038,7 @@
     font-style: italic;
 }
 
-/* 4. Card Simples para o Evento na Lista */
+/* 4. Card Simples para o Evento na Lista - ATUALIZADO COM PADDING */
 .my-event-card {
     display: flex;
     align-items: center;
@@ -1070,6 +1047,9 @@
     border-radius: 8px;
     padding: 15px;
     border: 1px solid var(--border-color);
+    position: relative; /* Para o botão de cancelar */
+    /* Adiciona espaço à direita para o botão */
+    padding-right: 140px; 
 }
 
 .my-event-card-img {
@@ -1097,4 +1077,29 @@
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+/* 5. NOVO: Botão de Cancelar Inscrição */
+.btn-cancelar-inscricao {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #dc3545; /* Vermelho */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+}
+
+.btn-cancelar-inscricao:hover {
+    background: #c82333;
+    transform: translateY(-50%) scale(1.05);
 }
