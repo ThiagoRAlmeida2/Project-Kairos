@@ -135,7 +135,7 @@
     box-shadow: 0 6px 20px rgba(50, 152, 239, 0.6);
 }
 
-
+/* Botão Encerrar no Modal de Detalhes */
 .btn-encerrar {
   background: var(--primary-blue);
     color: var(--white);
@@ -444,7 +444,7 @@
   .events-row {
     padding: 0 50px;
   }
-
+  
   .modal-content.create-event-modal {
       max-width: 95%;
       padding: 25px;
@@ -960,24 +960,30 @@
 }
 
 /* ======================================= */
-/* MELHORIA 1: "MEUS EVENTOS" (ALUNO)      */
+/* MELHORIA 1: "MEUS EVENTOS" (ALUNO) - TELA CHEIA */
 /* ======================================= */
 
-/* 1. Estilo do Modal "Meus Eventos" - TAMANHO AUMENTADO */
-.my-events-modal {
-    width: 90%;
-    max-width: 800px; /* <-- AUMENTADO */
-    padding: 35px 40px; 
-    border-radius: 16px;
-    max-height: 80vh;
+.modal-content.my-events-modal {
+    width: 100%;
+    max-width: 100%;
+    height: 100vh; /* Ocupa 100% da altura da tela */
+    max-height: 100vh; /* Garante que ocupe 100% */
+    border-radius: 0; /* Remove bordas arredondadas */
+    padding: 40px 50px; /* Adiciona mais padding interno */
+    box-shadow: none; /* Remove sombra de modal */
+    
+    /* Garante que o conteúdo role internamente */
+    display: flex;
+    flex-direction: column;
 }
 
 .my-events-modal h2 {
     margin-bottom: 25px;
-    text-align: center;
+    text-align: left; /* Alinha o título à esquerda */
     color: var(--primary-blue);
-    font-size: 1.8rem;
+    font-size: 2.5rem; /* Título maior */
     font-weight: 700;
+    flex-shrink: 0; /* Impede que o título encolha */
 }
 
 .no-results-modal {
@@ -986,7 +992,6 @@
     color: var(--text-secondary);
     font-style: italic;
 }
-
 
 /* 2. Wrapper da Tabela (para overflow) */
 .my-events-modal .dashboard-table-wrapper {
@@ -998,7 +1003,10 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    max-height: 50vh; /* Altura máxima da lista */
+    
+    /* ATUALIZADO: Faz a tabela ocupar o espaço restante */
+    flex-grow: 1; 
+    max-height: none; /* Remove o limite de altura anterior */
     overflow-y: auto; /* Adiciona rolagem se a lista for longa */
 }
 
@@ -1012,6 +1020,10 @@
 .my-events-modal .candidatos-table thead { 
     background: var(--gradient-blue);
     color: white;
+    /* Faz o cabeçalho grudar no topo ao rolar */
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .my-events-modal .candidatos-table th, 
