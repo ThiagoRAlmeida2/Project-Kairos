@@ -124,6 +124,8 @@ function CreateEventModal({ onClose, onEventCreated, setToast }) {
     const [fileName, setFileName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
+    const DESCRIPTION_MAX_LENGTH = 500;
+
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         
@@ -222,16 +224,23 @@ function CreateEventModal({ onClose, onEventCreated, setToast }) {
                         placeholder="Ex: Spring Boot Masterclass"
                         disabled={isLoading}
                     />
-                    <label>Descrição:</label>
-                    <textarea
-                        name="description"
-                        value={newEvent.description}
-                        onChange={handleChange}
-                        required
-                        rows="3"
-                        placeholder="Descreva o objetivo e o público-alvo do evento."
-                        disabled={isLoading}
-                    />
+                  <label>Descrição:</label>
+                    <div className="textarea-wrapper"> {/* Adiciona este wrapper */}
+                        <textarea
+                            name="description"
+                            value={newEvent.description}
+                            onChange={handleChange}
+                            required
+                            rows="3"
+                            placeholder="Descreva o objetivo e o público-alvo do evento."
+                            disabled={isLoading}
+                            maxLength={DESCRIPTION_MAX_LENGTH} // 👈 Adiciona o limite
+                        />
+                        {/* 3. Adiciona o contador visual */}
+                        <div className="char-counter">
+                            {newEvent.description.length} / {DESCRIPTION_MAX_LENGTH}
+                        </div>
+                    </div>
 
                     <label>Categoria:</label>
                     <select name="category" value={newEvent.category} onChange={handleChange} disabled={isLoading}>
