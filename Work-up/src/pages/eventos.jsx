@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import "../css/Eventos.css";
 import Footer from "../components/Footer";
 import Toast from "../components/Toast";
-import ConfirmDialog from "../components/ConfirmDialog"; // Importado
+import ConfirmDialog from "../components/ConfirmDialog";
 import LoginCard from "../components/LoginCard"; 
 import { FaChevronLeft, FaChevronRight, FaCalendarAlt, FaMapMarkerAlt, FaTag, FaCheckCircle, FaLaptopCode, FaTimes, FaPlusCircle } from "react-icons/fa";
 
@@ -73,8 +73,6 @@ function EventDetailsModal({ event, userRole, onClose, onOpenLogin, onEventClose
         onOpenConfirm(event); // 1. Avisa o "Pai" para abrir o diálogo
         onClose(); // 2. Fecha este modal de detalhes
     };
-    
-    // O bloco 'try...catch' de exclusão foi REMOVIDO daqui
 
     return (
         <div className="modal-backdrop" onClick={onClose}>
@@ -466,22 +464,60 @@ export default function Eventos() {
         );
     }, [searchTerm, events]); 
 
+    // =================================================================
+    // 👇 MELHORIA 2 APLICADA AQUI 👇
+    // =================================================================
     const eventCategories = useMemo(() => {
-        const categories = [
-          { title: "Eventos em Destaque", filter: (event) => event.featured === true },
-          { title: "Workshops e Cursos", filter: (event) => ["Workshop", "Curso"].includes(event.category) && !event.featured },
-          { title: "Hackathons e Competições", filter: (event) => ["Hackathon", "Competição"].includes(event.category) }
-        ];
+        // 1. Separa os eventos em Destaque
+        const featuredEvents = filteredEvents.filter(event => event.featured === true);
+        
+        // 2. Pega todos os outros eventos (não-Destaque)
+        const nonFeaturedEvents = filteredEvents.filter(event => event.featured !== true);
 
-        return categories.map((cat, index) => {
-          const categoryEvents = filteredEvents.filter(cat.filter);
+        // 3. Agrupa os eventos 'não-Destaque' por sua categoria
+        const groupedEvents = nonFeaturedEvents.reduce((acc, event) => {
+            const category = event.category || "Outros"; // Usa 'Outros' se a categoria for nula
+            
+            // Se o acumulador (acc) ainda não tem a chave, cria um array para ela
+            if (!acc[category]) {
+                acc[category] = [];
+            }
+            
+            // Adiciona o evento ao seu grupo de categoria
+            acc[category].push(event);
+            return acc;
+        }, {}); // O 'acc' começa como um objeto vazio
+
+        // 4. Transforma o objeto { "Workshop": [...], "Conferência": [...] } em um array
+        const dynamicCategories = Object.keys(groupedEvents).map(categoryName => ({
+            title: categoryName, // O título da seção (ex: "Conferência")
+            events: groupedEvents[categoryName], // O array de eventos
+            totalEvents: groupedEvents[categoryName].length
+        }));
+
+        // 5. Cria a seção "Destaque" (se houver eventos)
+        const featuredCategory = {
+            title: "Eventos em Destaque",
+            events: featuredEvents,
+            totalEvents: featuredEvents.length
+        };
+
+        // 6. Junta Destaque + as categorias dinâmicas
+        const allCategoryRows = [featuredCategory, ...dynamicCategories];
+
+        // 7. Aplica a lógica de "Ver todos" (expanded) e remove seções vazias
+        return allCategoryRows.map((cat, index) => {
           return {
             ...cat,
-            events: expandedCategories[index] ? categoryEvents : categoryEvents.slice(0, 8),
-            totalEvents: categoryEvents.length
+            // Lógica original para mostrar apenas 8 cards se não estiver expandido
+            events: expandedCategories[index] ? cat.events : cat.events.slice(0, 8),
           };
-        }).filter(cat => cat.totalEvents > 0);
+        }).filter(cat => cat.totalEvents > 0); // Remove seções sem eventos
+
     }, [filteredEvents, expandedCategories]);
+    // =================================================================
+    // FIM DA MELHORIA 2
+    // =================================================================
 
     const handleSearch = (e) => {
         e.preventDefault();
